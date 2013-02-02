@@ -1,0 +1,17 @@
+{% extends "users.html" %}
+{% block main %}
+<form class="form-horizontal" action="{{ url_for('add_demo') }}" method="POST">
+  <fieldset>
+    <legend><h3>Add a Demo</h3></legend>
+    <div class="control-group  {% if 'name' in errors %}error{% endif %}">
+      <label class="control-label" for="demo_name">Demo File</label>
+      <div class="controls">
+        <input type="text" class="input-xlarge" id="demo_name" name="demo_name" placeholder="auto-19880905-XXXX-cp_gravelpit.dem" value="{{ values.get('name', '') }}"/>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-success">Add User</button>
+    </div>
+  </fieldset>
+</form>
+{% endblock %}

@@ -8,3 +8,8 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/test.db'
 
 # App Config
 TITLE = 'Server Manager'
+DEBUG = False
+DEBUG = True
+IMPORT_DIR = '/var/www/html/tf2files/demo_inbox'
+DEMO_DIR = '/var/www/html/tf2files/demo_storage'
+PUBLIC_DEMOS = False
