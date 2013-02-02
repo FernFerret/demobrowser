@@ -29,6 +29,13 @@
       </div>
     </div>
     <div class="control-group">
+      <label class="control-label" for="perpage">Demos per Page:</label>
+      <div class="controls">
+        <input type="text" class="span8" id="perpage" name="perpage" placeholder="12" value="{{ config.get('DEMO_PER_PAGE', 12) }}" />
+        <p></p>
+      </div>
+    </div>
+    <div class="control-group">
       <label class="control-label" for="public">Public Demos:</label>
       <div class="controls">
         <input {% if config.get('DEMO_PUBLIC', False) %}checked="checked" {% endif %}type="checkbox" id="public" name="public">
@@ -40,6 +47,13 @@
       <div class="controls">
         <input {% if config.get('DEBUG', False) %}checked="checked" {% endif %}type="checkbox" id="debug" name="debug">
         <p>Turn Debug mode on/off. If debug mode is on, you'll see full stack traces for pages. Disable this for production systems.</p>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="cleardb">Clear the Database:</label>
+      <div class="controls">
+        <input type="checkbox" id="cleardb" name="cleardb">
+        <p>CLEARS the database. I'll probably delete this later. ONLY for testing.</p>
       </div>
     </div>
     <div class="form-actions">

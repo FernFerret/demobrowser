@@ -12,7 +12,7 @@
     <!-- Le styles -->
     <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/font-awesome.css') }}" rel="stylesheet">
-    <style type="text/css">
+    <link href="{{ url_for('static', filename='css/bootstrap-responsive.css') }}" rel="stylesheet">
     <style type="text/css">
       body {
         padding-top: 20px;
@@ -53,8 +53,23 @@
         padding-top: 60px;
         padding-bottom: 40px;
       }
+      ul.nav li.dropdown:hover > ul.dropdown-menu{
+          display: block; 
+          margin: 0px;   
+      }
+      ul.dropdown-menu{
+          margin: 0px;   
+      }
+
+      .navbar .nav > li > .dropdown-menu:after {
+        content: none;
+      }
+      
+      .navbar .nav > li > .dropdown-menu:before {
+        content: none;
+      }
       </style>
-      <link href="{{ url_for('static', filename='css/bootstrap-responsive.css') }}" rel="stylesheet">
+      
     <!--
 		Put this back in when we enable mobile mode.
     @media (max-width: 979px) {
@@ -85,12 +100,21 @@
           <a class="brand" href="{{ url_for('index') }}">{{ title }}</a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li {% if request.path == url_for('index') %}class="active"{% endif %}><a href="{{ url_for('index') }}">Demos</a></li>
-              {% if session.user_admin %}
-                <li {% if 'users' in request.path %}class="active"{% endif %}><a href="{{ url_for('users') }}">Users</a></li>
-              {% endif %}
-              {% if session.user_admin %}
-                <li {% if 'settings' in request.path and not 'server' in request.path %}class="active"{% endif %}><a href="{{ url_for('settings') }}">Settings</a></li>
+              <!-- <li class="dropdown" {% if request.path == url_for('index') %}class="active"{% endif %}> -->
+              <li class="dropdown{% if 'demos' in request.path %} active{% endif %}">
+                {% if session.user_admin %}
+                <a class="dropdown-toggle" href="{{ url_for('index') }}" data-toggle="dropdown">Demos</a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
+                  <li><a tabindex="-1" href="{{ url_for('index') }}"><i class="icon-th"></i> View Demos</a></li>
+                  <li class="divider"></li>
+                  <li><a tabindex="-1" href="{{ url_for('add_demo') }}"><i class="icon-upload"></i> Upload Demo</a></li>
+                  <li><a tabindex="-1" href="{{ url_for('index') }}"><i class="icon-signin"></i> Import Demo</a></li>
+                </ul>
+              </li>
+              <li {% if 'users' in request.path %}class="active"{% endif %}><a href="{{ url_for('users') }}">Users</a></li>
+              <li {% if 'settings' in request.path and not 'server' in request.path %}class="active"{% endif %}><a href="{{ url_for('settings') }}">Settings</a></li>
+              {% else %}
+              <li class="active"><a href="{{ url_for('index') }}">Demos</a></li>
               {% endif %}
             </ul>
             <ul class="nav pull-right">

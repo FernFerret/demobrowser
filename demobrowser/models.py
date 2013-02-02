@@ -1,5 +1,7 @@
 from demobrowser import db
 from pprint import pprint
+from datetime import datetime
+import re
 
 class Demo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -11,20 +13,21 @@ class Demo(db.Model):
     
     @staticmethod
     def get_all():
-        print "The Thinggs!"
-        pprint(Demo.query.all())
-        pprint(User.query.all())
         return Demo.query.all()
         
     @staticmethod
     def get_page(page):
         pageobj = Demo.query.paginate(page, per_page=12)
-        print dir(pageobj)
         return pageobj
     
     @staticmethod
     def create_from_name(demo_name):
-        return (True, "Success! Demo '%s' was uploaded!" % demo_name)
+        match = re.match('auto-(?P<date>[0-9]{8})-.*-(?P<map>.*)\.dem', demo_name)
+        if match:
+            strdate = match.groupdict()['date']
+            thedate = datetime(int(strdate[0:4]), int(strdate[4:6]), int(strdate[6:8]))
+            return Demo.create(match.groupdict()['map'], demo_name, "27.45 MB", thedate)
+        return (False, "Whoops, something went wrong... :( %s" % demo_name)
     @staticmethod
     def create(map_name, demopath, demo_size, map_date, tflog=None):
         # Make sure the user isn't already registered.
@@ -32,9 +35,10 @@ class Demo(db.Model):
         if demo:
             return (False, "Error, demo already exists!")
         new_demo = Demo()
-        new_demo.demo_size = "X"
+        new_demo.demo_size = demo_size
         new_demo.demo_path = demopath
         new_demo.map_name = map_name
+        new_demo.map_date = map_date
         db.session.add(new_demo)
         return (True, "Success! Demo '%s' was uploaded!" % demopath)
 

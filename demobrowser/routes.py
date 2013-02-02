@@ -121,8 +121,6 @@ def add_user():
 @app.route('/users/makeadmin/', methods=['POST'])
 @admin_required
 def make_admin():
-    print "Fish"
-    print request.form
     try:
         if int(request.form['userid']) == session['user_id']:
             return "You cannot modify your own admin privs.", 403
@@ -130,7 +128,6 @@ def make_admin():
         return "Fail.", 403
     user = User.get_from_id(int(request.form['userid']))
     admin = request.form['admin'].lower() == 'true'
-    print "here", user
     if user:
         user.make_admin(admin)
         return "Success"
@@ -152,6 +149,13 @@ def settings():
         values['DEBUG'] = request.form.get('debug', None) is not None
         values['DEMO_DIR'] = str(request.form.get('upload', None))
         values['DEMO_PUBLIC'] = request.form.get('public', None) is not None
+        try:
+            values['DEMO_PER_PAGE'] = int(request.form.get('perpage', 12))
+        except ValueError:
+            flash("Warning: Defaulting Demos Per Page to 12 because you didn't put a number in that textbox, idiot.", category='warn')
+        if request.form.get('cleardb', None) is not None and values['DEBUG'] is True:
+            db.drop_all()
+            db.create_all()
         write_pyfile(app.config['CFG_FILE'], values)
         # Now set our config values properly
         for key, value in values.iteritems():
@@ -169,7 +173,7 @@ def add_demo():
             success, msg = Demo.create_from_name(demo_name)
             if success:
                 flash(msg, category='success')
-                #db.session.commit()
+                db.session.commit()
             else:
                 flash(msg, category='error')
             return redirect(url_for('index'))

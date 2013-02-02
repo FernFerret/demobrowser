@@ -12,3 +12,4 @@ DEBUG = False
 DEMO_INBOX = '/var/www/html/tf2files/demo_inbox'
 DEMO_DIR = '/var/www/html/tf2files/demo_storage'
 DEMO_PUBLIC = False
+DEMO_PER_PAGE = 12
