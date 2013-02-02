@@ -3,6 +3,7 @@ from demobrowser.helpers import get_steam_userinfo, get_my_ip
 from demobrowser.models import User
 from flask import render_template, session, redirect, url_for, request, g, flash, get_flashed_messages
 from functools import wraps
+from pyfile import write_pyfile
 import re
 
 _steam_id_re = re.compile('steamcommunity.com/openid/id/(.*?)$')
@@ -136,15 +137,17 @@ def make_admin():
 def settings():
     values = {}
     if request.method == 'POST':
+        # These 4 cannot be changed in settings
         values['STEAM_API_KEY'] = str(app.config['STEAM_API_KEY'])
         values['SECRET_KEY'] = str(app.config['SECRET_KEY'])
         values['ADDRESS'] = str(app.config['ADDRESS'])
         values['SQLALCHEMY_DATABASE_URI'] = str(app.config['SQLALCHEMY_DATABASE_URI'])
+        # The rest of these can
         values['TITLE'] = str(request.form['title'])
-        values['LOCKSERVERS'] = request.form.get('lockservers', None) is not None
+        values['DEMO_INBOX'] = str(request.form.get('inbox', None))
         values['DEBUG'] = request.form.get('debug', None) is not None
-        values['TEST'] = request.form.get('test', None) is not None
-        values['ALLOW_LOCAL'] = request.form.get('allowlocal', None) is not None
+        values['DEMO_DIR'] = str(request.form.get('upload', None))
+        values['DEMO_PUBLIC'] = request.form.get('public', None) is not None
         write_pyfile(app.config['CFG_FILE'], values)
         # Now set our config values properly
         for key, value in values.iteritems():

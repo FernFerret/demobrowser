@@ -15,10 +15,24 @@
       </div>
     </div>
     <div class="control-group">
-      <label class="control-label" for="lockservers">Lock Servers:</label>
+      <label class="control-label" for="upload">Upload Directory:</label>
       <div class="controls">
-        <input {% if config.get('LOCKSERVERS', False) %}checked="checked" {% endif %}type="checkbox" id="lockservers" name="lockservers">
-        <p>If enabled, no one can delete servers from the system. This prevents accidental deletions.</p>
+        <input type="text" class="span8" id="upload" name="upload" placeholder="/var/uploads/demos" value="{{ config.get('DEMO_DIR', '') }}" />
+        <p></p>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="inbox">Inbox Directory:</label>
+      <div class="controls">
+        <input type="text" class="span8" id="inbox" name="inbox" placeholder="/var/uploads/demos/inbox" value="{{ config.get('DEMO_INBOX', '') }}" />
+        <p></p>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="public">Public Demos:</label>
+      <div class="controls">
+        <input {% if config.get('DEMO_PUBLIC', False) %}checked="checked" {% endif %}type="checkbox" id="public" name="public">
+        <p>If enabled, anyone can see your demos without logging in. If not, you'll have to add each Steam ID yourself.</p>
       </div>
     </div>
     <div class="control-group">
@@ -26,20 +40,6 @@
       <div class="controls">
         <input {% if config.get('DEBUG', False) %}checked="checked" {% endif %}type="checkbox" id="debug" name="debug">
         <p>Turn Debug mode on/off. If debug mode is on, you'll see full stack traces for pages. Disable this for production systems.</p>
-      </div>
-    </div>
-    <div class="control-group">
-      <label class="control-label" for="test">Test:</label>
-      <div class="controls">
-        <input {% if config.get('TEST', False) %}checked="checked" {% endif %}type="checkbox" disabled="true" id="test" name="test">
-        <p>Enable test mode. Don't check this. It's broken.</p>
-      </div>
-    </div>
-    <div class="control-group">
-      <label class="control-label" for="allowlocal">Enable Local Servers:</label>
-      <div class="controls">
-        <input {% if config.get('ALLOW_LOCAL', True) %}checked="checked" {% endif %}type="checkbox" id="allowlocal" name="allowlocal">
-        <p>Allow a server to be local to this Sexy Server Manager installation.</p>
       </div>
     </div>
     <div class="form-actions">
