@@ -17,7 +17,7 @@ class Demo(db.Model):
         
     @staticmethod
     def get_page(page, per_page=12):
-        pageobj = Demo.query.paginate(page, per_page=per_page)
+        pageobj = Demo.query.order_by(Demo.map_date.desc()).paginate(page, per_page=per_page)
         return pageobj
     
     @staticmethod
