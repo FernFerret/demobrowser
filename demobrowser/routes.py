@@ -1,6 +1,6 @@
 from demobrowser import app, oid, db
 from demobrowser.helpers import get_steam_userinfo, get_my_ip
-from demobrowser.models import User
+from demobrowser.models import User, Demo
 from flask import render_template, session, redirect, url_for, request, g, flash, get_flashed_messages
 from functools import wraps
 from pyfile import write_pyfile
@@ -35,7 +35,11 @@ def login_required(function):
 
 @app.route('/')
 def index():
-    return render_template('demos.html')
+    return render_template('demos.html', demos=Demo.get_page(1), alldemos=Demo.get_all())
+
+@app.route('/demos/page/<page>/')
+def demopage(page=1):
+    return render_template('demos.html', pagination=Demo.get_page(page))
 
 @app.route('/login/')
 @oid.loginhandler
@@ -159,4 +163,14 @@ def settings():
 @app.route('/demos/add/', methods=['GET', 'POST'])
 def add_demo():
     values = {}
+    if request.method == 'POST':
+        demo_name = request.form.get("demo_name", None)
+        if demo_name:
+            success, msg = Demo.create_from_name(demo_name)
+            if success:
+                flash(msg, category='success')
+                #db.session.commit()
+            else:
+                flash(msg, category='error')
+            return redirect(url_for('index'))
     return render_template('add_demo.html', values=values)

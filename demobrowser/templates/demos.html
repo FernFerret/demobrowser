@@ -4,18 +4,18 @@
   <div class="well">
     <ul class="nav nav-list">
       <li class="nav-header">
-          Users
+          Manage Demos
       </li>
-      <li {% if request.path == url_for('users') %}class="active"{% endif %}>
-        <a href="{{ url_for('users') }}">
-          <i class="icon-list {% if request.path == url_for('users') %}icon-white{% endif %}"></i>
-          User List
+      <li {% if request.path == url_for('index') %}class="active"{% endif %}>
+        <a href="{{ url_for('index') }}">
+          <i class="icon-th {% if request.path == url_for('index') %}icon-white{% endif %}"></i>
+          Demos
         </a>
       </li>
-      <li {% if request.path == url_for('add_user') %}class="active"{% endif %}>
-        <a href="{{ url_for('add_user') }}">
-          <i class="icon-plus-sign {% if request.path == url_for('add_user') %}icon-white{% endif %}"></i>
-          Add User
+      <li {% if request.path == url_for('add_demo') %}class="active"{% endif %}>
+        <a href="{{ url_for('add_demo') }}">
+          <i class="icon-plus-sign icon-black {% if request.path == url_for('add_demo') %}icon-white{% endif %}"></i>
+          Add Demo
         </a>
       </li>
     </ul>
@@ -28,87 +28,44 @@
 <div class="jumbotron">
   <h2>{{ config.get('TITLE', 'Server Manager') }}</h2>
 </div>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Community ID</th>
-      <th style="text-align:center">Admin</th>
-      <th style="text-align:center">Remove</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for user in users %}
-    <tr>
-      <td>{{ user.name }}</td>
-      <td><a href="http://www.steamcommunity.com/profiles/{{ user.steam_id  }}">{{ user.steam_id  }}</a></td>
-      <td style="text-align:center">
-        {% if user.id == session.user_id %}
-        <div class="btn btn-mini btn-{% if user.admin %}success{% else %}danger{% endif %} disabled" >
-          <i class="icon-{% if user.admin %}ok{% else %}remove icon-white{% endif %}"></i>
-        </div>
-        {% else %}
-        <a id="promote-{{ user.id }}" class="btn btn-mini btn-{% if user.admin %}success{% else %}danger{% endif %} promote" href="{{ url_for('users') }}">
-          <i class="icon-{% if user.admin %}ok{% else %}remove icon-white{% endif %}"></i>
-        </a>
-        {% endif %}
-      </td>
-      <td style="text-align:center">
-        {% if user.id == session.user_id %}
-        <div class="btn btn-mini btn-warning disabled" href="#"><i class="icon-remove icon-white"></i></div>
-        {% else %}
-        <a id='delete-{{ user.id }}' class="btn btn-mini btn-warning delete" href="#"><i class="icon-remove icon-white"></i></a>
-        {% endif %}
-      </td>
-    </tr>
+{% macro render_pagination(pagination) %}
+  <div class="row-fluid">
+    {% for demo in pagination.items %}
+    <div class="span3" style="text-align:center">
+      <h4>{{ demo.map_date }}</h4>
+      <a href="{{ demo.demo_path }}">
+        <img src="{{ url_for('static', filename='img/maps/pl_badwater.png') }}" />
+        <br />
+        {{ demo.map_name}}
+      </a>
+    </div>
     {% endfor %}
-  </tbody>
-</table>
-{% endblock main %}
-{% if session.user_admin %}
-  {% block javascript %}
-  <script type="text/javascript">
-    $(function() {
-      $('a.promote').click(function(e) {
-        e.preventDefault();
-        var me = $(this);
-        var isadmin = $(this).hasClass('btn-success');
-        $.ajax({
-          type: 'post',
-          url: '{{ url_for('make_admin', _external=True) }}',
-          data: 'userid=' + $(this).attr('id').replace('promote-', '') + '&admin=' + !isadmin,
-          success: function() {
-            if (isadmin) {
-              me.removeClass('btn-success').addClass('btn-danger').html('<i class="icon-remove icon-white"></i>');
-            } else {
-              me.removeClass('btn-danger').addClass('btn-success').html('<i class="icon-ok"></i>');
-            }
-          },
-          fail: function() {
-            alert('fail')
-          }
-        });
-      });
-      $('a.delete').click(function(e) {
-        e.preventDefault();
-        if ($(this).hasClass('delete')) {
-          var me = $(this)
-          $(this).removeClass('delete btn-warning').addClass('btn-danger confirm-delete').text('Sure?')
-          window.setTimeout(function() { me.removeClass('confirm-delete btn-danger').addClass('btn-warning delete').html('<i class="icon-remove icon-white"></i>'); }, 5000);
-        } else {
-          var parent = $(this).parent().parent();
-          $.ajax({
-            type: 'post',
-            url: '{{ url_for('delete_user', _external=True) }}',
-            data: 'delete=' + $(this).attr('id').replace('delete-', ''),
-            success: function() {
-              parent.remove();
-            }
-          });
-        }
-      });
-    });
-  </script>
+  </div>
+  <div class="pagination pagination-centered">
+    <ul>
+      {% if pagination.has_prev %}
+        <li><a href="#">{{ page - 1 }}</a></li>
+      {% else %}
+        <li class="disabled"><a href="#">«</a></li>
+      {% endif %}
+      {%- for page in pagination.iter_pages() %}
+        {% if page %}
+          
+          {% if page != pagination.page %}
+            <li><a href="{{ url_for('demopage', page=page) }}">{{ page }}</a></li>
+          {% else %}
+            <li class="active"><a href="#">{{ page }}</a></li>
+          {% endif %}
+        {% endif %}
+      {%- endfor %}
+      {% if pagination.has_next %}
+        <li><a href="#">{{ page + 1 }}</a></li>
+      {% else %}
+        <li class="disabled"><a href="#">»</a></li>
+      {% endif %}
+    </ul>
+  </div>
+{% endmacro %}
+{{ render_pagination(demos) }}
 
-  {% endblock javascript %}
-{% endif %}
+{% endblock main %}

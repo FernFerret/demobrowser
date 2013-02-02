@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from demobrowser import app, db
-db.drop_all()
+#db.drop_all()
 db.create_all()
 app.debug = app.config.get('DEBUG', False)
 
