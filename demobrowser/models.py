@@ -16,8 +16,8 @@ class Demo(db.Model):
         return Demo.query.all()
         
     @staticmethod
-    def get_page(page):
-        pageobj = Demo.query.paginate(page, per_page=12)
+    def get_page(page, per_page=12):
+        pageobj = Demo.query.paginate(page, per_page=per_page)
         return pageobj
     
     @staticmethod

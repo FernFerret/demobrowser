@@ -35,11 +35,17 @@ def login_required(function):
 
 @app.route('/')
 def index():
-    return render_template('demos.html', demos=Demo.get_page(1), alldemos=Demo.get_all())
+    return render_template('demos.html', demos=Demo.get_page(1, app.config['DEMO_PER_PAGE']), alldemos=Demo.get_all())
 
 @app.route('/demos/page/<page>/')
 def demopage(page=1):
-    return render_template('demos.html', pagination=Demo.get_page(page))
+    try:
+        page = int(page)
+    except ValueError:
+        return redirect(url_for('index'))
+    if page == 1:
+        return redirect(url_for('index'))
+    return render_template('demos.html', demos=Demo.get_page(page, app.config['DEMO_PER_PAGE']))
 
 @app.route('/login/')
 @oid.loginhandler
