@@ -3,7 +3,7 @@
   <div class="row-fluid">
     <div class="span3">
       <img class="img-rounded" src="{{ url_for('static', filename='img/maps/%s.png' % demo.map_name) }}" />
-      
+
     </div>
     <div class="span3">
       <h4><a href="#" id="title">{{ demo.title }}</a></h4>
@@ -19,14 +19,14 @@ $('#title').editable({
                            type:  'text',
                            pk:    {{ demo.id }},
                            name:  'title',
-                           url:   '/demos/field/{{ demo.id }}',  
+                           url:   'demos/field/{{ demo.id }}',
                            title: 'Enter the title of this match'
                         });
 $('#summary').editable({
                            type:  'textarea',
                            pk:    {{ demo.id }},
                            name:  'summary',
-                           url:   '/demos/field/{{ demo.id }}',  
+                           url:   'demos/field/{{ demo.id }}',
                            title: 'Enter a brief summary',
                            rows: 7
                         });
