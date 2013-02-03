@@ -31,11 +31,11 @@ def login_required(function):
         return function(*args, **kwargs)
     return decorated
 
-## Routes ## 
+## Routes ##
 
 @app.route('/')
 def index():
-    return render_template('demos.html', demos=Demo.get_page(1, app.config['DEMO_PER_PAGE']), alldemos=Demo.get_all())
+    return render_template('demos.html', demos=Demo.get_page(1, app.config['DEMO_PER_PAGE']))
 
 @app.route('/demos/page/<page>/')
 def demopage(page=1):
@@ -138,7 +138,7 @@ def make_admin():
         user.make_admin(admin)
         return "Success"
     return "Fail.", 403
-    
+
 @app.route('/settings/', methods=['GET', 'POST'])
 @admin_required
 def settings():
@@ -168,8 +168,8 @@ def settings():
             app.config[key] = value
         flash('Success! Your settings were updated.', category='success')
     return render_template('settings.html')
-    
-    
+
+
 @app.route('/demos/add/', methods=['GET', 'POST'])
 def add_demo():
     values = {}
