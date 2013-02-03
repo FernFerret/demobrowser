@@ -186,8 +186,20 @@ def add_demo():
             return redirect(url_for('index'))
     return render_template('add_demo.html', values=values)
     
-@app.route('/demos/edit/<demo>', methods=['GET', 'POST'])
+@app.route('/demos/edit/<demo>', methods=['GET'])
 @admin_required
 def edit_demo(demo=None):
     demo = Demo.get_from_id(demo)
     return render_template('edit_demo.html', demo=demo, values={})
+    
+@app.route('/demos/field/<demo>', methods=['POST'])
+@admin_required
+def edit_demo_field(demo=None):
+    demo = Demo.get_from_id(demo)
+    if request.method == 'POST':
+        name = request.form.get("name", None)
+        value = request.form.get("value", None)
+        setattr(demo, name, value)
+        db.session.commit()
+        return "Yep."
+    return "Nope."

@@ -10,6 +10,8 @@ class Demo(db.Model):
     demo_path = db.Column(db.String(512))
     map_name = db.Column(db.String(80))
     map_date = db.Column(db.Date())
+    summary = db.Column(db.Text())
+    title = db.Column(db.String(80))
     
     @staticmethod
     def get_all():
