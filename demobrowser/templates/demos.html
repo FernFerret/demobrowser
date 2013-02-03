@@ -1,7 +1,7 @@
 {% extends "layout-fixed.html" %}
 {% block main %}
 {% macro render_pagination(pagination) %}
-  <div class="row-fluid">
+  <div class="row-fluid marketing">
     {% for demo in pagination.items %}
     <div class="span3" style="text-align:center">
       <h4>{{ demo.map_date }}</h4>

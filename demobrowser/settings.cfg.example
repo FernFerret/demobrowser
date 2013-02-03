@@ -4,7 +4,10 @@ SECRET_KEY = 'SOME_RANDOM_STUFF'
 
 # Addresses/Locations
 ADDRESS = '127.0.0.1'
+# SQLite:
 SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/test.db'
+# MySQL:
+# SQLALCHEMY_DATABASE_URI = 'mysql://user:password@localhost/dbname'
 
 # App Config
 TITLE = 'Server Manager'
