@@ -100,18 +100,20 @@
           <a class="brand" href="{{ url_for('index') }}">{{ title }}</a>
           <div class="nav-collapse">
             <ul class="nav">
-              <!-- <li class="dropdown" {% if request.path == url_for('index') %}class="active"{% endif %}> -->
+              {% if session.user_admin %}
               <li class="dropdown{% if 'demos' in request.path %} active{% endif %}">
-                {% if session.user_admin %}
-                <a class="dropdown-toggle" href="{{ url_for('index') }}" data-toggle="dropdown">Demos</a>
+                <a class="dropdown-toggle" href="{{ url_for('index') }}">Demos</a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
-                  <li><a tabindex="-1" href="{{ url_for('index') }}"><i class="icon-th"></i> View Demos</a></li>
-                  <li class="divider"></li>
                   <li><a tabindex="-1" href="{{ url_for('add_demo') }}"><i class="icon-upload"></i> Upload Demo</a></li>
                   <li><a tabindex="-1" href="{{ url_for('index') }}"><i class="icon-signin"></i> Import Demo</a></li>
                 </ul>
               </li>
-              <li {% if 'users' in request.path %}class="active"{% endif %}><a href="{{ url_for('users') }}">Users</a></li>
+              <li class="dropdown{% if 'users' in request.path %} active{% endif %}">
+                <a href="{{ url_for('users') }}">Users</a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="drop2">
+                  <li><a tabindex="-1" href="{{ url_for('add_user') }}"><i class="icon-plus"></i> Add User</a></li>
+                </ul>
+              </li>
               <li {% if 'settings' in request.path and not 'server' in request.path %}class="active"{% endif %}><a href="{{ url_for('settings') }}">Settings</a></li>
               {% else %}
               <li class="active"><a href="{{ url_for('index') }}">Demos</a></li>
