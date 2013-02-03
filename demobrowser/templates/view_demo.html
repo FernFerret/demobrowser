@@ -1,0 +1,59 @@
+<div class="row-fluid">
+	<div style="text-align:center;" class="span12">
+	  <h2 style="line-height: 30px;">
+			{% if demo.title %}
+			 {{ demo.title }}
+			{% else %}
+				{{ demo.name }}
+			{% endif %}
+			<small><br />on {{ demo.good_date() }}</small>
+		</h2>
+	</div>
+</div>
+<div class="row-fluid">
+  <div class="span6">
+    <img class="img-polaroid" src="{{ url_for('static', filename='img/maps/%s.png' % demo.name) }}" />
+  </div>
+  <div class="span6">
+		<h4>Map</h4>
+		<p><a href="http://wiki.teamfortress.com/wiki/Croissant">{{ demo.name }}</a></p>
+		{% if demo.summary %}
+			<h4>Description</h4>
+	    <p>{{ demo.summary|safe }}</p>
+		{% endif %}
+		{% if demo.logfile %}
+			<h4>Summmary</h4>
+	    <p><a href="http://www.logs.tf/{{ demo.logfile }}">http://www.logs.tf/{{ demo.logfile }}</a></p>
+		{% endif %}
+		
+  </div>
+</div>
+<br />
+<div class="row-fluid">
+	<div style="text-align:center;" class="span12">
+		<a class="btn btn-success btn-large" href="#"><i class="icon-download"></i> Download this demo!</a>
+		{% if session.user_admin %}
+			<a class="btn btn-danger btn-large" href="#"><i class="icon-remove"></i> Delete</a>
+		{% endif %}
+	</div>
+</div>
+<a style="text-decoration:none;" class="close-reveal-modal" onclick="$('#myModal').trigger('reveal:close');">&#215;</a>
+<script type="text/javascript">
+//$.fn.editable.defaults.mode = 'inline';
+$.fn.editable.defaults.placement = 'right';
+$('#delete').editable({
+                           type:  'text',
+                           pk:    {{ demo.id }},
+                           name:  'title',
+                           url:   'demos/field/{{ demo.id }}',  
+                           title: 'Enter the title of this match'
+                        });
+$('#summary').editable({
+                           type:  'textarea',
+                           pk:    {{ demo.id }},
+                           name:  'summary',
+                           url:   'demos/field/{{ demo.id }}',  
+                           title: 'Enter a brief summary',
+                           rows: 7
+                        });
+</script>

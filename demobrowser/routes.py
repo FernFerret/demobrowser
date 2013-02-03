@@ -192,6 +192,11 @@ def edit_demo(demo=None):
     demo = Demo.get_from_id(demo)
     return render_template('edit_demo.html', demo=demo, values={})
     
+@app.route('/demos/view/<demo>', methods=['GET'])
+def view_demo(demo=None):
+    demo = Demo.get_from_id(demo)
+    return render_template('view_demo.html', demo=demo)
+    
 @app.route('/demos/field/<demo>', methods=['POST'])
 @admin_required
 def edit_demo_field(demo=None):

@@ -4,15 +4,24 @@
   <div class="row-fluid marketing">
     {% for demo in pagination.items %}
     <div class="span3" style="text-align:center">
+			<h4>
       {% if session.user_admin %}
-        <h4><a style="text-decoration:none;" href="#" onclick="$('#myModal').reveal();editDemo('{{ demo.id }}','#myModal','#loading');" ><i class="icon-pencil icon-border"></i></a> {{ demo.map_date }}  <a style="text-decoration:none;" href="#" ><i class="icon-bar-chart icon-border"></i></a></h4>
-      {% else %}
-        <h4><a style="text-decoration:none;" href="#" onclick="$('#myModal').reveal();editDemo('{{ demo.id }}','#myModal','#loading');" ><i class="icon-pencil icon-border"></i></a> {{ demo.map_date }}</h4>
-      {% endif %}
-      <a href="{{ config.get('DEMO_DIR', '')  }}/{{ demo.demo_path }}">
-        <img src="{{ url_for('static', filename='img/maps/%s.png' % demo.map_name) }}" />
+        <a style="text-decoration:none;" href="#" onclick="$('#myModal').reveal();editDemo('{{ demo.id }}','#myModal','#loading');" ><i class="icon-pencil icon-border"></i></a>		      
+			{% endif %}
+			{% if demo.title %}  
+				{{ demo.title }}<small><br />on {{ demo.good_date() }}</small>
+			{% else %}
+				{{ demo.good_date() }}
+			{% endif %}
+			{% if demo.logfile %}
+				<a><i class="icon-bar-chart icon-border"></i></a>
+			{% endif %}
+			</h4>
+
+      <a href="#" onclick="$('#myModal').reveal();viewDemo('{{ demo.id }}','#myModal','#loading');">
+        <img class="img-rounded" src="{{ url_for('static', filename='img/maps/%s.png' % demo.name) }}" />
         <br />
-        {{ demo.map_name}}
+        {{ demo.name}}
       </a>
     </div>
     {% if loop.index % 4 == 0 and not loop.last %}
@@ -54,5 +63,5 @@
 </div>
 {% endblock main %}
 {% block javascript %}
-<script src="{{ url_for('static', filename='js/editdemo.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/editdemo.js') }}"></script>
 {% endblock %}

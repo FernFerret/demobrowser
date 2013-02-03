@@ -5,11 +5,11 @@ import re
 
 class Demo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    log_tf_id = db.Column(db.String(8))
-    demo_size = db.Column(db.String(12))
-    demo_path = db.Column(db.String(512))
-    map_name = db.Column(db.String(80))
-    map_date = db.Column(db.Date())
+    logfile = db.Column(db.String(8))
+    size = db.Column(db.String(12))
+    path = db.Column(db.String(512))
+    name = db.Column(db.String(80))
+    date = db.Column(db.Date())
     summary = db.Column(db.Text())
     title = db.Column(db.String(80))
     
@@ -19,8 +19,12 @@ class Demo(db.Model):
         
     @staticmethod
     def get_page(page, per_page=12):
-        pageobj = Demo.query.order_by(Demo.map_date.desc()).paginate(page, per_page=per_page)
+        pageobj = Demo.query.order_by(Demo.date.desc()).paginate(page, per_page=per_page)
         return pageobj
+    
+    def good_date(self):
+        # Maybe I like "%B %d, %Y" better...
+        return self.date.strftime("%d %B %Y")
     
     @staticmethod
     def create_from_name(demo_name):
@@ -33,14 +37,16 @@ class Demo(db.Model):
     @staticmethod
     def create(map_name, demopath, demo_size, map_date, tflog=None):
         # Make sure the user isn't already registered.
-        demo = Demo.query.filter_by(demo_path=demopath).first()
+        demo = Demo.query.filter_by(path=demopath).first()
         if demo:
             return (False, "Error, demo already exists!")
         new_demo = Demo()
-        new_demo.demo_size = demo_size
-        new_demo.demo_path = demopath
-        new_demo.map_name = map_name
-        new_demo.map_date = map_date
+        new_demo.size = demo_size
+        new_demo.path = demopath
+        new_demo.name = map_name
+        new_demo.date = map_date
+        # Init the title to the map_name
+        new_demo.title = map_name
         db.session.add(new_demo)
         return (True, "Success! Demo '%s' was uploaded!" % demopath)
         

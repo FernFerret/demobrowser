@@ -4,3 +4,10 @@ function editDemo(demoid, id, loading){
       $(loading).hide();
     });
 }
+
+function viewDemo(demoid, id, loading){
+    $.get('demos/view/'+demoid, function(data) {
+      $(id).html(data);
+      $(loading).hide();
+    });
+}
