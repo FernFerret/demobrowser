@@ -171,6 +171,7 @@ def settings():
 
 
 @app.route('/demos/add/', methods=['GET', 'POST'])
+@admin_required
 def add_demo():
     values = {}
     if request.method == 'POST':
@@ -184,3 +185,9 @@ def add_demo():
                 flash(msg, category='error')
             return redirect(url_for('index'))
     return render_template('add_demo.html', values=values)
+    
+@app.route('/demos/edit/<demo>', methods=['GET', 'POST'])
+@admin_required
+def edit_demo(demo=None):
+    demo = Demo.get_from_id(demo)
+    return render_template('edit_demo.html', demo=demo, values={})

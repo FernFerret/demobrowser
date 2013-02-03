@@ -1,0 +1,38 @@
+<!-- ><form class="form-horizontal" action="{{ url_for('edit_demo', demo=demo.id) }}" method="POST">
+  <fieldset>
+    <legend><h3>Modify Demo #{{ demo.id }}</h3></legend>
+    <div class="control-group  {% if 'name' in errors %}error{% endif %}">
+      <label class="control-label" for="demo_name">Demo File</label>
+      <div class="controls">
+        <input type="text" class="input-xlarge" id="demo_name" name="demo_name" placeholder="auto-19880905-XXXX-cp_gravelpit.dem" value="{{ values.get('name', '') }}"/>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-success">Add Demo</button>
+    </div>
+  </fieldset>
+</form> -->
+
+<div class="container">
+  <h3>Editing demo played on {{ demo.map_date }}</h3>
+  <div class="row-fluid">
+    <div class="span3">
+      <img class="img-rounded" src="{{ url_for('static', filename='img/maps/%s.png' % demo.map_name) }}" />
+      
+    </div>
+    <div class="span3">
+      <h4><a href="#" id="title">Test</a></h4>
+    </div>
+  </div>
+</div>
+<a style="text-decoration:none;" class="close-reveal-modal" onclick="$('#myModal').trigger('reveal:close');">&#215;</a>
+<script type="text/javascript">
+$.fn.editable.defaults.mode = 'inline';
+$('#title').editable({
+                           type:  'text',
+                           pk:    {{ demo.id }},
+                           name:  'title',
+                           url:   'post.php',  
+                           title: 'Enter the title of this match'
+                        });
+</script>

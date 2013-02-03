@@ -41,6 +41,10 @@ class Demo(db.Model):
         new_demo.map_date = map_date
         db.session.add(new_demo)
         return (True, "Success! Demo '%s' was uploaded!" % demopath)
+        
+    @staticmethod
+    def get_from_id(id):
+        return Demo.query.filter_by(id=id).first()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)

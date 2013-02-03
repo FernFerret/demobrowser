@@ -4,7 +4,11 @@
   <div class="row-fluid marketing">
     {% for demo in pagination.items %}
     <div class="span3" style="text-align:center">
-      <h4>{{ demo.map_date }}</h4>
+      {% if session.user_admin %}
+        <h4>{{ demo.map_date }} <a style="text-decoration:none;" href="#" onclick="$('#myModal').reveal();editDemo('{{ demo.id }}','#myModal','#loading');" ><i class="icon-pencil icon-border"></i></a></h4>
+      {% else %}
+        <h4>{{ demo.map_date }}</h4>
+      {% endif %}
       <a href="{{ config.get('DEMO_DIR', '')  }}/{{ demo.demo_path }}">
         <img src="{{ url_for('static', filename='img/maps/%s.png' % demo.map_name) }}" />
         <br />
@@ -30,7 +34,7 @@
           {% if page != pagination.page %}
             <li><a href="{{ url_for('demopage', page=page) }}">{{ page }}</a></li>
           {% else %}
-            <li class="active"><a href="#">{{ page }}</a></li>
+            <li class="active"><a  href="#">{{ page }}</a></li>
           {% endif %}
         {% endif %}
       {%- endfor %}
@@ -41,7 +45,16 @@
       {% endif %}
     </ul>
   </div>
+  
 {% endmacro %}
 {{ render_pagination(demos) }}
-
+<div id="myModal" class="reveal-modal">
+  <div style="text-align:center;" id="loading">
+    <h2><i class="icon-spinner icon-spin"></i> Loading...</h2>
+  </div>
+  <a style="text-decoration:none;" class="close-reveal-modal">&#215;</a>
+</div>
 {% endblock main %}
+{% block javascript %}
+<script src="{{ url_for('static', filename='js/editdemo.js') }}"></script>
+{% endblock %}
