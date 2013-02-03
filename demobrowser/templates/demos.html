@@ -5,9 +5,9 @@
     {% for demo in pagination.items %}
     <div class="span3" style="text-align:center">
       {% if session.user_admin %}
-        <h4>{{ demo.map_date }} <a style="text-decoration:none;" href="#" onclick="$('#myModal').reveal();editDemo('{{ demo.id }}','#myModal','#loading');" ><i class="icon-pencil icon-border"></i></a></h4>
+        <h4><a style="text-decoration:none;" href="#" onclick="$('#myModal').reveal();editDemo('{{ demo.id }}','#myModal','#loading');" ><i class="icon-pencil icon-border"></i></a> {{ demo.map_date }}  <a style="text-decoration:none;" href="#" ><i class="icon-bar-chart icon-border"></i></a></h4>
       {% else %}
-        <h4>{{ demo.map_date }}</h4>
+        <h4><a style="text-decoration:none;" href="#" onclick="$('#myModal').reveal();editDemo('{{ demo.id }}','#myModal','#loading');" ><i class="icon-pencil icon-border"></i></a> {{ demo.map_date }}</h4>
       {% endif %}
       <a href="{{ config.get('DEMO_DIR', '')  }}/{{ demo.demo_path }}">
         <img src="{{ url_for('static', filename='img/maps/%s.png' % demo.map_name) }}" />
@@ -30,7 +30,6 @@
       {% endif %}
       {%- for page in pagination.iter_pages() %}
         {% if page %}
-
           {% if page != pagination.page %}
             <li><a href="{{ url_for('demopage', page=page) }}">{{ page }}</a></li>
           {% else %}
@@ -45,7 +44,6 @@
       {% endif %}
     </ul>
   </div>
-  
 {% endmacro %}
 {{ render_pagination(demos) }}
 <div id="myModal" class="reveal-modal large">

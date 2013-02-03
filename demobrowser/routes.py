@@ -197,8 +197,10 @@ def edit_demo(demo=None):
 def edit_demo_field(demo=None):
     demo = Demo.get_from_id(demo)
     if request.method == 'POST':
-        name = request.form.get("name", None)
-        value = request.form.get("value", None)
+        name = request.form.get("name", '')
+        value = request.form.get("value", '')
+        if name == "summary":
+            value = value.replace("\n", "<br />")
         setattr(demo, name, value)
         db.session.commit()
         return "Yep."
