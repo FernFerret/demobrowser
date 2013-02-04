@@ -5,6 +5,8 @@ from flask import render_template, session, redirect, url_for, request, g, flash
 from functools import wraps
 from pyfile import write_pyfile
 import re
+from glob import glob
+import os
 
 _steam_id_re = re.compile('steamcommunity.com/openid/id/(.*?)$')
 
@@ -185,6 +187,18 @@ def add_demo():
                 flash(msg, category='error')
             return redirect(url_for('index'))
     return render_template('add_demo.html', values=values)
+
+@app.route('/demos/import/', methods=['GET', 'POST'])
+@admin_required
+def import_demo():
+    values = {}
+    if request.method == 'POST':
+        pass
+    demos_raw = glob(app.config.get('DEMO_INBOX', '.') + "/*.dem")
+    demos = [] 
+    for demo in demos_raw:
+        demos.append(os.path.basename(demo))
+    return render_template('import_demo.html', demos=demos)
     
 @app.route('/demos/edit/<demo>', methods=['GET'])
 @admin_required

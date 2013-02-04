@@ -1,0 +1,19 @@
+{% extends "demos.html" %}
+{% block main %}
+<form class="form-horizontal" action="{{ url_for('import_demo') }}" method="POST">
+  <fieldset>
+    <legend><h3>Import a Demo</h3></legend>
+    <div class="control-group  {% if 'name' in errors %}error{% endif %}">
+      <label class="control-label" for="Íname">Demo File</label>
+      <div class="controls">
+			  {% for demo in demos %}
+				  <input type="checkbox" name="{{ demo }}" value="soccer" /> {{ demo }}<br />
+			  {% endfor %}
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-success">Import Demo(s)</button>
+    </div>
+  </fieldset>
+</form>
+{% endblock %}
