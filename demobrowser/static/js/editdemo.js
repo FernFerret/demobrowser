@@ -1,13 +1,13 @@
-function editDemo(demoid, id, loading){
-    $.get('demos/edit/'+demoid, function(data) {
+function viewDemo(demoid, id, loading, page){
+    $.get(page, function(data) {
       $(id).html(data);
       $(loading).hide();
     });
 }
 
-function viewDemo(demoid, id, loading){
-    $.get('demos/view/'+demoid, function(data) {
-      $(id).html(data);
-      $(loading).hide();
+function deleteDemo(demoid, id, page){
+    $.post(page, { demoid: demoid }, function(data) {
+        $(id).trigger('reveal:close');
+        $('#demo'+demoid).fadeOut();
     });
 }

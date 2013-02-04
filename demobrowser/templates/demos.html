@@ -3,23 +3,21 @@
 {% macro render_pagination(pagination) %}
   <div class="row-fluid marketing">
     {% for demo in pagination.items %}
-    <div class="span3" style="text-align:center">
+    <div id="demo{{ demo.id }}" class="span3" style="text-align:center">
+    
 			<h4>
-      {% if session.user_admin %}
-        <a style="text-decoration:none;" href="#" onclick="$('#myModal').reveal();editDemo('{{ demo.id }}','#myModal','#loading');" ><i class="icon-pencil icon-border"></i></a>		      
-			{% endif %}
 			{% if demo.title %}  
 				{{ demo.title }}
 			{% else %}
 				{{ demo.name }}
 			{% endif %}
 			{% if demo.logfile %}
-				<a><i class="icon-bar-chart icon-border"></i></a>
+			<small><a target="_blank" href="http://www.logs.tf/{{ demo.logfile }}"><i class="icon-bar-chart"></i></a></small>
 			{% endif %}
 			</h4>
-
-      <a href="#" onclick="$('#myModal').reveal();viewDemo('{{ demo.id }}','#myModal','#loading');">
-        <img class="img-rounded" src="{{ url_for('static', filename='img/maps/%s.png' % demo.name) }}" />
+<a href="#" onclick="$('#myModal').reveal();viewDemo('{{ demo.id }}','#myModal','#loading', '{{ url_for('view_demo', demo=demo.id) }}');">
+      
+        <img class="img-polaroid" src="{{ url_for('static', filename='img/maps/%s.png' % demo.name) }}" />
         <br />
         on {{ demo.good_date() }}
       </a>

@@ -27,6 +27,10 @@ class Demo(db.Model):
         return self.date.strftime("%d %B %Y")
     
     @staticmethod
+    def demo_exists(demo_name):
+    	return (Demo.query.filter_by(path=demo_name).first() != None)
+
+    @staticmethod
     def create_from_name(demo_name):
         match = re.match('auto-(?P<date>[0-9]{8})-.*-(?P<map>.*)\.dem', demo_name)
         if match:
@@ -53,6 +57,15 @@ class Demo(db.Model):
     @staticmethod
     def get_from_id(id):
         return Demo.query.filter_by(id=id).first()
+
+    @staticmethod
+    def delete(id):
+        demo = Demo.query.filter_by(id=id).first()
+        if not demo:
+            return False
+        db.session.delete(demo)
+        db.session.commit()
+        return True
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)

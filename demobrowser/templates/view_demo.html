@@ -1,11 +1,17 @@
 <div class="row-fluid">
 	<div style="text-align:center;" class="span12">
 	  <h2 style="line-height: 30px;">
+            {% if session.user_admin %}
+            <a href="#" id="title">
+            {% endif %}        
 			{% if demo.title %}
 			 {{ demo.title }}
 			{% else %}
 				{{ demo.name }}
 			{% endif %}
+			{% if session.user_admin %}
+            </a>
+            {% endif %}    
 			<small><br />on {{ demo.good_date() }}</small>
 		</h2>
 	</div>
@@ -16,14 +22,23 @@
   </div>
   <div class="span6">
 		<h4>Map</h4>
-		<p><a href="http://wiki.teamfortress.com/wiki/Croissant">{{ demo.name }}</a></p>
-		{% if demo.summary %}
+		<p><a target="_blank" href="http://wiki.teamfortress.com/w/index.php?title={{ demo.name }}&redirect=yes">{{ demo.name }}</a></p>
+		{% if demo.summary or session.user_admin %}
 			<h4>Description</h4>
-	    <p>{{ demo.summary|safe }}</p>
+	    <p>
+	       {% if session.user_admin %}
+	       <a href="#" id="summary">{{ demo.summary|safe }}</a>
+	       {% else %}
+	       {{ demo.summary|safe }}
+	       {% endif %}
+	    </p>
 		{% endif %}
-		{% if demo.logfile %}
+		{% if demo.logfile or session.user_admin %}
 			<h4>Summmary</h4>
-	    <p><a href="http://www.logs.tf/{{ demo.logfile }}">http://www.logs.tf/{{ demo.logfile }}</a></p>
+			{% if session.user_admin %}
+			<p>Log ID: <a href="#" id="logfile">{{ demo.logfile }}</a> (Click this link to edit it)</p>
+			{% endif %}
+			<p><a target="_blank" href="http://www.logs.tf/{{ demo.logfile }}">logs.tf/{{ demo.logfile }}</a></p>
 		{% endif %}
 		{% if session.user_admin %}
 			<h4>Removal</h4>
@@ -34,12 +49,39 @@
 <br />
 <div class="row-fluid">
 	<div style="text-align:center;" class="span12">
-		<a class="btn btn-success btn-large" href="#"><i class="icon-download"></i> Download this demo!</a>
+		<a class="btn btn-success btn-large" href="{{ config.get('DEMO_DIR', '')  }}/{{ demo.path }}"><i class="icon-download"></i> Download this demo!</a>
 		{% if session.user_admin %}
-			<a style="display:none;" class="btn btn-danger btn-large" id="delete" href="#"><i class="icon-remove"></i> Delete</a>
+			<a onclick="deleteDemo({{ demo.id }}, '#myModal', '{{ url_for('delete_demo') }}');" style="display:none;" class="btn btn-danger btn-large" id="delete" href="#"><i class="icon-remove"></i> Delete</a>
 		{% endif %}
 	</div>
 </div>
 <a style="text-decoration:none;" class="close-reveal-modal" onclick="$('#myModal').trigger('reveal:close');">&#215;</a>
+{% if session.user_admin %}
 <script type="text/javascript">
+//$.fn.editable.defaults.mode = 'inline';
+$.fn.editable.defaults.placement = 'right';
+$('#title').editable({
+                           type:  'text',
+                           pk:    {{ demo.id }},
+                           name:  'title',
+                           url:   '{{ url_for("edit_demo_field", demo=demo.id) }}',
+                           title: 'Enter the title of this match'
+                        });
+$('#logfile').editable({
+                           type:  'text',
+                           pk:    {{ demo.id }},
+                           name:  'logfile',
+                           url:   '{{ url_for("edit_demo_field", demo=demo.id) }}',
+                           title: 'Enter the 4 digit number for logs.tf'
+                        });
+$('#summary').editable({
+                           type:  'textarea',
+                           pk:    {{ demo.id }},
+                           name:  'summary',
+                           url:   '{{ url_for("edit_demo_field", demo=demo.id) }}',
+                           title: 'Enter a brief summary',
+                           rows: 7
+                        });
 </script>
+<script src="{{ url_for('static', filename='js/editdemo.js') }}"></script>
+{% endif %}

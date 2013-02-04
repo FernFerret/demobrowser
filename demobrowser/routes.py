@@ -161,9 +161,9 @@ def settings():
             values['DEMO_PER_PAGE'] = int(request.form.get('perpage', 12))
         except ValueError:
             flash("Warning: Defaulting Demos Per Page to 12 because you didn't put a number in that textbox, idiot.", category='warn')
-        if request.form.get('cleardb', None) is not None and values['DEBUG'] is True:
-            db.drop_all()
-            db.create_all()
+        #if request.form.get('cleardb', None) is not None and values['DEBUG'] is True:
+        #    db.drop_all()
+        #    db.create_all()
         write_pyfile(app.config['CFG_FILE'], values)
         # Now set our config values properly
         for key, value in values.iteritems():
@@ -193,24 +193,33 @@ def add_demo():
 def import_demo():
     values = {}
     if request.method == 'POST':
-        pass
+        for demo_name in request.form:
+            success, msg = Demo.create_from_name(demo_name)
+            if success:
+                flash(msg, category='success')
+                db.session.commit()
+            else:
+                flash(msg, category='error')
+
     demos_raw = glob(app.config.get('DEMO_INBOX', '.') + "/*.dem")
-    demos = [] 
+    demos = []
     for demo in demos_raw:
-        demos.append(os.path.basename(demo))
+        if not Demo.demo_exists(os.path.basename(demo)):
+            demos.append(os.path.basename(demo))
     return render_template('import_demo.html', demos=demos)
-    
-@app.route('/demos/edit/<demo>', methods=['GET'])
-@admin_required
-def edit_demo(demo=None):
-    demo = Demo.get_from_id(demo)
-    return render_template('edit_demo.html', demo=demo, values={})
-    
+
 @app.route('/demos/view/<demo>', methods=['GET'])
 def view_demo(demo=None):
     demo = Demo.get_from_id(demo)
     return render_template('view_demo.html', demo=demo)
-    
+
+@app.route('/demos/delete/', methods=['POST'])
+def delete_demo():
+    if request.method == 'POST':
+        demoid = request.form.get("demoid", None)
+        Demo.delete(int(demoid))
+    return "Yay."
+
 @app.route('/demos/field/<demo>', methods=['POST'])
 @admin_required
 def edit_demo_field(demo=None):
