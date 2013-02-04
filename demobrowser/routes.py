@@ -204,6 +204,11 @@ def edit_demo_field(demo=None):
     if request.method == 'POST':
         name = request.form.get("name", '')
         value = request.form.get("value", '')
+        if name == "delete":
+            # special case,  we need to redirect
+            print "Yay!"
+            flash('Success! Demo %s was deleted!' % demo.title, category='success')
+            return redirect(url_for('index'))
         if name == "summary":
             value = value.replace("\n", "<br />")
         setattr(demo, name, value)

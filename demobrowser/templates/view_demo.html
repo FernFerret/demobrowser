@@ -25,6 +25,11 @@
 			<h4>Summmary</h4>
 	    <p><a href="http://www.logs.tf/{{ demo.logfile }}">http://www.logs.tf/{{ demo.logfile }}</a></p>
 		{% endif %}
+
+		{% if session.user_admin %}
+			<h4>Removal</h4>
+	    <p><a id="showdelete" href="#" onclick="$('#delete').toggle();">Show/Hide Delete Button</a></p>
+		{% endif %}
 		
   </div>
 </div>
@@ -33,27 +38,10 @@
 	<div style="text-align:center;" class="span12">
 		<a class="btn btn-success btn-large" href="#"><i class="icon-download"></i> Download this demo!</a>
 		{% if session.user_admin %}
-			<a class="btn btn-danger btn-large" href="#"><i class="icon-remove"></i> Delete</a>
+			<a style="display:none;" class="btn btn-danger btn-large" id="delete" href="#"><i class="icon-remove"></i> Delete</a>
 		{% endif %}
 	</div>
 </div>
 <a style="text-decoration:none;" class="close-reveal-modal" onclick="$('#myModal').trigger('reveal:close');">&#215;</a>
 <script type="text/javascript">
-//$.fn.editable.defaults.mode = 'inline';
-$.fn.editable.defaults.placement = 'right';
-$('#delete').editable({
-                           type:  'text',
-                           pk:    {{ demo.id }},
-                           name:  'title',
-                           url:   'demos/field/{{ demo.id }}',  
-                           title: 'Enter the title of this match'
-                        });
-$('#summary').editable({
-                           type:  'textarea',
-                           pk:    {{ demo.id }},
-                           name:  'summary',
-                           url:   'demos/field/{{ demo.id }}',  
-                           title: 'Enter a brief summary',
-                           rows: 7
-                        });
 </script>

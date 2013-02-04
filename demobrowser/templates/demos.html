@@ -9,9 +9,9 @@
         <a style="text-decoration:none;" href="#" onclick="$('#myModal').reveal();editDemo('{{ demo.id }}','#myModal','#loading');" ><i class="icon-pencil icon-border"></i></a>		      
 			{% endif %}
 			{% if demo.title %}  
-				{{ demo.title }}<small><br />on {{ demo.good_date() }}</small>
+				{{ demo.title }}
 			{% else %}
-				{{ demo.good_date() }}
+				{{ demo.name }}
 			{% endif %}
 			{% if demo.logfile %}
 				<a><i class="icon-bar-chart icon-border"></i></a>
@@ -21,7 +21,7 @@
       <a href="#" onclick="$('#myModal').reveal();viewDemo('{{ demo.id }}','#myModal','#loading');">
         <img class="img-rounded" src="{{ url_for('static', filename='img/maps/%s.png' % demo.name) }}" />
         <br />
-        {{ demo.name}}
+        on {{ demo.good_date() }}
       </a>
     </div>
     {% if loop.index % 4 == 0 and not loop.last %}
