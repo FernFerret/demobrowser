@@ -36,7 +36,7 @@ class Demo(db.Model):
 
     @staticmethod
     def demo_exists(demo_name):
-    	return (Demo.query.filter_by(path=demo_name).first() != None)
+        return (Demo.query.filter_by(path=demo_name).first() is not None)
 
     @staticmethod
     def create_from_name(demo_name):
