@@ -222,9 +222,13 @@ def view_demo(demo=None):
     if demo is None:
         return redirect(url_for('index'))
     demo = Demo.get_from_id(demo)
+    if demo is None:
+        flash('Sorry I couldn\'t find that demo...', category='warning')
+        return redirect(url_for('index'))
     return render_template('view_demo.html', demo=demo, pages=Demo.get_page(demo.id, 1))
 
 @app.route('/demos/delete/', methods=['POST'])
+@admin_required
 def delete_demo():
     if request.method == 'POST':
         demoid = request.form.get("demoid", None)
@@ -240,7 +244,6 @@ def edit_demo_field(demo=None):
         value = request.form.get("value", '')
         if name == "delete":
             # special case,  we need to redirect
-            print "Yay!"
             flash('Success! Demo %s was deleted!' % demo.title, category='success')
             return redirect(url_for('index'))
         if name == "summary":
