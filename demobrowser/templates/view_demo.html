@@ -1,33 +1,36 @@
 {% extends "layout-fixed.html" %}
 {% block main %}
-  {% set fullpage = True %}
+
   <div class="row">
-    <div class="span8 offset2">
-      <div class="hero-unit">
+    <div class="span10 offset1">
+      <ul class="pager" style="margin-top:0px">
+        {% if next %}
+          <li class="previous">
+            <a title="View Demo: {{ next.title }}" href="{{ url_for('view_demo', demo=next.id) }}"><i class="icon-angle-left"></i> Newer</a>
+          </li>
+        {% else %}
+          <li class="previous disabled">
+            <a href="#"><i class="icon-angle-left"></i> Newer</a>
+          </li>
+        {% endif %}
+        <li>
+          <a title="Back to Demo Grid" href="{{ url_for('demopage', page=demo.get_page_of(config.get('DEMO_PER_PAGE', 12))) }}"><i class="icon-th"></i></a>
+        </li>
+        {% if prev %}
+          <li class="next">
+            <a title="View Demo: {{ prev.title }}" href="{{ url_for('view_demo', demo=prev.id) }}">Older <i class="icon-angle-right"></i></a>
+          </li>
+        {% else %}
+          <li class="next disabled">
+            <a href="#" onclick="e.preventDefault();" class="">Older <i class="icon-angle-right"></i></a>
+          </li>
+        {% endif %}
+      </ul>
+      <div class="hero-unit" style="padding:30px 60px 60px 60px">
         {% include "view_demo_raw.html" %}
       </div>
     </div>
   </div>
-  <ul class="pager">
-    {% if prev %}
-      <li class="previous">
-        <a href="{{ url_for('view_demo', demo=prev.id) }}"><i class="icon-angle-left"></i> Older</a>
-      </li>
-    {% else %}
-      <li class="previous disabled">
-        <a href="#" class="disabled"><i class="icon-angle-left"></i> Older</a>
-      </li>
-    {% endif %}
-    {% if next %}
-      <li class="next">
-        <a href="{{ url_for('view_demo', demo=next.id) }}">Newer <i class="icon-angle-right"></i></a>
-      </li>
-    {% else %}
-      <li class="next disabled">
-        <a href="#" onclick="e.preventDefault();" class="">Newer <i class="icon-angle-right"></i></a>
-      </li>
-    {% endif %}
-  </ul>
 {% endblock main %}
 {% block javascript %}
   {% if session.user_admin %}
