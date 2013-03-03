@@ -1,56 +1,66 @@
 {% extends "layout-fixed.html" %}
 {% block main %}
 {% macro render_pagination(pagination) %}
-  <div class="row-fluid marketing">
-    {% for demo in pagination.items %}
-    <div id="demo{{ demo.id }}" class="span3" style="text-align:center">
-    
-			<h4>
-			{% if demo.title %}  
-				{{ demo.title }}
-			{% else %}
-				{{ demo.name }}
-			{% endif %}
-			{% if demo.logfile %}
-			<small><a target="_blank" href="http://www.logs.tf/{{ demo.logfile }}"><i class="icon-bar-chart"></i></a></small>
-			{% endif %}
-			</h4>
-<a href="#" onclick="$('#myModal').reveal();viewDemo('{{ demo.id }}','#myModal','#loading', '{{ url_for('view_demo', demo=demo.id) }}');">
-      
-        <img class="img-polaroid" src="{{ url_for('static', filename='img/maps/%s.png' % demo.name) }}" />
-        <br />
-        on {{ demo.good_date() }}
-      </a>
-    </div>
-    {% if loop.index % 4 == 0 and not loop.last %}
-      </div>
-      <div class="row-fluid marketing">
-     {% endif %}
-    {% endfor %}
-  </div>
-  <div class="pagination pagination-centered">
-    <ul>
-      {% if pagination.has_prev %}
-        <li><a href="{{ url_for('demopage', page=pagination.prev_num) }}"><i class="icon-angle-left"></i></a></li>
-      {% else %}
-        <li class="disabled"><a href="#"><i class="icon-angle-left"></i></a></li>
-      {% endif %}
-      {%- for page in pagination.iter_pages() %}
-        {% if page %}
-          {% if page != pagination.page %}
-            <li><a href="{{ url_for('demopage', page=page) }}">{{ page }}</a></li>
+    {% if not pagination.items %}
+      <div class="hero-unit">
+        {% if g.user.id %}
+          <h3 style="text-align:center;">No Demos. <small>Perhaps you like to <a href="{{ url_for('import_demo') }}">import one</a>?</small></h3>
           {% else %}
-            <li class="active"><a  href="#">{{ page }}</a></li>
+            <h3 style="text-align:center;">No Demos. <small>Check back later!</small></h3>
           {% endif %}
+      </div>
+    {% else %}
+      <div class="row-fluid marketing">
+      {% for demo in pagination.items %}
+      <div id="demo{{ demo.id }}" class="span3" style="text-align:center">
+
+  			<h4>
+  			{% if demo.title %}
+  				{{ demo.title }}
+  			{% else %}
+  				{{ demo.name }}
+  			{% endif %}
+  			{% if demo.logfile %}
+  			<small><a target="_blank" href="http://www.logs.tf/{{ demo.logfile }}"><i class="icon-bar-chart"></i></a></small>
+  			{% endif %}
+  			</h4>
+  <a href="#" onclick="$('#myModal').reveal();viewDemo('{{ demo.id }}','#myModal','#loading', '{{ url_for('view_demo', demo=demo.id) }}');">
+
+          <img class="img-polaroid" src="{{ url_for('static', filename='img/maps/%s.png' % demo.name) }}" />
+          <br />
+          on {{ demo.good_date() }}
+        </a>
+      </div>
+      {% if loop.index % 4 == 0 and not loop.last %}
+        </div>
+        <div class="row-fluid marketing">
+       {% endif %}
+      {% endfor %}
+    </div>
+    <div class="pagination pagination-centered">
+      <ul>
+        {% if pagination.has_prev %}
+          <li><a href="{{ url_for('demopage', page=pagination.prev_num) }}"><i class="icon-angle-left"></i></a></li>
+        {% else %}
+          <li class="disabled"><a href="#"><i class="icon-angle-left"></i></a></li>
         {% endif %}
-      {%- endfor %}
-      {% if pagination.has_next %}
-        <li><a href="{{ url_for('demopage', page=pagination.next_num) }}"><i class="icon-angle-right"></i></a></li>
-      {% else %}
-        <li class="disabled"><a href="#"><i class="icon-angle-right"></i></a></li>
-      {% endif %}
-    </ul>
-  </div>
+        {%- for page in pagination.iter_pages() %}
+          {% if page %}
+            {% if page != pagination.page %}
+              <li><a href="{{ url_for('demopage', page=page) }}">{{ page }}</a></li>
+            {% else %}
+              <li class="active"><a  href="#">{{ page }}</a></li>
+            {% endif %}
+          {% endif %}
+        {%- endfor %}
+        {% if pagination.has_next %}
+          <li><a href="{{ url_for('demopage', page=pagination.next_num) }}"><i class="icon-angle-right"></i></a></li>
+        {% else %}
+          <li class="disabled"><a href="#"><i class="icon-angle-right"></i></a></li>
+        {% endif %}
+      </ul>
+    </div>
+  {% endif %}
 {% endmacro %}
 {{ render_pagination(demos) }}
 <div id="myModal" class="reveal-modal large">
