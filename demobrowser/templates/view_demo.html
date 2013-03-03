@@ -10,13 +10,13 @@
   </div>
   <div class="pagination pagination-centered">
     <ul>
-      {% if pages.has_prev %}
-        <li><a href="{{ url_for('view_demo', demo=demo.id) }}"><i class="icon-angle-left"></i></a></li>
+      {% if prev %}
+        <li><a href="{{ url_for('view_demo', demo=prev.id) }}"><i class="icon-angle-left"></i></a></li>
       {% else %}
         <li class="disabled"><a href="#"><i class="icon-angle-left"></i></a></li>
       {% endif %}
-      {% if pages.has_next %}
-        <li><a href="{{ url_for('view_demo', demo=demo.id) }}"><i class="icon-angle-right"></i></a></li>
+      {% if next %}
+        <li><a href="{{ url_for('view_demo', demo=next.id) }}"><i class="icon-angle-right"></i></a></li>
       {% else %}
         <li class="disabled"><a href="#"><i class="icon-angle-right"></i></a></li>
       {% endif %}

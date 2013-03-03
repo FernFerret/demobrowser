@@ -27,6 +27,14 @@ class Demo(db.Model):
         return self.date.strftime("%d %B %Y")
 
     @staticmethod
+    def previous_by_date(demo_date):
+    	return Demo.query.order_by(Demo.date.desc()).filter(Demo.date < demo_date).first()
+
+    @staticmethod
+    def next_by_date(demo_date):
+    	return Demo.query.order_by(Demo.date.asc()).filter(Demo.date > demo_date).first()
+
+    @staticmethod
     def demo_exists(demo_name):
     	return (Demo.query.filter_by(path=demo_name).first() != None)
 
