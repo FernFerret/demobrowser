@@ -12,20 +12,20 @@ class Demo(db.Model):
     date = db.Column(db.Date())
     summary = db.Column(db.Text())
     title = db.Column(db.String(80))
-    
+
     @staticmethod
     def get_all():
         return Demo.query.all()
-        
+
     @staticmethod
     def get_page(page, per_page=12):
         pageobj = Demo.query.order_by(Demo.date.desc()).paginate(page, per_page=per_page)
         return pageobj
-    
+
     def good_date(self):
         # Maybe I like "%B %d, %Y" better...
         return self.date.strftime("%d %B %Y")
-    
+
     @staticmethod
     def demo_exists(demo_name):
     	return (Demo.query.filter_by(path=demo_name).first() != None)
@@ -38,6 +38,7 @@ class Demo(db.Model):
             thedate = datetime(int(strdate[0:4]), int(strdate[4:6]), int(strdate[6:8]))
             return Demo.create(match.groupdict()['map'], demo_name, "27.45 MB", thedate)
         return (False, "Whoops, something went wrong... :( %s" % demo_name)
+
     @staticmethod
     def create(map_name, demopath, demo_size, map_date, tflog=None):
         # Make sure the user isn't already registered.
@@ -53,7 +54,7 @@ class Demo(db.Model):
         new_demo.title = map_name
         db.session.add(new_demo)
         return (True, "Success! Demo '%s' was uploaded!" % demopath)
-        
+
     @staticmethod
     def get_from_id(id):
         return Demo.query.filter_by(id=id).first()
@@ -89,7 +90,7 @@ class User(db.Model):
             user.admin = True
             db.session.add(user)
             print "Creating initial user - %s" % steam_id
-            return user 
+            return user
         user = User.query.filter_by(steam_id=steam_id).first()
         if not user:
             return False

@@ -2,16 +2,24 @@
 {% block main %}
   {% set fullpage = True %}
   <div class="row">
-    <div class="span1">
-      <p class="text-center" style="margin-top:200px;"><a href="#"><i class="icon-angle-left icon-4x"></i></a></p>
-    </div>
-    <div class="span10">
+    <div class="span8 offset2">
       <div class="hero-unit">
         {% include "view_demo_raw.html" %}
       </div>
     </div>
-    <div class="span1">
-      <p style="margin-top:200px;"><a href="#"><i class="icon-angle-left icon-4x"></i></a></p>
-    </div>
+  </div>
+  <div class="pagination pagination-centered">
+    <ul>
+      {% if pages.has_prev %}
+        <li><a href="{{ url_for('view_demo', demo=demo.id) }}"><i class="icon-angle-left"></i></a></li>
+      {% else %}
+        <li class="disabled"><a href="#"><i class="icon-angle-left"></i></a></li>
+      {% endif %}
+      {% if pages.has_next %}
+        <li><a href="{{ url_for('view_demo', demo=demo.id) }}"><i class="icon-angle-right"></i></a></li>
+      {% else %}
+        <li class="disabled"><a href="#"><i class="icon-angle-right"></i></a></li>
+      {% endif %}
+    </ul>
   </div>
 {% endblock main %}

@@ -24,7 +24,7 @@
   			<small><a target="_blank" href="http://www.logs.tf/{{ demo.logfile }}"><i class="icon-bar-chart"></i></a></small>
   			{% endif %}
   			</h4>
-  <a href="#" onclick="$('#myModal').reveal();viewDemo('{{ demo.id }}','#myModal','#loading', '{{ url_for('view_demo', demo=demo.id) }}');">
+  <a href="#" onclick="$('#myModal').reveal();viewDemo('{{ demo.id }}','#myModal','#loading', '{{ url_for('view_demo_raw', demo=demo.id) }}');">
 
           <img class="img-polaroid" src="{{ url_for('static', filename='img/maps/%s.png' % demo.name) }}" />
           <br />

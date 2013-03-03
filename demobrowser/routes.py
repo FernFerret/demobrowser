@@ -208,8 +208,8 @@ def import_demo():
             demos.append(os.path.basename(demo))
     return render_template('import_demo.html', demos=demos)
 
-@app.route('/demos/view/<demo>', methods=['POST'])
-def view_demo_no_css(demo=None):
+@app.route('/demos/view_raw/<demo>', methods=['GET'])
+def view_demo_raw(demo=None):
     # This gets the version that doesn't include the headers.
     if demo is None:
         return redirect(url_for('index'))
@@ -222,7 +222,7 @@ def view_demo(demo=None):
     if demo is None:
         return redirect(url_for('index'))
     demo = Demo.get_from_id(demo)
-    return render_template('view_demo.html', demo=demo)
+    return render_template('view_demo.html', demo=demo, pages=Demo.get_page(demo.id, 1))
 
 @app.route('/demos/delete/', methods=['POST'])
 def delete_demo():
