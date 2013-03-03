@@ -208,8 +208,19 @@ def import_demo():
             demos.append(os.path.basename(demo))
     return render_template('import_demo.html', demos=demos)
 
+@app.route('/demos/view/<demo>', methods=['POST'])
+def view_demo_no_css(demo=None):
+    # This gets the version that doesn't include the headers.
+    if demo is None:
+        return redirect(url_for('index'))
+    demo = Demo.get_from_id(demo)
+    return render_template('view_demo_raw.html', demo=demo)
+
 @app.route('/demos/view/<demo>', methods=['GET'])
 def view_demo(demo=None):
+    # This renders the permalink
+    if demo is None:
+        return redirect(url_for('index'))
     demo = Demo.get_from_id(demo)
     return render_template('view_demo.html', demo=demo)
 

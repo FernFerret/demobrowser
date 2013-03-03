@@ -1,0 +1,89 @@
+<div class="row-fluid">
+	<div style="text-align:center;" class="span12">
+	  <h2 style="line-height: 30px;">
+            {% if session.user_admin %}
+            <a href="#" id="title">
+            {% endif %}
+			{% if demo.title %}
+			 {{ demo.title }}
+			{% else %}
+				{{ demo.name }}
+			{% endif %}
+			{% if session.user_admin %}
+            </a>
+            {% endif %}
+			<small><br />on {{ demo.good_date() }}</small>
+		</h2>
+	</div>
+</div>
+<div class="row-fluid">
+  <div class="span6">
+    <img class="img-polaroid" src="{{ url_for('static', filename='img/maps/%s.png' % demo.name) }}" />
+  </div>
+  <div class="span6">
+		<h4>Map</h4>
+		<p><a target="_blank" href="http://wiki.teamfortress.com/w/index.php?title={{ demo.name }}&amp;redirect=yes">{{ demo.name }}</a></p>
+		{% if demo.summary or session.user_admin %}
+			<h4>Description</h4>
+	    <p>
+	       {% if session.user_admin %}
+	       <a href="#" id="summary">{{ demo.summary|safe }}</a>
+	       {% else %}
+	       {{ demo.summary|safe }}
+	       {% endif %}
+	    </p>
+		{% endif %}
+		{% if demo.logfile or session.user_admin %}
+			<h4>Summmary</h4>
+			{% if session.user_admin %}
+			<p>Log ID: <a href="#" id="logfile">{{ demo.logfile }}</a> (Click this link to edit it)</p>
+			{% endif %}
+			<p><a target="_blank" href="http://www.logs.tf/{{ demo.logfile }}">logs.tf/{{ demo.logfile }}</a></p>
+		{% endif %}
+    <h4>Permalink</h4>
+    <a title="{{ demo.title }}" href="{{ url_for('view_demo', demo=demo.id) }}">http://{{ url_for('view_demo', demo=demo.id) }}</a>
+  </div>
+</div>
+<br />
+<div class="row-fluid">
+	<div style="text-align:center;" class="span12">
+		<a class="btn btn-success btn-large" href="{{ config.get('DEMO_DIR', '')  }}/{{ demo.path }}"><i class="icon-download"></i> Download this demo!</a>
+		{% if session.user_admin %}
+    <a id="deletedemo" href="#" class="btn btn-danger btn-large" data-placement="top" data-toggle="popover" data-html="true" data-content="<p>Are you sure you really want to remove <strong>{{demo.title}}</strong>?</p><p>This <strong>won't</strong> delete the demo file!</p><div style='text-align:center'><button onclick='$(&quot;#deletedemo&quot;).popover(&quot;hide&quot;);' class='btn btn-info'>No!</button> <button onclick='deleteDemo({{ demo.id }}, &quot;#myModal&quot;, &quot;{{ url_for('delete_demo') }}&quot;);' class='btn btn-danger'>Yes, remove it!</button></div>" data-original-title="<strong class='text-error'>Really Delete?</strong>"><i class="icon-remove"></i> Remove Demo</a>
+    <!-- ><button onclick="deleteDemo({{ demo.id }}, '#myModal', '{{ url_for('delete_demo') }}');" class="dropdown-menu pull-right btn-large btn-danger" style="color:#FFF;" id="delete" href="#"><i class="icon-remove"></i> Delete this demo.</button> -->
+		{% endif %}
+	</div>
+</div>
+{% if not fullpage %}
+<a style="text-decoration:none;" class="close-reveal-modal" onclick="$('#myModal').trigger('reveal:close');">&#215;</a>
+{% endif %}
+{% if session.user_admin %}
+<script type="text/javascript">
+//$.fn.editable.defaults.mode = 'inline';
+$.fn.editable.defaults.placement = 'right';
+$('#deletedemo').popover();
+$('#title').editable({
+                           type:  'text',
+                           pk:    {{ demo.id }},
+                           name:  'title',
+                           url:   '{{ url_for("edit_demo_field", demo=demo.id) }}',
+                           title: 'Enter the title of this match'
+                        });
+$('#logfile').editable({
+                           type:  'text',
+                           pk:    {{ demo.id }},
+                           name:  'logfile',
+                           url:   '{{ url_for("edit_demo_field", demo=demo.id) }}',
+                           title: 'Enter the 4 digit number for logs.tf'
+                        });
+$('#summary').editable({
+                           type:  'textarea',
+                           pk:    {{ demo.id }},
+                           name:  'summary',
+                           url:   '{{ url_for("edit_demo_field", demo=demo.id) }}',
+                           title: 'Enter a brief summary',
+                           rows: 7
+                        });
+</script>
+<script src="{{ url_for('static', filename='js/editdemo.js') }}"></script>
+{% endif %}
