@@ -45,14 +45,11 @@
 <br />
 <div class="row-fluid">
 	<div style="text-align:center;" class="span12">
-    <div class="btn-group">
-  		<a class="btn btn-success btn-large" href="{{ config.get('DEMO_DIR', '')  }}/{{ demo.path }}"><i class="icon-download"></i> Download this demo!</a>
-  		{% if session.user_admin %}
-      <a id="deletedemo" href="#" class="btn btn-danger btn-large" data-placement="top" data-toggle="popover" data-html="true" data-content="Are you sure you really want to remove <strong>{{demo.title}}</strong>?<div style='text-align:center'><button onclick='$(&quot;#deletedemo&quot;).popover(&quot;hide&quot;);' class='btn btn-info'>No!</button> <button onclick='deleteDemo({{ demo.id }}, &quot;#myModal&quot;, &quot;{{ url_for('delete_demo') }}&quot;);' class='btn btn-danger'>Yes! Blow it away!</button></div>" data-original-title="<strong class='text-error'>Really Delete?</strong>"><i class="icon-remove"></i></a>
-      <!-- ><button onclick="deleteDemo({{ demo.id }}, '#myModal', '{{ url_for('delete_demo') }}');" class="dropdown-menu pull-right btn-large btn-danger" style="color:#FFF;" id="delete" href="#"><i class="icon-remove"></i> Delete this demo.</button> -->
-  		{% endif %}
-  </div>
-
+		<a class="btn btn-success btn-large" href="{{ config.get('DEMO_DIR', '')  }}/{{ demo.path }}"><i class="icon-download"></i> Download this demo!</a>
+		{% if session.user_admin %}
+    <a id="deletedemo" href="#" class="btn btn-danger btn-large" data-placement="top" data-toggle="popover" data-html="true" data-content="<p>Are you sure you really want to remove <strong>{{demo.title}}</strong>?</p><p>This <strong>won't</strong> delete the demo file!</p><div style='text-align:center'><button onclick='$(&quot;#deletedemo&quot;).popover(&quot;hide&quot;);' class='btn btn-info'>No!</button> <button onclick='deleteDemo({{ demo.id }}, &quot;#myModal&quot;, &quot;{{ url_for('delete_demo') }}&quot;);' class='btn btn-danger'>Yes, remove it!</button></div>" data-original-title="<strong class='text-error'>Really Delete?</strong>"><i class="icon-remove"></i> Remove Demo</a>
+    <!-- ><button onclick="deleteDemo({{ demo.id }}, '#myModal', '{{ url_for('delete_demo') }}');" class="dropdown-menu pull-right btn-large btn-danger" style="color:#FFF;" id="delete" href="#"><i class="icon-remove"></i> Delete this demo.</button> -->
+		{% endif %}
 	</div>
 </div>
 <a style="text-decoration:none;" class="close-reveal-modal" onclick="$('#myModal').trigger('reveal:close');">&#215;</a>
