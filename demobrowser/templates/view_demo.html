@@ -1,26 +1,28 @@
 {% extends "layout-fixed.html" %}
 {% block main %}
   {% set fullpage = True %}
+  {#
+  <div class="pagination pagination-centered">
+    <ul>
+      {% if next %}
+        <li><a href="{{ url_for('view_demo', demo=next.id) }}"><i class="icon-angle-left"></i> Next</a></li>
+      {% else %}
+        <li class="disabled"><a href="#"><i class="icon-angle-left"></i></a></li>
+      {% endif %}
+      {% if prev %}
+        <li><a href="{{ url_for('view_demo', demo=prev.id) }}">Prev <i class="icon-angle-right"></i></a></li>
+      {% else %}
+        <li class="disabled"><a href="#"><i class="icon-angle-right"></i></a></li>
+      {% endif %}
+    </ul>
+  </div>
+  #}
   <div class="row">
     <div class="span8 offset2">
       <div class="hero-unit">
         {% include "view_demo_raw.html" %}
       </div>
     </div>
-  </div>
-  <div class="pagination pagination-centered">
-    <ul>
-      {% if next %}
-        <li><a href="{{ url_for('view_demo', demo=next.id) }}"><i class="icon-angle-left"></i></a></li>
-      {% else %}
-        <li class="disabled"><a href="#"><i class="icon-angle-left"></i></a></li>
-      {% endif %}
-      {% if prev %}
-        <li><a href="{{ url_for('view_demo', demo=prev.id) }}"><i class="icon-angle-right"></i></a></li>
-      {% else %}
-        <li class="disabled"><a href="#"><i class="icon-angle-right"></i></a></li>
-      {% endif %}
-    </ul>
   </div>
 {% endblock main %}
 {% block javascript %}
