@@ -27,9 +27,8 @@
   <a href="#" onclick="$('#myModal').reveal();viewDemo('{{ demo.id }}','#myModal','#loading', '{{ url_for('view_demo_raw', demo=demo.id) }}');">
 
           <img class="img-polaroid" src="{{ url_for('static', filename='img/maps/%s.png' % demo.name) }}" />
-          <br />
-          on {{ demo.good_date() }}
-        </a>
+          <br />on {{ demo.good_date() }}</a><p class="pull-right" style="margin-right:-10px;"><a title="Permalink for {{ demo.title }}" style="text-decoration:none;" href="{{ url_for('view_demo', demo=demo.id)}}"><i class="icon-link"></i></a></p>
+
       </div>
       {% if loop.index % 4 == 0 and not loop.last %}
         </div>

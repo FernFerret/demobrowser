@@ -11,3 +11,9 @@ function deleteDemo(demoid, id, page){
         $('#demo'+demoid).fadeOut();
     });
 }
+
+function deleteDemoRedirect(demoid, id, page, redirect){
+    $.post(page, { demoid: demoid }, function(data) {
+      window.location = redirect;
+    });
+}

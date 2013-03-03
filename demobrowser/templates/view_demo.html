@@ -23,3 +23,35 @@
     </ul>
   </div>
 {% endblock main %}
+{% block javascript %}
+  {% if session.user_admin %}
+    <script src="{{ url_for('static', filename='js/bootstrap-editable.js') }}"></script>
+    <script type="text/javascript">
+    $.fn.editable.defaults.placement = 'right';
+    $('#deletedemo').popover();
+    $('#title').editable({
+                               type:  'text',
+                               pk:    {{ demo.id }},
+                               name:  'title',
+                               url:   '{{ url_for("edit_demo_field", demo=demo.id) }}',
+                               title: 'Enter the title of this match'
+                            });
+    $('#logfile').editable({
+                               type:  'text',
+                               pk:    {{ demo.id }},
+                               name:  'logfile',
+                               url:   '{{ url_for("edit_demo_field", demo=demo.id) }}',
+                               title: 'Enter the Log ID number for logs.tf'
+                            });
+    $('#summary').editable({
+                               type:  'textarea',
+                               pk:    {{ demo.id }},
+                               name:  'summary',
+                               url:   '{{ url_for("edit_demo_field", demo=demo.id) }}',
+                               title: 'Enter a brief summary',
+                               rows: 7
+                            });
+    </script>
+    <script src="{{ url_for('static', filename='js/editdemo.js') }}"></script>
+  {% endif %}
+{% endblock %}

@@ -55,17 +55,17 @@
         padding-bottom: 40px;
       }
       ul.nav li.dropdown:hover > ul.dropdown-menu{
-          display: block; 
-          margin: 0px;   
+          display: block;
+          margin: 0px;
       }
       ul.dropdown-menu{
-          margin: 0px;   
+          margin: 0px;
       }
 
       .navbar .nav > li > .dropdown-menu:after {
         content: none;
       }
-      
+
       .navbar .nav > li > .dropdown-menu:before {
         content: none;
       }
@@ -73,7 +73,7 @@
         width:193px;
       }
       </style>
-      
+
     <!--
 		Put this back in when we enable mobile mode.
     @media (max-width: 979px) {
@@ -157,7 +157,6 @@
     <script src="{{ url_for('static', filename='js/jquery-1.9.0.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
     <script src="{{ url_for('static', filename='js/jquery.foundation.reveal.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap-editable.js') }}"></script>
     {% block javascript %}{% endblock %}
   </body>
 </html>
