@@ -2,6 +2,8 @@ from demobrowser import db
 from pprint import pprint
 from datetime import datetime
 import re
+from sqlalchemy import or_, and_
+import math
 
 class Demo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -19,20 +21,32 @@ class Demo(db.Model):
 
     @staticmethod
     def get_page(page, per_page=12):
-        pageobj = Demo.query.order_by(Demo.date.desc()).paginate(page, per_page=per_page)
-        return pageobj
+        return Demo.query.order_by(Demo.date.desc(), Demo.id.desc()).paginate(page, per_page=per_page)
+
+    def get_page_of(self, per_page=12):
+        # Get the number of items NEWER than this one
+        sweet_query = Demo.query.order_by(Demo.date.asc(), Demo.id.asc()).filter(or_(Demo.date > self.date,
+                                                              and_(Demo.date >= self.date,
+                                                                   Demo.id > self.id)))
+        # Now, calculate the page that this guy is on!
+        return int(math.ceil((sweet_query.count() + 1) / float(per_page)))
 
     def good_date(self):
         # Maybe I like "%B %d, %Y" better...
         return self.date.strftime("%d %B %Y")
 
-    @staticmethod
-    def previous_by_date(demo_date):
-    	return Demo.query.order_by(Demo.date.desc()).filter(Demo.date < demo_date).first()
+    def previous_by_date(self):
+        sweet_query = Demo.query.order_by(Demo.date.desc(), Demo.id.desc()).filter(or_(Demo.date < self.date,
+                                                              and_(Demo.date <= self.date,
+                                                                   Demo.id < self.id)))
+    	return sweet_query.first()
 
-    @staticmethod
-    def next_by_date(demo_date):
-    	return Demo.query.order_by(Demo.date.asc()).filter(Demo.date > demo_date).first()
+
+    def next_by_date(self):
+        sweet_query = Demo.query.order_by(Demo.date.asc(), Demo.id.asc()).filter(or_(Demo.date > self.date,
+                                                              and_(Demo.date >= self.date,
+                                                                   Demo.id > self.id)))
+    	return sweet_query.first()
 
     @staticmethod
     def demo_exists(demo_name):
@@ -75,6 +89,9 @@ class Demo(db.Model):
         db.session.delete(demo)
         db.session.commit()
         return True
+
+    def __repr__(self):
+        return "<(Demo:%s - Title: %s, Date: %s, Map: %s)>" % (self.id, self.title, self.date, self.name)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)

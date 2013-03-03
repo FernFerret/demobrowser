@@ -208,14 +208,6 @@ def import_demo():
             demos.append(os.path.basename(demo))
     return render_template('import_demo.html', demos=demos)
 
-@app.route('/demos/view_raw/<demo>', methods=['GET'])
-def view_demo_raw(demo=None):
-    # This gets the version that doesn't include the headers.
-    if demo is None:
-        return redirect(url_for('index'))
-    demo = Demo.get_from_id(demo)
-    return render_template('view_demo_raw.html', demo=demo)
-
 @app.route('/view/<demo>', methods=['GET'])
 def view_demo(demo=None):
     # This renders the permalink
@@ -226,7 +218,7 @@ def view_demo(demo=None):
         flash('Sorry I couldn\'t find that demo...', category='warning')
         return redirect(url_for('index'))
     # TODO: Do SQL magic to get this down to 1 query, too late tonight...
-    return render_template('view_demo.html', demo=demo, next=Demo.next_by_date(demo.date), prev=Demo.previous_by_date(demo.date))
+    return render_template('view_demo.html', demo=demo, next=demo.next_by_date(), prev=demo.previous_by_date())
 
 @app.route('/demos/delete/', methods=['POST'])
 @admin_required

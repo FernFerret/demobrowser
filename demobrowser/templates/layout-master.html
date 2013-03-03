@@ -104,20 +104,20 @@
           <div class="nav-collapse">
             <ul class="nav">
               {% if session.user_admin %}
-              <li class="dropdown{% if 'demos' in request.path %} active{% endif %}">
+              <li class="dropdown{% if request.endpoint in ['demopage', 'view_demo', 'index', 'import_demo', 'add_demo'] %} active{% endif %}">
                 <a class="dropdown-toggle" href="{{ url_for('index') }}">Demos</a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
                   <li><a tabindex="-1" href="{{ url_for('add_demo') }}"><i class="icon-upload"></i> Upload Demo</a></li>
                   <li><a tabindex="-1" href="{{ url_for('import_demo') }}"><i class="icon-signin"></i> Import Demo</a></li>
                 </ul>
               </li>
-              <li class="dropdown{% if 'users' in request.path %} active{% endif %}">
+              <li class="dropdown{% if request.endpoint in ['users', 'add_user'] %} active{% endif %}">
                 <a href="{{ url_for('users') }}">Users</a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="drop2">
                   <li><a tabindex="-1" href="{{ url_for('add_user') }}"><i class="icon-plus"></i> Add User</a></li>
                 </ul>
               </li>
-              <li {% if 'settings' in request.path and not 'server' in request.path %}class="active"{% endif %}><a href="{{ url_for('settings') }}">Settings</a></li>
+              <li {% if 'settings' in request.path %}class="active"{% endif %}><a href="{{ url_for('settings') }}">Settings</a></li>
               {% else %}
               <li class="active"><a href="{{ url_for('index') }}">Demos</a></li>
               {% endif %}
@@ -156,7 +156,6 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="{{ url_for('static', filename='js/jquery-1.9.0.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/jquery.foundation.reveal.js') }}"></script>
     {% block javascript %}{% endblock %}
   </body>
 </html>
