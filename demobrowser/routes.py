@@ -39,7 +39,7 @@ def login_required(function):
 def index():
     return render_template('demos.html', demos=Demo.get_page(1, app.config['DEMO_PER_PAGE']))
 
-@app.route('/demos/page/<page>/')
+@app.route('/page/<page>/')
 def demopage(page=1):
     try:
         page = int(page)
@@ -172,7 +172,7 @@ def settings():
     return render_template('settings.html')
 
 
-@app.route('/demos/add/', methods=['GET', 'POST'])
+@app.route('/add/', methods=['GET', 'POST'])
 @admin_required
 def add_demo():
     values = {}
@@ -188,7 +188,7 @@ def add_demo():
             return redirect(url_for('index'))
     return render_template('add_demo.html', values=values)
 
-@app.route('/demos/import/', methods=['GET', 'POST'])
+@app.route('/import/', methods=['GET', 'POST'])
 @admin_required
 def import_demo():
     values = {}
