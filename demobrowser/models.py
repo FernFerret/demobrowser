@@ -7,11 +7,13 @@ import math
 
 class Demo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    logfile = db.Column(db.String(8))
+    logfile = db.Column(db.String(10))
     size = db.Column(db.String(12))
     path = db.Column(db.String(512))
     name = db.Column(db.String(80))
+    sub = db.Column(db.String(160))
     date = db.Column(db.Date())
+    private = db.Column(db.Boolean())
     summary = db.Column(db.Text())
     title = db.Column(db.String(80))
 

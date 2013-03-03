@@ -1,5 +1,11 @@
 {% extends "layout-fixed.html" %}
 {% block main %}
+{% if session.user_admin %}
+<div class="hidden-desktop text-center">
+  <a class="btn btn-success" href="{{ url_for('add_demo') }}"><i class="icon-upload"></i> Upload Demo</a>
+  <a class="btn btn-info" href="{{ url_for('import_demo') }}"><i class="icon-signin"></i> Import Demo</a>
+</div>
+{% endif %}
 {% macro render_pagination(pagination) %}
     {% if not pagination.items %}
       <div class="hero-unit">
@@ -26,9 +32,10 @@
   			</h4>
         <a href="{{ url_for('view_demo', demo=demo.id) }}">
           <img class="img-polaroid" src="{{ url_for('static', filename='img/maps/%s.png' % demo.name) }}" />
-          <br />on {{ demo.good_date() }}</a>
-          {# <p class="pull-right" style="margin-right:-10px;"><a title="Permalink for {{ demo.title }}" style="text-decoration:none;" href="{{ url_for('view_demo', demo=demo.id)}}"><i class="icon-link"></i></a></p> #}
-
+          {% if demo.sub %}
+          <div class="pull-left visible-desktop"><small><i class="icon-group"></i> {{ demo.sub }}</small></div>
+          {% endif %}
+          <div style="margin-right:-10px;" class="pull-right hidden-phone"><small>{{ demo.good_date() }} <i class="icon-calendar"></i></small></div></a>
       </div>
       {% if loop.index % 4 == 0 and not loop.last %}
         </div>
@@ -62,12 +69,6 @@
   {% endif %}
 {% endmacro %}
 {{ render_pagination(demos) }}
-<div id="myModal" class="reveal-modal large">
-  <div style="text-align:center;" id="loading">
-    <h2><i class="icon-spinner icon-spin"></i> Loading...</h2>
-  </div>
-  <a style="text-decoration:none;" class="close-reveal-modal">&#215;</a>
-</div>
 {% endblock main %}
 {% block javascript %}
 	<script src="{{ url_for('static', filename='js/editdemo.js') }}"></script>

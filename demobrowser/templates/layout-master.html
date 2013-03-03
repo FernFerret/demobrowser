@@ -12,14 +12,7 @@
     <!-- Le styles -->
     <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/font-awesome.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/bootstrap-responsive.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/reveal.css') }}" rel="stylesheet">
     <style type="text/css">
-      body {
-        padding-top: 20px;
-        padding-bottom: 40px;
-      }
-
       /* Custom container */
       .container-narrow {
         margin: 0 auto;
@@ -54,25 +47,28 @@
         padding-top: 60px;
         padding-bottom: 40px;
       }
-      ul.nav li.dropdown:hover > ul.dropdown-menu{
-          display: block;
-          margin: 0px;
-      }
-      ul.dropdown-menu{
-          margin: 0px;
-      }
+      @media (min-width: 979px) {
+        ul.nav li.dropdown:hover > ul.dropdown-menu{
+            display: block;
+            margin: 0px;
+        }
+        ul.dropdown-menu{
+            margin: 0px;
+        }
 
-      .navbar .nav > li > .dropdown-menu:after {
-        content: none;
-      }
+        .navbar .nav > li > .dropdown-menu:after {
+          content: none;
+        }
 
-      .navbar .nav > li > .dropdown-menu:before {
-        content: none;
+        .navbar .nav > li > .dropdown-menu:before {
+          content: none;
+        }
       }
       textarea.input-large {
         width:193px;
       }
       </style>
+      <link href="{{ url_for('static', filename='css/bootstrap-responsive.css') }}" rel="stylesheet">
 
     <!--
 		Put this back in when we enable mobile mode.

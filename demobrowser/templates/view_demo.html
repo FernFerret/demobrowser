@@ -44,6 +44,13 @@
                                url:   '{{ url_for("edit_demo_field", demo=demo.id) }}',
                                title: 'Enter the title of this match'
                             });
+    $('#sub').editable({
+                               type:  'text',
+                               pk:    {{ demo.id }},
+                               name:  'sub',
+                               url:   '{{ url_for("edit_demo_field", demo=demo.id) }}',
+                               title: 'Enter the type of this demo (Scrim, Match, etc.)'
+                            });
     $('#logfile').editable({
                                type:  'text',
                                pk:    {{ demo.id }},

@@ -21,6 +21,11 @@
 </div>
 {% endblock left %}
 {% block main %}
+{% if session.user_admin %}
+<div class="hidden-desktop text-center">
+  <a class="btn btn-success" href="{{ url_for('add_user') }}"><i class="icon-plus"></i> Upload Demo</a>
+</div>
+{% endif %}
 <div>
   <h2>Users</h2>
   <p>Any user on this page will have access to view the demos (unless you have demos set to public in the settings). Any user with the admin field, will be able to upload demos or add other users.</p>
