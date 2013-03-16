@@ -49,6 +49,7 @@
         <p>Turn Debug mode on/off. If debug mode is on, you'll see full stack traces for pages. Disable this for production systems.</p>
       </div>
     </div>
+    {% if config.get('DEBUG', False) %}
     <div class="control-group">
       <label class="control-label" for="cleardb">Clear the Database:</label>
       <div class="controls">
@@ -56,6 +57,7 @@
         <p>CLEARS the database. I'll probably delete this later. ONLY for testing.</p>
       </div>
     </div>
+    {% endif %}
     <div class="form-actions">
       <button type="submit" class="btn btn-success">Save Settings</button>
       <a href="{{ url_for('index') }}" class="btn">Cancel</a>
