@@ -100,10 +100,10 @@
           <div class="nav-collapse">
             <ul class="nav">
               {% if session.user_admin %}
-              <li class="dropdown{% if request.endpoint in ['demopage', 'view_demo', 'index', 'import_demo', 'add_demo'] %} active{% endif %}">
+              <li class="dropdown{% if request.endpoint in ['demopage', 'view_demo', 'index', 'import_demo', 'upload_demo'] %} active{% endif %}">
                 <a class="dropdown-toggle" href="{{ url_for('index') }}">Demos</a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
-                  <li><a tabindex="-1" href="{{ url_for('add_demo') }}"><i class="icon-upload"></i> Upload Demo</a></li>
+                  <li><a tabindex="-1" href="{{ url_for('upload_demo') }}"><i class="icon-upload"></i> Upload Demo</a></li>
                   <li><a tabindex="-1" href="{{ url_for('import_demo') }}"><i class="icon-signin"></i> Import Demo</a></li>
                 </ul>
               </li>

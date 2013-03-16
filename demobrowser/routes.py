@@ -171,12 +171,20 @@ def settings():
         flash('Success! Your settings were updated.', category='success')
     return render_template('settings.html')
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() == "dem"
 
-@app.route('/add/', methods=['GET', 'POST'])
+@app.route('/upload/', methods=['GET', 'POST'])
 @admin_required
-def add_demo():
+def upload_demo():
     values = {}
     if request.method == 'POST':
+        the_file = request.files['demo_file']
+        if the_file and allowed_file(the_file.filename):
+            filename = secure_filename(the_file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('uploaded_file', filename=filename))
         demo_name = request.form.get("demo_name", None)
         if demo_name:
             success, msg = Demo.create_from_name(demo_name)
@@ -186,7 +194,7 @@ def add_demo():
             else:
                 flash(msg, category='error')
             return redirect(url_for('index'))
-    return render_template('add_demo.html', values=values)
+    return render_template('upload_demo.html', values=values)
 
 @app.route('/import/', methods=['GET', 'POST'])
 @admin_required

@@ -2,7 +2,7 @@
 {% block main %}
 {% if session.user_admin %}
 <div class="hidden-desktop text-center">
-  <a class="btn btn-success" href="{{ url_for('add_demo') }}"><i class="icon-upload"></i> Upload Demo</a>
+  <a class="btn btn-success" href="{{ url_for('upload_demo') }}"><i class="icon-upload"></i> Upload Demo</a>
   <a class="btn btn-info" href="{{ url_for('import_demo') }}"><i class="icon-signin"></i> Import Demo</a>
 </div>
 {% endif %}
