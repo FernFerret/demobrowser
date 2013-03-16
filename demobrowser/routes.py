@@ -154,9 +154,9 @@ def settings():
         values['SQLALCHEMY_DATABASE_URI'] = str(app.config['SQLALCHEMY_DATABASE_URI'])
         # The rest of these can
         values['TITLE'] = str(request.form['title'])
-        values['DEMO_DROPBOX_DIR'] = str(request.form.get('inbox', None))
+        values['DEMO_STORAGE_DIR'] = str(request.form.get('storage', None))
         values['DEBUG'] = request.form.get('debug', None) is not None
-        values['DEMO_UPLOAD_DIR'] = str(request.form.get('upload', None))
+        values['DEMO_DOWNLOAD_DIR'] = str(request.form.get('download', None))
         values['DEMO_PUBLIC'] = request.form.get('public', None) is not None
         try:
             values['DEMO_PER_PAGE'] = int(request.form.get('perpage', 12))
@@ -188,7 +188,7 @@ def upload_demo():
             flash("DOH! Only .dem files are allowed!", category='error')
         else:
             filename = secure_filename(the_file.filename)
-            total_path = os.path.join(app.config['DEMO_UPLOAD_DIR'], filename)
+            total_path = os.path.join(app.config['DEMO_STORAGE_DIR'], filename)
             if os.path.exists(total_path):
                 demo = Demo.get_from_filename(filename)
                 print demo
@@ -196,7 +196,8 @@ def upload_demo():
                     flash("<strong>Whoops!</strong> <a href='%s'>That Demo already exists</a>!" % \
                         (url_for('view_demo', demo=demo.id)), category='warning')
                 else:
-                    flash("Whoops! That Demo already exists!", category='warning')
+                    flash("<strong>Whoops!</strong> That Demo <strong>file</strong> already exists, but hasn't been added to the repository. "
+                          "Perhaps you'd like to <a href='%s'>import it</a>?" % (url_for("import_demo")), category='warning')
             else:
                 success, msg = Demo.create_from_name(filename)
                 if success:
@@ -222,7 +223,7 @@ def import_demo():
             else:
                 flash(msg, category='error')
 
-    demos_raw = glob(os.path.join(app.config.get('DEMO_DROPBOX_DIR', '.'), "*.dem"))
+    demos_raw = glob(os.path.join(app.config.get('DEMO_STORAGE_DIR', '.'), "*.dem"))
     demos = []
     for demo in demos_raw:
         if not Demo.demo_exists(os.path.basename(demo)):

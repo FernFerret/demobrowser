@@ -15,16 +15,16 @@
       </div>
     </div>
     <div class="control-group">
-      <label class="control-label" for="upload">Upload Directory:</label>
+      <label class="control-label" for="upload">Download Directory:</label>
       <div class="controls">
-        <input type="text" class="span8" id="upload" name="upload" placeholder="/var/uploads/demos" value="{{ config.get('DEMO_UPLOAD_DIR', '') }}" />
+        <input type="text" class="span8" id="download" name="download" placeholder="/demo_storage" value="{{ config.get('DEMO_DOWNLOAD_DIR', '') }}" />
         <p></p>
       </div>
     </div>
     <div class="control-group">
-      <label class="control-label" for="inbox">Dropbox Directory:</label>
+      <label class="control-label" for="inbox">Storage Directory:</label>
       <div class="controls">
-        <input type="text" class="span8" id="inbox" name="inbox" placeholder="/var/uploads/demos/inbox" value="{{ config.get('DEMO_DROPBOX_DIR', '') }}" />
+        <input type="text" class="span8" id="storage" name="storage" placeholder="/var/www/html/tf2files/demo_storage" value="{{ config.get('DEMO_STORAGE_DIR', '') }}" />
         <p></p>
       </div>
     </div>

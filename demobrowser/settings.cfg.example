@@ -12,7 +12,7 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/test.db'
 # App Config
 TITLE = 'Server Manager'
 DEBUG = False
-DEMO_INBOX = '/var/www/html/tf2files/demo_inbox'
-DEMO_DIR = '/var/www/html/tf2files/demo_storage'
+DEMO_DOWNLOAD_DIR = '/demo_storage'
+DEMO_STORAGE_DIR = '/var/www/html/tf2files/demo_storage'
 DEMO_PUBLIC = False
 DEMO_PER_PAGE = 12

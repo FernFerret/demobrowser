@@ -2,7 +2,7 @@
 {% block main %}
 <form class="form-horizontal" action="{{ url_for('upload_demo') }}" method="POST" enctype="multipart/form-data">
   <fieldset>
-    <legend><h3>Add a Demo</h3></legend>
+    <legend><h3>Upload a Demo</h3></legend>
     <div class="control-group  {% if 'name' in errors %}error{% endif %}">
       <label class="control-label" for="Íname">Demo File</label>
       <div class="controls">
