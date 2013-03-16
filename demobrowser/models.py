@@ -27,9 +27,10 @@ class Demo(db.Model):
 
     def get_page_of(self, per_page=12):
         # Get the number of items NEWER than this one
-        sweet_query = Demo.query.order_by(Demo.date.asc(), Demo.id.asc()).filter(or_(Demo.date > self.date,
-                                                              and_(Demo.date >= self.date,
-                                                                   Demo.id > self.id)))
+        sweet_query = Demo.query.order_by(Demo.date.asc(),
+                                          Demo.id.asc()).filter(or_(Demo.date > self.date,
+                                                                and_(Demo.date >= self.date,
+                                                                     Demo.id > self.id)))
         # Now, calculate the page that this guy is on!
         return int(math.ceil((sweet_query.count() + 1) / float(per_page)))
 
@@ -38,16 +39,18 @@ class Demo(db.Model):
         return self.date.strftime("%d %B %Y")
 
     def previous_by_date(self):
-        sweet_query = Demo.query.order_by(Demo.date.desc(), Demo.id.desc()).filter(or_(Demo.date < self.date,
-                                                              and_(Demo.date <= self.date,
-                                                                   Demo.id < self.id)))
+        sweet_query = Demo.query.order_by(Demo.date.desc(),
+                                          Demo.id.desc()).filter(or_(Demo.date < self.date,
+                                                                 and_(Demo.date <= self.date,
+                                                                      Demo.id < self.id)))
     	return sweet_query.first()
 
 
     def next_by_date(self):
-        sweet_query = Demo.query.order_by(Demo.date.asc(), Demo.id.asc()).filter(or_(Demo.date > self.date,
-                                                              and_(Demo.date >= self.date,
-                                                                   Demo.id > self.id)))
+        sweet_query = Demo.query.order_by(Demo.date.asc(),
+                                          Demo.id.asc()).filter(or_(Demo.date > self.date,
+                                                                    and_(Demo.date >= self.date,
+                                                                         Demo.id > self.id)))
     	return sweet_query.first()
 
     @staticmethod
@@ -82,6 +85,10 @@ class Demo(db.Model):
     @staticmethod
     def get_from_id(id):
         return Demo.query.filter_by(id=id).first()
+
+    @staticmethod
+    def get_from_filename(name):
+        return Demo.query.filter_by(path=name).first()
 
     @staticmethod
     def delete(id):

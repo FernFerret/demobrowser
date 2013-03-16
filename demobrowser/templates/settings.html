@@ -17,14 +17,14 @@
     <div class="control-group">
       <label class="control-label" for="upload">Upload Directory:</label>
       <div class="controls">
-        <input type="text" class="span8" id="upload" name="upload" placeholder="/var/uploads/demos" value="{{ config.get('DEMO_DIR', '') }}" />
+        <input type="text" class="span8" id="upload" name="upload" placeholder="/var/uploads/demos" value="{{ config.get('DEMO_UPLOAD_DIR', '') }}" />
         <p></p>
       </div>
     </div>
     <div class="control-group">
       <label class="control-label" for="inbox">Dropbox Directory:</label>
       <div class="controls">
-        <input type="text" class="span8" id="inbox" name="inbox" placeholder="/var/uploads/demos/inbox" value="{{ config.get('DEMO_INBOX', '') }}" />
+        <input type="text" class="span8" id="inbox" name="inbox" placeholder="/var/uploads/demos/inbox" value="{{ config.get('DEMO_DROPBOX_DIR', '') }}" />
         <p></p>
       </div>
     </div>

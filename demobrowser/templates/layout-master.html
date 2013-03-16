@@ -135,7 +135,7 @@
           {% for cat, message in messages %}
         <div class="alert alert-{{ cat }}">
           <a class="close" data-dismiss="alert">×</a>
-            {{ message }}
+            {{ message|safe }}
         </div>
           {% endfor %}
         {% endif %}

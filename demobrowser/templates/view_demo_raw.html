@@ -50,7 +50,7 @@
 <br />
 <div class="row-fluid">
 	<div style="text-align:center;" class="span12">
-		<a class="btn btn-success btn-large" href="{{ config.get('DEMO_DIR', '')  }}/{{ demo.path }}"><i class="icon-download"></i> Download this demo!</a>
+		<a class="btn btn-success btn-large" href="{{ config.get('DEMO_UPLOAD_DIR', '')  }}/{{ demo.path }}"><i class="icon-download"></i> Download this demo!</a>
 		{% if session.user_admin %}
       {% set delete_script = 'deleteDemoRedirect(%s, "#myModal", "%s", "%s");' % (demo.id, url_for('delete_demo'), url_for('index')) %}
       <a id="deletedemo" href="#" class="btn btn-danger btn-large" data-placement="top" data-toggle="popover" data-html="true" data-content="<p>Are you sure you really want to remove <strong>{{demo.title}}</strong>?</p><p>This <strong>won't</strong> delete the demo file!</p><div style='text-align:center'><button onclick='$(&quot;#deletedemo&quot;).popover(&quot;hide&quot;);' class='btn btn-info'>No!</button> <button onclick='{{ delete_script }}' class='btn btn-danger'>Yes, remove it!</button></div>" data-original-title="<strong class='text-error'>Really Delete?</strong>"><i class="icon-remove"></i> Remove Demo</a>

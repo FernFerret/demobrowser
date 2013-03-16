@@ -2,6 +2,7 @@ from demobrowser import app, oid, db
 from demobrowser.helpers import get_steam_userinfo, get_my_ip
 from demobrowser.models import User, Demo
 from flask import render_template, session, redirect, url_for, request, g, flash, get_flashed_messages
+from werkzeug import secure_filename
 from functools import wraps
 from pyfile import write_pyfile
 import re
@@ -153,9 +154,9 @@ def settings():
         values['SQLALCHEMY_DATABASE_URI'] = str(app.config['SQLALCHEMY_DATABASE_URI'])
         # The rest of these can
         values['TITLE'] = str(request.form['title'])
-        values['DEMO_INBOX'] = str(request.form.get('inbox', None))
+        values['DEMO_DROPBOX_DIR'] = str(request.form.get('inbox', None))
         values['DEBUG'] = request.form.get('debug', None) is not None
-        values['DEMO_DIR'] = str(request.form.get('upload', None))
+        values['DEMO_UPLOAD_DIR'] = str(request.form.get('upload', None))
         values['DEMO_PUBLIC'] = request.form.get('public', None) is not None
         try:
             values['DEMO_PER_PAGE'] = int(request.form.get('perpage', 12))
@@ -181,19 +182,31 @@ def upload_demo():
     values = {}
     if request.method == 'POST':
         the_file = request.files['demo_file']
-        if the_file and allowed_file(the_file.filename):
+        if not the_file:
+            flash("You must select a demo to upload!", category='error')
+        elif not allowed_file(the_file.filename):
+            flash("DOH! Only .dem files are allowed!", category='error')
+        else:
             filename = secure_filename(the_file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_file', filename=filename))
-        demo_name = request.form.get("demo_name", None)
-        if demo_name:
-            success, msg = Demo.create_from_name(demo_name)
-            if success:
-                flash(msg, category='success')
-                db.session.commit()
+            total_path = os.path.join(app.config['DEMO_UPLOAD_DIR'], filename)
+            if os.path.exists(total_path):
+                demo = Demo.get_from_filename(filename)
+                print demo
+                if demo:
+                    flash("<strong>Whoops!</strong> <a href='%s'>That Demo already exists</a>!" % \
+                        (url_for('view_demo', demo=demo.id)), category='warning')
+                else:
+                    flash("Whoops! That Demo already exists!", category='warning')
             else:
-                flash(msg, category='error')
-            return redirect(url_for('index'))
+                success, msg = Demo.create_from_name(filename)
+                if success:
+                    flash(msg, category='success')
+                    the_file.save(total_path)
+                    db.session.commit()
+                    return redirect(url_for('index'))
+                else:
+                    flash(msg, category='error')
+
     return render_template('upload_demo.html', values=values)
 
 @app.route('/import/', methods=['GET', 'POST'])
@@ -209,7 +222,7 @@ def import_demo():
             else:
                 flash(msg, category='error')
 
-    demos_raw = glob(app.config.get('DEMO_INBOX', '.') + "/*.dem")
+    demos_raw = glob(os.path.join(app.config.get('DEMO_DROPBOX_DIR', '.'), "*.dem"))
     demos = []
     for demo in demos_raw:
         if not Demo.demo_exists(os.path.basename(demo)):
