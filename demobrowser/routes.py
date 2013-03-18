@@ -1,5 +1,5 @@
 from demobrowser import app, oid, db
-from demobrowser.helpers import get_steam_userinfo, get_my_ip
+from demobrowser.helpers import get_steam_userinfo, get_my_ip, do_upload_log
 from demobrowser.models import User, Demo
 from flask import render_template, session, redirect, url_for, request, g, flash, get_flashed_messages
 from werkzeug import secure_filename
@@ -176,39 +176,78 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() == "dem"
 
+def allowed_log_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() == "log"
+
 @app.route('/upload/', methods=['GET', 'POST'])
 @admin_required
 def upload_demo():
     values = {}
     if request.method == 'POST':
+        log_file = request.files['log_file']
         the_file = request.files['demo_file']
-        if not the_file:
-            flash("You must select a demo to upload!", category='error')
-        elif not allowed_file(the_file.filename):
-            flash("DOH! Only .dem files are allowed!", category='error')
-        else:
-            filename = secure_filename(the_file.filename)
-            total_path = os.path.join(app.config['DEMO_STORAGE_DIR'], filename)
-            if os.path.exists(total_path):
-                demo = Demo.get_from_filename(filename)
-                print demo
-                if demo:
-                    flash("<strong>Whoops!</strong> <a href='%s'>That Demo already exists</a>!" % \
-                        (url_for('view_demo', demo=demo.id)), category='warning')
-                else:
-                    flash("<strong>Whoops!</strong> That Demo <strong>file</strong> already exists, but hasn't been added to the repository. "
-                          "Perhaps you'd like to <a href='%s'>import it</a>?" % (url_for("import_demo")), category='warning')
-            else:
-                success, msg = Demo.create_from_name(filename)
-                if success:
-                    flash(msg, category='success')
-                    the_file.save(total_path)
-                    db.session.commit()
-                    return redirect(url_for('index'))
-                else:
-                    flash(msg, category='error')
+        # Returns a demo on success, none if fail.
+        demo = _do_upload_demo_file(the_file)
+        if demo and log_file:
+            # If the log file was present, and we had a successful upload, try the log file.
+            _do_upload_log_file(log_file, demo)
 
     return render_template('upload_demo.html', values=values)
+
+def _do_upload_demo_file(the_file):
+    if not the_file:
+        flash("You must select a demo to upload!", category='error')
+        return None
+    if not allowed_file(the_file.filename):
+        flash("DOH! Only .dem files are allowed!", category='error')
+        return None
+    filename = secure_filename(the_file.filename)
+    total_path = os.path.join(app.config['DEMO_STORAGE_DIR'], filename)
+    if os.path.exists(total_path):
+        demo = Demo.get_from_filename(filename)
+        if demo:
+            flash("<strong>Whoops!</strong> <a href='%s'>That Demo already exists</a>!" % \
+                (url_for('view_demo', demo=demo.id)), category='warning')
+        else:
+            flash("<strong>Whoops!</strong> That Demo <strong>file</strong> already exists, but hasn't been added to the repository. "
+                  "Perhaps you'd like to <a href='%s'>import it</a>?" % (url_for("import_demo")), category='warning')
+    else:
+        success, msg = Demo.create_from_name(filename)
+        if success:
+            flash(msg, category='success')
+            the_file.save(total_path)
+            db.session.commit()
+            return Demo.get_from_filename(filename)
+        else:
+            flash(msg, category='error')
+    return None
+
+def _do_upload_log_file(the_file, demo):
+    if not allowed_log_file(the_file.filename):
+        flash("DOH! Your logfile should be named X.log!", category='error')
+        return False
+    filename = secure_filename(the_file.filename)
+    # We'll store the demo files in the STORAGE dir
+    total_path = os.path.join(app.config['DEMO_STORAGE_DIR'], filename)
+    if os.path.exists(total_path):
+        flash("<strong>Whoops!</strong> That Logfile already exists, Not sure what to do here...(%s)!" % total_path, category='warning')
+        return False
+    the_file.save(total_path)
+    success, log_id, msg = do_upload_log(total_path, app.config.get('LOGSTF_API_KEY', ''), title=demo.title, map=demo.name)
+    if success:
+        flash(msg, category='success')
+        demo.logfile = log_id
+        db.session.commit()
+    else:
+        flash(msg, category='error')
+        return "Demo uploaded successfully <strong>without</strong> logs! <a href='%s'>Click here to see it</a>!" % url_for("view_demo", demo=demo.id)
+    try:
+        os.unlink(total_path)
+    except EnvironmentError:
+        # Already gone.
+        pass
+    return "Demo uploaded successfully with logs! <a href='%s'>Click here to see it</a>!" % url_for("view_demo", demo=demo.id)
 
 @app.route('/import/', methods=['GET', 'POST'])
 @admin_required

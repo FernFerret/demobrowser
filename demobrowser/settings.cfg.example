@@ -1,5 +1,6 @@
 # Keys
 STEAM_API_KEY = 'API_KEY'
+LOGSTF_API_KEY = 'LOGSTF_API_KEY'
 SECRET_KEY = 'SOME_RANDOM_STUFF'
 
 # Addresses/Locations

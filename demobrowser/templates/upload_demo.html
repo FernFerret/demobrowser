@@ -3,10 +3,22 @@
 <form class="form-horizontal" action="{{ url_for('upload_demo') }}" method="POST" enctype="multipart/form-data">
   <fieldset>
     <legend><h3>Upload a Demo</h3></legend>
+    <div>
+      <h4>About Demo Uploads</h2>
+      <p>The filename of the demo is used to determine the <strong>map</strong> and <strong>date</strong>. The accepted syntax is the same as your tf2 server creates the auto demos. If you keep getting an error, see the <a href="{{ url_for('static', filename='img/anatomy_demo_file.png')}}">anatomy of a demo filename</a> for more info!</p>
+      {#<img src="{{ url_for('static', filename='img/anatomy_demo_file.png')}}" />#}
+    </div>
+    <hr />
     <div class="control-group  {% if 'name' in errors %}error{% endif %}">
       <label class="control-label" for="Íname">Demo File</label>
       <div class="controls">
         <input type="file" class="input-xlarge" id="demo_file" name="demo_file" placeholder="auto-19880905-XXXX-cp_gravelpit.dem" value="{{ values.get('name', '') }}"/>
+      </div>
+    </div>
+    <div class="control-group  {% if 'name' in errors %}error{% endif %}">
+      <label class="control-label" for="Íname">Log File</label>
+      <div class="controls">
+        <input type="file" class="input-xlarge" id="log_file" name="log_file" placeholder="auto-19880905-XXXX-cp_gravelpit.dem" value="{{ values.get('name', '') }}"/>
       </div>
     </div>
     <div class="form-actions">

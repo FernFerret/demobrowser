@@ -14,6 +14,7 @@ class Demo(db.Model):
     sub = db.Column(db.String(160))
     date = db.Column(db.Date())
     private = db.Column(db.Boolean())
+    nuked = db.Column(db.Boolean())
     summary = db.Column(db.Text())
     title = db.Column(db.String(80))
 
