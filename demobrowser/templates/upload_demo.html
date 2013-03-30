@@ -18,10 +18,10 @@
     </div>
     <div class="row-fluid">
       <div class="progress progress-striped active span6">
-          <div class="bar" style="width: 40%;"></div>
+          <div id="demo_progress" class="bar" style="width: 40%;"></div>
       </div>
       <div class="progress progress-striped active span6">
-         <div class="bar" style="width: 40%;"></div>
+         <div id="log_progress" class="bar" style="width: 40%;"></div>
       </div>
     </div>
     {#
@@ -46,33 +46,54 @@
 {% endblock %}
 {% block javascript %}
 <script>
-function handleFileSelectDemo(evt) {
-  evt.stopPropagation();
-  evt.preventDefault();
+  function errorHandler(evt) {
+    switch(evt.target.error.code) {
+      case evt.target.error.NOT_FOUND_ERR:
+        alert('File Not Found!');
+        break;
+      case evt.target.error.NOT_READABLE_ERR:
+        alert('File is not readable');
+        break;
+      case evt.target.error.ABORT_ERR:
+        break; // noop
+      default:
+        alert('An error occurred reading this file.');
+    };
+  }
+  function handleFileSelectDemo(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
 
-  var files = evt.dataTransfer.files; // FileList object.
+    var f = evt.dataTransfer.files[0]; // FileList object.
 
-  // files is a FileList of File objects. List some properties.
-  var output = [];
-  for (var i = 0, f; f = files[i]; i++) {
+    // files is a FileList of File objects. List some properties.
+    var output = [];
     var fn = escape(f.name);
     var name_match = fn.match(/^auto-([0-9]{8})-.*-(.*)\.dem$/);
     if (name_match == null) {
-      output.push('<h3 style="color:#BE2F33;">', escape(f.name), '</h3>');
+      output.push('<h3 style="color:#BE2F33;"><i class="icon-file-alt icon"></i> ', escape(f.name), '</h3>',
+                  '<h4 style="color:#000;">Oops!<br />That file didn\'t match the format I expected for a demo file:</h4>',
+                  '<h4>auto<span style="color:#000;">-</span><span style="color:#8dc63f;">20130119</span>',
+                  '<span style="color:#000;">-</span><span style="color:#f26c4f;">2034</span>',
+                  '<span style="color:#000;">-</span><span style="color:#448ccb">',
+                  'cp_dustbowl</span><span style="color:#a864a8">.dem</span><h4>',
+                  '<h4 style="color:#000;">If you\'re <span style="color:#2D9B27;">sure</span>',
+                  ' this is your demo file,<br />rename it and drag here again!</h4>',
+                  '<a id="undo_demo" class="btn btn-info" href="#">Clear Invalid File</a>');
     } else {
-      output.push('<h3 style="color:#2D9B27;">', escape(f.name), '</h3>');
+      output.push('<h3 style="color:#2D9B27;"><i class="icon-file-alt icon"></i> ', escape(f.name), '</h3>',
+                  '<a id="undo_demo" class="btn btn-info" href="#">Clear Demo File</a>');
     }
 
-    console.log(name_match);
-
+    document.getElementById('drop_zone_demo').innerHTML = output.join('');
   }
-  document.getElementById('drop_zone_demo').innerHTML = output.join('');
-}
   function handleFileSelectLog(evt) {
     evt.stopPropagation();
     evt.preventDefault();
 
     var files = evt.dataTransfer.files; // FileList object.
+    var progressDemo = document.getElementById('demo_percent');
+    var progressLog = document.getElementById('log_percent');
 
     // files is a FileList of File objects. List some properties.
     var output = [];
@@ -80,13 +101,22 @@ function handleFileSelectDemo(evt) {
       var fn = escape(f.name);
       var name_match = fn.match(/^.*\.log$/);
       if (name_match == null) {
-        output.push('<h3 style="color:#BE2F33;">', escape(f.name), '</h3>');
+        output.push('<h3 style="color:#BE2F33;"><i class="icon-file-alt icon"></i> ', escape(f.name), '</h3>',
+                    '<a id="undo_" class="btn btn-danger" href="#">Try again</a>');
       } else {
-        output.push('<h3 style="color:#2D9B27;">', escape(f.name), '</h3>');
+        output.push('<h3 style="color:#2D9B27;"><i class="icon-file-alt icon"></i> ', escape(f.name), '</h3>',
+                    '<a id="undo_log" class="btn btn-info" href="#">Clear Log File</a>');
       }
     }
     document.getElementById('drop_zone_log').innerHTML = output.join('');
   }
+
+  $(document).on("click", "#undo_log", function () {
+    $("#drop_zone_log").html("<h2>Drop <span style=\"color:#4284D3;\">log</span> file here!</h2>");
+  });
+  $(document).on("click", "#undo_demo", function () {
+    $("#drop_zone_demo").html("<h2>Drop <span style=\"color:#FF8540;\">demo</span> file here!</h2>");
+  });
 
   function handleDragOver(evt) {
     evt.stopPropagation();
