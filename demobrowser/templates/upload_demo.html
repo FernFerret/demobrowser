@@ -38,10 +38,9 @@
     xhr.upload.addEventListener("progress", function(e) {
     		  var pc = parseInt((e.loaded / e.total * 100));
     		  progress.style.width = pc + "%";
-          console.log(pc + "%");
         }, false);
     xhr.onreadystatechange = function() {
-      console.log(xhr);
+      // console.log(xhr);
       if (xhr.readyState == 4) {
         progress.style.width = "100%";
         $('#demo_progress_ctr').addClass("progress-success").removeClass("active").removeClass("progress-striped");
@@ -53,7 +52,6 @@
           }
         } else {
           var obj = JSON.parse(xhr.responseText);
-          console.log(obj);
           var msg = '<div class="alert alert-' + obj.cat + '"><a class="close" data-dismiss="alert">×</a>' + obj.msg + '</div>';
           $(msg).fadeIn().appendTo("#globalmsgs");
         }
