@@ -203,15 +203,19 @@ def upload_demo():
         flash(msg, category=cat)
     return render_template('upload_demo.html', values=values)
 
-def _do_upload_demo_file(the_file):
-    '''
-    Returns: Demo Object/False, Message, Message Type (to be passed to flash)
-    '''
-    if not the_file:
-        return False, "You must select a demo to upload!", "error"
-    if not allowed_file(the_file.filename):
-        return False, "DOH! Only .dem files are allowed!", "error"
-    filename = secure_filename(the_file.filename)
+@app.route('/demo/check/', methods=['POST'])
+@admin_required
+def check_filename():
+    filename = request.form.get('filename', None)
+    if filename is not None:
+        print "Checking %s" % filename
+        file_exists, total_path, category = _is_file_on_disk(filename)
+        if file_exists:
+            return json.dumps({'success':False,'msg':total_path,'cat':category})
+        return json.dumps({'success':True})
+    return json.dumps({'success':False, 'msg':"No filename provided.", 'cat':'error'})
+
+def _is_file_on_disk(filename):
     total_path = os.path.join(app.config['DEMO_STORAGE_DIR'], filename)
     if os.path.exists(total_path):
         demo = Demo.get_from_filename(filename)
@@ -223,7 +227,24 @@ def _do_upload_demo_file(the_file):
             msg = "<strong>Whoops!</strong> That Demo <strong>file</strong> already exists, but hasn't been added to the repository. " \
                   "Perhaps you'd like to <a href='%s'>import it</a>?" % (url_for("import_demo"))
             category = 'warning'
-        return False, msg, category
+        return True, msg, category
+    return False, total_path, "success"
+
+def _do_upload_demo_file(the_file):
+    '''
+    Returns: Demo Object/False, Message, Message Type (to be passed to flash)
+    '''
+    if not the_file:
+        return False, "You must select a demo to upload!", "error"
+    if not allowed_file(the_file.filename):
+        return False, "DOH! Only .dem files are allowed!", "error"
+
+    filename = secure_filename(the_file.filename)
+    file_exists, total_path, category = _is_file_on_disk(filename)
+    if file_exists:
+        # NOTE: total_path here will be the message!
+        return False, total_path, category
+
     success, msg = Demo.create_from_name(filename)
     if success:
         category = 'success'

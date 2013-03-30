@@ -86,9 +86,21 @@
                   ' this is your demo file,<br />rename it and drag here again!</h4>',
                   '<a id="undo_demo" class="btn btn-danger" href="#">Clear Invalid File</a>');
     } else {
-      output.push('<h3 style="color:#2D9B27;"><i class="icon-file-alt icon"></i> ', escape(demoFile.name), '</h3>',
+      output.push('<h3 id="demo_name" style="color:#2D9B27;"><i class="icon-file-alt icon"></i> ', escape(demoFile.name), '</h3>',
                   '<a id="undo_demo" class="btn btn-info" href="#">Clear Demo File</a>');
-      sendFile(demoFile);
+      $.post("{{ url_for('check_filename') }}", { filename: fn },
+        function(data){
+          obj = JSON.parse(data);
+          if (obj.success) {
+            sendFile(demoFile);
+          } else {
+            $("#demo_name").css('color', '#FFAA00');
+            var msg = '<div class="alert alert-' + obj.cat + '"><a class="close" data-dismiss="alert">×</a>' + obj.msg + '</div>';
+            $(msg).fadeIn().appendTo("#globalmsgs");
+            console.log(data);
+          }
+        });
+
     }
 
     document.getElementById('drop_zone_demo').innerHTML = output.join('');
