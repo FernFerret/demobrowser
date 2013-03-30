@@ -9,24 +9,24 @@
       {#<img src="{{ url_for('static', filename='img/anatomy_demo_file.png')}}" />#}
     </div>
     <div class="row-fluid">
-      <div class="span6" style="height:20px;">
+      <div class="span8 offset2" style="height:20px;">
         <div style="display:none;" id="demo_progress_ctr" class="progress progress-striped active">
             <div id="demo_progress" class="bar" style="width: 40%;"></div>
         </div>
       </div>
-      <div class="span6" style="height:20px;">
-        <div style="display:none;" id="log_progress_ctr" class="progress progress-striped active">
-           <div id="log_progress" class="bar" style="width: 40%;"></div>
-        </div>
-      </div>
+      {# <div class="span6" style="height:20px;"> #}
+      {#   <div style="display:none;" id="log_progress_ctr" class="progress progress-striped active"> #}
+      {#      <div id="log_progress" class="bar" style="width: 40%;"></div> #}
+      {#   </div> #}
+      {# </div> #}
     </div>
     <div class="row-fluid">
-      <div id="drop_zone_demo" class=" span6 upload_box">
+      <div id="drop_zone_demo" class="span8 offset2 upload_box">
         <h2>Drop <span style="color:#FF8540;">demo</span> file here!</h2>
       </div>
-      <div id="drop_zone_log" class="span6 upload_box">
-        <h2>Drop <span style="color:#4284D3;">log</span> file here!</h2>
-      </div>
+      {# <div id="drop_zone_log" class="span6 upload_box"> #}
+      {#   <h2>Drop <span style="color:#4284D3;">log</span> file here!</h2> #}
+      {# </div> #}
     </div>
     {#
     <div class="control-group  {% if 'name' in errors %}error{% endif %}">
@@ -51,7 +51,9 @@
 {% block javascript %}
 <script>
   var progress = document.getElementById('demo_progress');
-  var progressLog = document.getElementById('log_progress');
+  // var progressLog = document.getElementById('log_progress');
+  var demoFile;
+  // var logFile;
   function abortRead() {
     reader.abort();
   }
@@ -67,16 +69,16 @@
     }
   }
 
-  function updateProgressLog(evt) {
-    // evt is an ProgressEvent.
-    if (evt.lengthComputable) {
-      var percentLoaded = Math.round((evt.loaded / evt.total) * 100);
-      // Increase the progress bar length.
-      if (percentLoaded < 100) {
-        progressLog.style.width = percentLoaded + '%';
-      }
-    }
-  }
+  // function updateProgressLog(evt) {
+  //   // evt is an ProgressEvent.
+  //   if (evt.lengthComputable) {
+  //     var percentLoaded = Math.round((evt.loaded / evt.total) * 100);
+  //     // Increase the progress bar length.
+  //     if (percentLoaded < 100) {
+  //       progressLog.style.width = percentLoaded + '%';
+  //     }
+  //   }
+  // }
 
   function errorHandler(evt) {
     switch(evt.target.error.code) {
@@ -92,20 +94,49 @@
         alert('An error occurred reading this file.');
     };
   }
+
+  function sendFile(file) {
+      var uri = "{{ url_for('upload_demo', async=True) }}";
+      var xhr = new XMLHttpRequest();
+      var fd = new FormData();
+
+      xhr.open("POST", uri, true);
+      xhr.onreadystatechange = function() {
+        console.log(xhr);
+        if (xhr.readyState == 4) {
+          if (xhr.status == 200) {
+            // Handle response.
+            if (xhr.responseText == "Good") {
+              window.location = "{{ url_for('index') }}";
+            }
+          } else {
+            var obj = JSON.parse(xhr.responseText);
+            console.log(obj);
+            var msg = '<div class="alert alert-' + obj.cat + '"><a class="close" data-dismiss="alert">×</a>' + obj.msg + '</div>';
+            $(msg).fadeIn().appendTo("#globalmsgs");
+          }
+        }
+      };
+      fd.append('async', 1);
+      fd.append('demo_file', file);
+      // Initiate a multipart/form-data upload
+      xhr.send(fd);
+  }
+
   function handleFileSelectDemo(evt) {
     evt.stopPropagation();
     evt.preventDefault();
 
 
-    var f = evt.dataTransfer.files[0]; // FileList object.
+    demoFile = evt.dataTransfer.files[0]; // FileList object.
 
 
     // files is a FileList of File objects. List some properties.
     var output = [];
-    var fn = escape(f.name);
+    var fn = escape(demoFile.name);
     var name_match = fn.match(/^auto-([0-9]{8})-.*-(.*)\.dem$/);
     if (name_match == null) {
-      output.push('<h3 style="color:#BE2F33;"><i class="icon-file-alt icon"></i> ', escape(f.name), '</h3>',
+      output.push('<h3 style="color:#BE2F33;"><i class="icon-file-alt icon"></i> ', escape(demoFile.name), '</h3>',
                   '<h4 style="color:#000;">Oops!<br />That file didn\'t match the format I expected for a demo file:</h4>',
                   '<h4>auto<span style="color:#000;">-</span><span style="color:#8dc63f;">20130119</span>',
                   '<span style="color:#000;">-</span><span style="color:#f26c4f;">2034</span>',
@@ -113,11 +144,11 @@
                   'cp_dustbowl</span><span style="color:#a864a8">.dem</span><h4>',
                   '<h4 style="color:#000;">If you\'re <span style="color:#2D9B27;">sure</span>',
                   ' this is your demo file,<br />rename it and drag here again!</h4>',
-                  '<a id="undo_demo" class="btn btn-info" href="#">Clear Invalid File</a>');
+                  '<a id="undo_demo" class="btn btn-danger" href="#">Clear Invalid File</a>');
     } else {
       progress.style.width = '0%';
       $('#demo_progress_ctr').show();
-      output.push('<h3 style="color:#2D9B27;"><i class="icon-file-alt icon"></i> ', escape(f.name), '</h3>',
+      output.push('<h3 style="color:#2D9B27;"><i class="icon-file-alt icon"></i> ', escape(demoFile.name), '</h3>',
                   '<a id="undo_demo" class="btn btn-info" href="#">Clear Demo File</a>');
       reader = new FileReader();
       reader.onerror = errorHandler;
@@ -134,54 +165,55 @@
         // Hide the progress bar.
         setTimeout("$('#demo_progress_ctr').fadeOut();", 2000);
       }
-      reader.readAsBinaryString(f);
+      reader.readAsDataURL(demoFile);
+      sendFile(demoFile);
     }
 
     document.getElementById('drop_zone_demo').innerHTML = output.join('');
   }
-  function handleFileSelectLog(evt) {
-    evt.stopPropagation();
-    evt.preventDefault();
-    var files = evt.dataTransfer.files; // FileList object.
+  // function handleFileSelectLog(evt) {
+  //   evt.stopPropagation();
+  //   evt.preventDefault();
+  //   var files = evt.dataTransfer.files; // FileList object.
+  //
+  //   // files is a FileList of File objects. List some properties.
+  //   var output = [];
+  //   for (var i = 0, f; f = files[i]; i++) {
+  //     var fn = escape(f.name);
+  //     var name_match = fn.match(/^.*\.log$/);
+  //     if (name_match == null) {
+  //       output.push('<h3 style="color:#BE2F33;"><i class="icon-file-alt icon"></i> ', escape(f.name), '</h3>',
+  //                   '<a id="undo_log" class="btn btn-danger" href="#">Clear invalid file</a>');
+  //     } else {
+  //       progress.style.width = '0%';
+  //       $('#log_progress_ctr').show();
+  //       output.push('<h3 style="color:#2D9B27;"><i class="icon-file-alt icon"></i> ', escape(f.name), '</h3>',
+  //                   '<a id="undo_log" class="btn btn-info" href="#">Clear Log File</a>');
+  //       reader = new FileReader();
+  //       reader.onerror = errorHandler;
+  //       reader.onprogress = updateProgressLog;
+  //       reader.onabort = function(e) {
+  //         alert('File read cancelled');
+  //       };
+  //       reader.onloadstart = function(e) {
+  //         //document.getElementById('progress_bar').className = 'loading';
+  //       };
+  //       reader.onload = function(e) {
+  //         // Ensure that the progress bar displays 100% at the end.
+  //         progressLog.style.width = '100%';
+  //         // Hide the progress bar.
+  //         setTimeout("$('#log_progress_ctr').fadeOut();", 2000);
+  //       }
+  //       reader.readAsDataURL(f);
+  //     }
+  //   }
+  //
+  //   document.getElementById('drop_zone_log').innerHTML = output.join('');
+  // }
 
-    // files is a FileList of File objects. List some properties.
-    var output = [];
-    for (var i = 0, f; f = files[i]; i++) {
-      var fn = escape(f.name);
-      var name_match = fn.match(/^.*\.log$/);
-      if (name_match == null) {
-        output.push('<h3 style="color:#BE2F33;"><i class="icon-file-alt icon"></i> ', escape(f.name), '</h3>',
-                    '<a id="undo_log" class="btn btn-danger" href="#">Clear invalid file</a>');
-      } else {
-        progress.style.width = '0%';
-        $('#log_progress_ctr').show();
-        output.push('<h3 style="color:#2D9B27;"><i class="icon-file-alt icon"></i> ', escape(f.name), '</h3>',
-                    '<a id="undo_log" class="btn btn-info" href="#">Clear Log File</a>');
-        reader = new FileReader();
-        reader.onerror = errorHandler;
-        reader.onprogress = updateProgressLog;
-        reader.onabort = function(e) {
-          alert('File read cancelled');
-        };
-        reader.onloadstart = function(e) {
-          //document.getElementById('progress_bar').className = 'loading';
-        };
-        reader.onload = function(e) {
-          // Ensure that the progress bar displays 100% at the end.
-          progressLog.style.width = '100%';
-          // Hide the progress bar.
-          setTimeout("$('#log_progress_ctr').fadeOut();", 2000);
-        }
-        reader.readAsBinaryString(f);
-      }
-    }
-
-    document.getElementById('drop_zone_log').innerHTML = output.join('');
-  }
-
-  $(document).on("click", "#undo_log", function () {
-    $("#drop_zone_log").html("<h2>Drop <span style=\"color:#4284D3;\">log</span> file here!</h2>");
-  });
+  // $(document).on("click", "#undo_log", function () {
+  //   $("#drop_zone_log").html("<h2>Drop <span style=\"color:#4284D3;\">log</span> file here!</h2>");
+  // });
   $(document).on("click", "#undo_demo", function () {
     $("#drop_zone_demo").html("<h2>Drop <span style=\"color:#FF8540;\">demo</span> file here!</h2>");
   });
@@ -196,8 +228,8 @@
   var dropZoneDemo = document.getElementById('drop_zone_demo');
   dropZoneDemo.addEventListener('dragover', handleDragOver, false);
   dropZoneDemo.addEventListener('drop', handleFileSelectDemo, false);
-  var dropZoneLog = document.getElementById('drop_zone_log');
-  dropZoneLog.addEventListener('dragover', handleDragOver, false);
-  dropZoneLog.addEventListener('drop', handleFileSelectLog, false);
+  // var dropZoneLog = document.getElementById('drop_zone_log');
+  // dropZoneLog.addEventListener('dragover', handleDragOver, false);
+  // dropZoneLog.addEventListener('drop', handleFileSelectLog, false);
 </script>
 {% endblock %}

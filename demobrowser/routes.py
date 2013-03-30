@@ -8,6 +8,7 @@ from pyfile import write_pyfile
 import re
 from glob import glob
 import os
+import json
 
 _steam_id_re = re.compile('steamcommunity.com/openid/id/(.*?)$')
 
@@ -185,54 +186,64 @@ def allowed_log_file(filename):
 def upload_demo():
     values = {}
     if request.method == 'POST':
-        log_file = request.files['log_file']
+        async = False
+        if request.form.get('async', '0') == '1':
+            async = True
+        #log_file = request.files['log_file']
         the_file = request.files['demo_file']
         # Returns a demo on success, none if fail.
-        demo = _do_upload_demo_file(the_file)
-        if demo and log_file:
-            # If the log file was present, and we had a successful upload, try the log file.
-            _do_upload_log_file(log_file, demo)
-
+        demo, msg, cat = _do_upload_demo_file(the_file)
+        if demo and async:
+            flash(msg, category=cat)
+            return "Good"
+        elif async:
+            return json.dumps({'msg':msg, 'cat':cat}), 403
+        #     # If the log file was present, and we had a successful upload, try the log file.
+        #     _do_upload_log_file(log_file, demo)
+        flash(msg, category=cat)
     return render_template('upload_demo.html', values=values)
 
 def _do_upload_demo_file(the_file):
+    '''
+    Returns: Demo Object/False, Message, Message Type (to be passed to flash)
+    '''
     if not the_file:
-        flash("You must select a demo to upload!", category='error')
-        return None
+        return False, "You must select a demo to upload!", "error"
     if not allowed_file(the_file.filename):
-        flash("DOH! Only .dem files are allowed!", category='error')
-        return None
+        return False, "DOH! Only .dem files are allowed!", "error"
     filename = secure_filename(the_file.filename)
     total_path = os.path.join(app.config['DEMO_STORAGE_DIR'], filename)
     if os.path.exists(total_path):
         demo = Demo.get_from_filename(filename)
         if demo:
-            flash("<strong>Whoops!</strong> <a href='%s'>That Demo already exists</a>!" % \
-                (url_for('view_demo', demo=demo.id)), category='warning')
+            msg = "<strong>Whoops!</strong> <a href='%s'>That Demo already exists</a>!" % \
+                  (url_for('view_demo', demo=demo.id))
+            category = 'warning'
         else:
-            flash("<strong>Whoops!</strong> That Demo <strong>file</strong> already exists, but hasn't been added to the repository. "
-                  "Perhaps you'd like to <a href='%s'>import it</a>?" % (url_for("import_demo")), category='warning')
+            msg = "<strong>Whoops!</strong> That Demo <strong>file</strong> already exists, but hasn't been added to the repository. " \
+                  "Perhaps you'd like to <a href='%s'>import it</a>?" % (url_for("import_demo"))
+            category = 'warning'
+        return False, msg, category
+    success, msg = Demo.create_from_name(filename)
+    if success:
+        category = 'success'
+        the_file.save(total_path)
+        db.session.commit()
+        demo = Demo.get_from_filename(filename)
     else:
-        success, msg = Demo.create_from_name(filename)
-        if success:
-            flash(msg, category='success')
-            the_file.save(total_path)
-            db.session.commit()
-            return Demo.get_from_filename(filename)
-        else:
-            flash(msg, category='error')
-    return None
+        category = 'error'
+    return demo, msg, category
 
 def _do_upload_log_file(the_file, demo):
     if not allowed_log_file(the_file.filename):
         flash("DOH! Your logfile should be named X.log!", category='error')
-        return False
+        return False, "DOH! Your logfile should be named X.log!", 'error'
     filename = secure_filename(the_file.filename)
     # We'll store the demo files in the STORAGE dir
     total_path = os.path.join(app.config['DEMO_STORAGE_DIR'], filename)
     if os.path.exists(total_path):
         flash("<strong>Whoops!</strong> That Logfile already exists, Not sure what to do here...(%s)!" % total_path, category='warning')
-        return False
+        return False, "<strong>Whoops!</strong> That Logfile already exists, Not sure what to do here...(%s)!" % total_path, 'warning'
     the_file.save(total_path)
     success, log_id, msg = do_upload_log(total_path, app.config.get('LOGSTF_API_KEY', ''), title=demo.title, map=demo.name)
     if success:
