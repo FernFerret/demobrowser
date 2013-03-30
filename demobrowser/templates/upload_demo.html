@@ -46,17 +46,19 @@
         $('#demo_progress_ctr').addClass("progress-success").removeClass("active").removeClass("progress-striped");
         setTimeout("$('#demo_progress_ctr').fadeOut();", 2000);
         if (xhr.status == 200) {
-          // Handle response.
-          if (xhr.responseText == "Good") {
-            window.location = "{{ url_for('index') }}";
-          }
-        } else {
           var obj = JSON.parse(xhr.responseText);
-          var msg = '<div class="alert alert-' + obj.cat + '"><a class="close" data-dismiss="alert">×</a>' + obj.msg + '</div>';
-          $(msg).fadeIn().appendTo("#globalmsgs");
+          console.log(obj);
+          // Handle response.
+          if (obj.success) {
+            var msg = '<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a>' + obj.msg + '</div>';
+            $(msg).fadeIn().appendTo("#globalmsgs");
+          } else {
+            var msg = '<div class="alert alert-' + obj.cat + '"><a class="close" data-dismiss="alert">×</a>' + obj.msg + '</div>';
+            $(msg).fadeIn().appendTo("#globalmsgs");
+          }
         }
       }
-    };
+    }
     fd.append('async', 1);
     fd.append('demo_file', file);
     // Initiate a multipart/form-data upload
@@ -66,6 +68,7 @@
   function handleFileSelectDemo(evt) {
     evt.stopPropagation();
     evt.preventDefault();
+    $("#globalmsgs").children().each(function() {$(this).slideUp();});
 
 
     demoFile = evt.dataTransfer.files[0]; // FileList object.

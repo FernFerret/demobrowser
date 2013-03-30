@@ -194,10 +194,12 @@ def upload_demo():
         # Returns a demo on success, none if fail.
         demo, msg, cat = _do_upload_demo_file(the_file)
         if demo and async:
-            flash(msg, category=cat)
-            return "Good"
+            print the_file
+            msg = "<strong>Success!</strong> Demo '%s' was uploaded! Would you like to <a href='%s'>view it</a>?" % \
+                  (secure_filename(the_file.filename), url_for('view_demo', demo=demo.id))
+            return json.dumps({'success':True, 'msg':msg, 'cat':cat})
         elif async:
-            return json.dumps({'msg':msg, 'cat':cat}), 403
+            return json.dumps({'success':False, 'msg':msg, 'cat':cat})
         #     # If the log file was present, and we had a successful upload, try the log file.
         #     _do_upload_log_file(log_file, demo)
         flash(msg, category=cat)
@@ -212,23 +214,27 @@ def check_filename():
         file_exists, total_path, category = _is_file_on_disk(filename)
         if file_exists:
             return json.dumps({'success':False,'msg':total_path,'cat':category})
+        print "File did NOT exist on disk! %s" % filename
         return json.dumps({'success':True})
     return json.dumps({'success':False, 'msg':"No filename provided.", 'cat':'error'})
 
 def _is_file_on_disk(filename):
     total_path = os.path.join(app.config['DEMO_STORAGE_DIR'], filename)
-    if os.path.exists(total_path):
-        demo = Demo.get_from_filename(filename)
-        if demo:
-            msg = "<strong>Whoops!</strong> <a href='%s'>That Demo already exists</a>!" % \
-                  (url_for('view_demo', demo=demo.id))
-            category = 'warning'
-        else:
-            msg = "<strong>Whoops!</strong> That Demo <strong>file</strong> already exists, but hasn't been added to the repository. " \
-                  "Perhaps you'd like to <a href='%s'>import it</a>?" % (url_for("import_demo"))
-            category = 'warning'
-        return True, msg, category
-    return False, total_path, "success"
+    demo = Demo.get_from_filename(filename)
+    file_exists = False
+    category = "success"
+    msg = total_path
+    if demo:
+        file_exists = True
+        msg = "<strong>Whoops!</strong> <a href='%s'>That Demo already exists</a>!" % \
+              (url_for('view_demo', demo=demo.id))
+        category = 'warning'
+    elif os.path.exists(total_path):
+        file_exists = True
+        msg = "<strong>Whoops!</strong> That Demo <strong>file</strong> already exists, but hasn't been added to the repository. " \
+              "Perhaps you'd like to <a href='%s'>import it</a>?" % (url_for("import_demo"))
+        category = 'warning'
+    return file_exists, msg, category
 
 def _do_upload_demo_file(the_file):
     '''
@@ -238,7 +244,7 @@ def _do_upload_demo_file(the_file):
         return False, "You must select a demo to upload!", "error"
     if not allowed_file(the_file.filename):
         return False, "DOH! Only .dem files are allowed!", "error"
-
+    demo = None
     filename = secure_filename(the_file.filename)
     file_exists, total_path, category = _is_file_on_disk(filename)
     if file_exists:
