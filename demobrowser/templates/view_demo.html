@@ -1,6 +1,17 @@
 {% extends "layout-fixed.html" %}
 {% block main %}
-  <div class="row">
+  <div class="row-fluid">
+    <div id="log_progress_ctr" style="display:none;" class="span10 offset1" style="height:20px;">
+      <div style="" id="log_progress_style" class="progress progress-striped active">
+          <div id="log_progress" class="bar" style="width: 40%;"></div>
+      </div>
+    </div>
+  </div>
+  <div id="drop_zone" class="row">
+    <div style="display:none;" id="upload_overlay">
+      <div class="drop_fade_txt"><h1><i class="icon-cloud-upload"></i> Drop <span style="color:#FF9640">log</span> here to upload it!</h1></div>
+      <div class="drop_fade"></div>
+    </div>
     <div class="span10 offset1">
       <ul class="pager" style="margin-top:0px">
         {% if next %}
@@ -35,6 +46,7 @@
   {% if session.user_admin %}
     <script src="{{ url_for('static', filename='js/bootstrap-editable.js') }}"></script>
     <script type="text/javascript">
+    var uri = '{{ url_for("upload_log", demo=demo.id) }}';
     $.fn.editable.defaults.placement = 'right';
     $('#deletedemo').popover();
     $('#title').editable({

@@ -36,7 +36,6 @@ def login_required(function):
     return decorated
 
 ## Routes ##
-
 @app.route('/')
 def index():
     return render_template('demos.html', demos=Demo.get_page(1, app.config['DEMO_PER_PAGE']))
@@ -181,29 +180,31 @@ def allowed_log_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() == "log"
 
+@app.route('/upload/log/<demo>', methods=['POST'])
+@admin_required
+def upload_log(demo=None):
+    if demo is None:
+        return json.dumps({'success':False, 'msg':"Demo ID required. How did you get here again?", 'cat':"error"})
+    demo_obj = Demo.get_from_id(demo)
+    if demo_obj is None:
+        return json.dumps({'success':False, 'msg':"Demo %s was not found! How did you get here again?" % demo, 'cat':"error"})
+    log_file = request.files['log_file']
+    success, msg, cat = _do_upload_log_file(log_file, demo_obj)
+    return json.dumps({"success":success, "msg":msg, "cat":cat})
+
 @app.route('/upload/', methods=['GET', 'POST'])
 @admin_required
 def upload_demo():
-    values = {}
     if request.method == 'POST':
-        async = False
-        if request.form.get('async', '0') == '1':
-            async = True
-        #log_file = request.files['log_file']
         the_file = request.files['demo_file']
         # Returns a demo on success, none if fail.
         demo, msg, cat = _do_upload_demo_file(the_file)
-        if demo and async:
-            print the_file
+        if demo:
             msg = "<strong>Success!</strong> Demo '%s' was uploaded! Would you like to <a href='%s'>view it</a>?" % \
                   (secure_filename(the_file.filename), url_for('view_demo', demo=demo.id))
             return json.dumps({'success':True, 'msg':msg, 'cat':cat})
-        elif async:
-            return json.dumps({'success':False, 'msg':msg, 'cat':cat})
-        #     # If the log file was present, and we had a successful upload, try the log file.
-        #     _do_upload_log_file(log_file, demo)
-        flash(msg, category=cat)
-    return render_template('upload_demo.html', values=values)
+        return json.dumps({'success':False, 'msg':msg, 'cat':cat})
+    return render_template('upload_demo.html')
 
 @app.route('/demo/check/', methods=['POST'])
 @admin_required
@@ -263,29 +264,24 @@ def _do_upload_demo_file(the_file):
 
 def _do_upload_log_file(the_file, demo):
     if not allowed_log_file(the_file.filename):
-        flash("DOH! Your logfile should be named X.log!", category='error')
         return False, "DOH! Your logfile should be named X.log!", 'error'
     filename = secure_filename(the_file.filename)
-    # We'll store the demo files in the STORAGE dir
-    total_path = os.path.join(app.config['DEMO_STORAGE_DIR'], filename)
+    # We'll store the log files in the STORAGE dir too!
+    logname = demo.path.rsplit(".", 1)[0] + ".log"
+    total_path = os.path.join(app.config['DEMO_STORAGE_DIR'], logname)
     if os.path.exists(total_path):
-        flash("<strong>Whoops!</strong> That Logfile already exists, Not sure what to do here...(%s)!" % total_path, category='warning')
-        return False, "<strong>Whoops!</strong> That Logfile already exists, Not sure what to do here...(%s)!" % total_path, 'warning'
+        try:
+            os.unlink(total_path)
+        except EnvironmentError:
+            return False, "<strong>ERROR</strong> Couldn't remove <code>%s</code>! " \
+                          "You'll have to remove it yourself and try again!" % total_path, 'error'
     the_file.save(total_path)
     success, log_id, msg = do_upload_log(total_path, app.config.get('LOGSTF_API_KEY', ''), title=demo.title, map=demo.name)
-    if success:
-        flash(msg, category='success')
-        demo.logfile = log_id
-        db.session.commit()
-    else:
-        flash(msg, category='error')
-        return "Demo uploaded successfully <strong>without</strong> logs! <a href='%s'>Click here to see it</a>!" % url_for("view_demo", demo=demo.id)
-    try:
-        os.unlink(total_path)
-    except EnvironmentError:
-        # Already gone.
-        pass
-    return "Demo uploaded successfully with logs! <a href='%s'>Click here to see it</a>!" % url_for("view_demo", demo=demo.id)
+    if not success:
+        return False, msg, 'warning'
+    demo.logfile = log_id
+    db.session.commit()
+    return True, "<strong>SUCCESS!</strong> Logs added! <a href='http://logs.tf/%s'>Click here to see it</a>!" % log_id, "success"
 
 @app.route('/import/', methods=['GET', 'POST'])
 @admin_required

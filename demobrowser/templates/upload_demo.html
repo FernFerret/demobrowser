@@ -68,11 +68,10 @@
   function handleFileSelectDemo(evt) {
     evt.stopPropagation();
     evt.preventDefault();
+    $("#drop_zone_demo").removeClass("drag_hover");
     $("#globalmsgs").children().each(function() {$(this).slideUp();});
 
-
     demoFile = evt.dataTransfer.files[0]; // FileList object.
-
 
     // files is a FileList of File objects. List some properties.
     var output = [];
@@ -117,11 +116,24 @@
     evt.stopPropagation();
     evt.preventDefault();
     evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+    $("#drop_zone_demo").addClass("drag_hover");
+    console.log("starting");
+    console.log(evt);
+  }
+
+  function handleDragLeave(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    $("#drop_zone_demo").removeClass("drag_hover");
+    evt.dataTransfer.dropEffect = 'none';
+    console.log("leaving");
+    console.log(evt);
   }
 
   // Setup the dnd listeners.
   var dropZoneDemo = document.getElementById('drop_zone_demo');
   dropZoneDemo.addEventListener('dragover', handleDragOver, false);
+  dropZoneDemo.addEventListener('dragleave', handleDragLeave, false);
   dropZoneDemo.addEventListener('drop', handleFileSelectDemo, false);
 
 </script>
