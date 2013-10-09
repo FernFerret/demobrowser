@@ -1,67 +1,77 @@
 {% extends "layout-two-col.html" %}
-
 {% block main %}
-<form class="form-horizontal" action="{{ url_for('settings') }}" method="POST">
-  <fieldset>
-    <legend><h3>Modify System Settings</h3></legend>
-    <div class="alert">
-      <strong>Warning!</strong> Changing these settings can break things!
+<div class="ui grid">
+  <div class="four wide column"></div>
+  <div class="eight wide column">
+    <h3 class="ui header">Modify System Settings</h3>
+    <div class="ui warning message">
+      <div class="header">Warning!</div>
+      <p>Changing these settings can break things!</p>
     </div>
-    <div class="control-group">
-      <label class="control-label" for="title">Title:</label>
-      <div class="controls">
-        <input type="text" class="span8" id="title" name="title" placeholder="Sexy Server Manager" value="{{ config.get('TITLE', '') }}" />
-        <p></p>
+    <form class="form-horizontal" action="{{ url_for('settings') }}" method="POST">
+      <div class="ui form segment">
+        <div class="field">
+          <label><i class="help icon link" data-position="left center" data-content="The title of this site"></i>Title</label>
+          <div class="ui left labeled icon input">
+            <input type="text" id="title" name="title" placeholder="Sexy Server Manager" value="{{ config.get('TITLE', '') }}">
+            <i class="user icon"></i>
+          </div>
+        </div>
+        <div class="field">
+          <label><i class="help icon link" data-position="left center" data-content="Absolute url from the root of the site where the demos are stored"></i>Download Directory</label>
+          <div class="ui left labeled icon input">
+            <input type="text" id="download" name="download" placeholder="/demo_storage" value="{{ config.get('DEMO_DOWNLOAD_DIR', '') }}">
+            <i class="folder icon"></i>
+          </div>
+        </div>
+        <div class="field">
+          <label><i class="help icon link" data-position="left center" data-content="Directory where uploads are stored"></i>Storage Directory</label>
+          <div class="ui left labeled icon input">
+            <input type="text" id="storage" name="storage" placeholder="/var/www/html/tf2files/demo_storage" value="{{ config.get('DEMO_STORAGE_DIR', '') }}">
+            <i class="folder icon"></i>
+          </div>
+        </div>
+        <div class="field">
+          <label>Demos Per Page</label>
+          <div class="ui left labeled icon input">
+            <input type="text" id="perpage" name="perpage" placeholder="12" value="{{ config.get('DEMO_PER_PAGE', 12) }}">
+            <i class="grid layout icon"></i>
+          </div>
+        </div>
+        <div class="inline field">
+          <div class="ui checkbox">
+            <input type="checkbox" id="public" name="public" {% if config.get('DEMO_PUBLIC', False) %}checked{% endif %}>
+            <label for="public"></label>
+          </div>
+          <label><i class="help icon link" data-content="If enabled, anyone can see your demos without logging in. If not, you'll have to add each Steam ID yourself."></i>Public Demos</label>
+        </div>
+        <div class="inline field">
+          <div class="ui checkbox">
+            <input type="checkbox" id="debug" name="debug" {% if config.get('DEMO_PUBLIC', False) %}checked{% endif %}>
+            <label for="debug"></label>
+          </div>
+          <label><i class="help icon link" data-position="left center" data-content="Turn Debug mode on/off. If debug mode is on, you'll see full stack traces for pages. Disable this for production systems."></i>Debug</label>
+        </div>
+        <div class="inline field">
+          <div class="ui checkbox">
+            <input type="checkbox" id="cleardb" name="cleardb" {% if config.get('DEMO_PUBLIC', False) %}checked{% endif %}>
+            <label for="cleardb"></label>
+          </div>
+          <label><i class="help icon link" data-position="left center" data-content="CLEARS the database. I'll probably delete this later. ONLY for testing."></i>RESET the database</label>
+        </div>
+        <div class="ui error message">
+          <div class="header">We noticed some issues</div>
+        </div>
+        <!-- <div class="ui blue submit button">Login</div>
+        <button type="submit" class="btn btn-success">Save Settings</button>
+        <a href="{{ url_for('index') }}" class="btn">Cancel</a> -->
+        <div class="ui buttons center floated">
+          <a href="{{ url_for('index') }}" class="ui button">Cancel</a>
+          <div class="or"></div>
+          <div onclick="document.myform.submit()" class="ui positive button">Save</div>
+        </div>
       </div>
-    </div>
-    <div class="control-group">
-      <label class="control-label" for="upload">Download Directory:</label>
-      <div class="controls">
-        <input type="text" class="span8" id="download" name="download" placeholder="/demo_storage" value="{{ config.get('DEMO_DOWNLOAD_DIR', '') }}" />
-        <p></p>
-      </div>
-    </div>
-    <div class="control-group">
-      <label class="control-label" for="inbox">Storage Directory:</label>
-      <div class="controls">
-        <input type="text" class="span8" id="storage" name="storage" placeholder="/var/www/html/tf2files/demo_storage" value="{{ config.get('DEMO_STORAGE_DIR', '') }}" />
-        <p></p>
-      </div>
-    </div>
-    <div class="control-group">
-      <label class="control-label" for="perpage">Demos per Page:</label>
-      <div class="controls">
-        <input type="text" class="span8" id="perpage" name="perpage" placeholder="12" value="{{ config.get('DEMO_PER_PAGE', 12) }}" />
-        <p>Probably best to keep this divisible by four.</p>
-      </div>
-    </div>
-    <div class="control-group">
-      <label class="control-label" for="public">Public Demos:</label>
-      <div class="controls">
-        <input {% if config.get('DEMO_PUBLIC', False) %}checked="checked" {% endif %}type="checkbox" id="public" name="public">
-        <p>If enabled, anyone can see your demos without logging in. If not, you'll have to add each Steam ID yourself.</p>
-      </div>
-    </div>
-    <div class="control-group">
-      <label class="control-label" for="debug">Debug:</label>
-      <div class="controls">
-        <input {% if config.get('DEBUG', False) %}checked="checked" {% endif %}type="checkbox" id="debug" name="debug">
-        <p>Turn Debug mode on/off. If debug mode is on, you'll see full stack traces for pages. Disable this for production systems.</p>
-      </div>
-    </div>
-    {% if config.get('DEBUG', False) %}
-    <div class="control-group">
-      <label class="control-label" for="cleardb">Clear the Database:</label>
-      <div class="controls">
-        <input type="checkbox" id="cleardb" name="cleardb">
-        <p>CLEARS the database. I'll probably delete this later. ONLY for testing.</p>
-      </div>
-    </div>
-    {% endif %}
-    <div class="form-actions">
-      <button type="submit" class="btn btn-success">Save Settings</button>
-      <a href="{{ url_for('index') }}" class="btn">Cancel</a>
-    </div>
-  </fieldset>
-</form>
+    </form>
+  </div>
+</div>
 {% endblock main %}

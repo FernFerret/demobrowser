@@ -1,25 +1,17 @@
 {% extends "layout-fixed.html" %}
 {% block main %}
+<h3 class="ui header">Upload a Demo</h3>
 <form action="{{ url_for('upload_demo') }}" method="POST" enctype="multipart/form-data">
-  <fieldset>
-    <legend><h3>Upload a Demo</h3></legend>
-    <div>
-      <h4>About Demo Uploads</h2>
-      <p>The filename of the demo is used to determine the <strong>map</strong> and <strong>date</strong>. The accepted syntax is the same as your Team Fortress 2 server creates the demos. If you keep getting an error, see the <a href="{{ url_for('static', filename='img/anatomy_demo_file.png')}}">anatomy of a demo filename</a> for more info!</p>
-    </div>
-    <div class="row-fluid">
-      <div class="span8 offset2" style="height:20px;">
-        <div style="display:none;" id="demo_progress_ctr" class="progress progress-striped active">
-            <div id="demo_progress" class="bar" style="width: 40%;"></div>
-        </div>
-      </div>
-    </div>
-    <div class="row-fluid">
-      <div id="drop_zone_demo" class="span8 offset2 upload_box">
-        <h2>Drop <span style="color:#3F92D2;">demo</span> file here!</h2>
-      </div>
-    </div>
-  </fieldset>
+  <div class="ui info message">
+    <div class="header">About Demo Uploads</div>
+    <p>The filename of the demo is used to determine the <strong>map</strong> and <strong>date</strong>. The accepted syntax is the same as your Team Fortress 2 server creates the demos. If you keep getting an error, see the <a href="{{ url_for('static', filename='img/anatomy_demo_file.png')}}">anatomy of a demo filename</a> for more info!</p>
+  </div>
+  <div style="display: none;" id="demo_progress_ctr" class="ui blue active progress">
+    <div id="demo_progress" class="bar" style="width:40%"></div>
+  </div>
+  <div id="drop_zone_demo" class="ui center aligned segment" style="padding-top: 4em; padding-bottom: 4em;">
+    <h2>Drop <span style="color:#FF8540;">demo</span> file here!</h2>
+  </div>
 </form>
 {% endblock %}
 {% block javascript %}
@@ -29,7 +21,7 @@
 
   function sendFile(file) {
     progress.style.width = '0%';
-    $('#demo_progress_ctr').removeClass("progress-success").addClass("active").addClass("progress-striped").show();
+    $('#demo_progress_ctr').removeClass("successful").addClass("active").show();
     var uri = "{{ url_for('upload_demo', async=True) }}";
     var xhr = new XMLHttpRequest();
     var fd = new FormData();
@@ -43,18 +35,20 @@
       // console.log(xhr);
       if (xhr.readyState == 4) {
         progress.style.width = "100%";
-        $('#demo_progress_ctr').addClass("progress-success").removeClass("active").removeClass("progress-striped");
+        $('#demo_progress_ctr').addClass("successful").removeClass("active");
         setTimeout("$('#demo_progress_ctr').fadeOut();", 2000);
         if (xhr.status == 200) {
           var obj = JSON.parse(xhr.responseText);
           console.log(obj);
           // Handle response.
           if (obj.success) {
-            var msg = '<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a>' + obj.msg + '</div>';
-            $(msg).fadeIn().appendTo("#globalmsgs");
+            //var msg = '<div class="alert alert-success"><a class="close" data-dismiss="alert">×</a>' + obj.msg + '</div>';
+            var msg = '<div id="alert" class="ui ' + obj.cat + ' message hidden "><i id="alert-close" class="close icon"></i><div class="header">' + obj.title + '</div><p>' + obj.msg + '</p></div>';
+            $(msg).appendTo("#globalmsgs").transition("scale");
           } else {
-            var msg = '<div class="alert alert-' + obj.cat + '"><a class="close" data-dismiss="alert">×</a>' + obj.msg + '</div>';
-            $(msg).fadeIn().appendTo("#globalmsgs");
+            //var msg = '<div class="alert alert-' + obj.cat + '"><a class="close" data-dismiss="alert">×</a>' + obj.msg + '</div>';
+            var msg = '<div id="alert" class="ui ' + obj.cat + ' message hidden "><i id="alert-close" class="close icon"></i><div class="header">' + obj.title + '</div><p>' + obj.msg + '</p></div>';
+            $(msg).appendTo("#globalmsgs").transition("scale");
           }
         }
       }
@@ -68,8 +62,10 @@
   function handleFileSelectDemo(evt) {
     evt.stopPropagation();
     evt.preventDefault();
-    $("#drop_zone_demo").removeClass("drag_hover");
-    $("#globalmsgs").children().each(function() {$(this).slideUp();});
+    $("#drop_zone_demo").removeClass("inverted");
+    $("#globalmsgs").children().each(function() {
+      $(this).remove();
+    });
 
     demoFile = evt.dataTransfer.files[0]; // FileList object.
 
@@ -86,10 +82,10 @@
                   'cp_dustbowl</span><span style="color:#a864a8">.dem</span><h4>',
                   '<h4 style="color:#000;">If you\'re <span style="color:#2D9B27;">sure</span>',
                   ' this is your demo file,<br />rename it and drag here again!</h4>',
-                  '<a id="undo_demo" class="btn btn-danger" href="#">Clear Invalid File</a>');
+                  '<a id="undo_demo" class="ui primary red button" href="#">Clear Invalid File</a>');
     } else {
       output.push('<h3 id="demo_name" style="color:#2D9B27;"><i class="icon-file-alt icon"></i> ', escape(demoFile.name), '</h3>',
-                  '<a id="undo_demo" class="btn btn-info" href="#">Clear Demo File</a>');
+                  '<a id="undo_demo" class="ui primary blue button" href="#">Clear Demo File</a>');
       $.post("{{ url_for('check_filename') }}", { filename: fn },
         function(data){
           obj = JSON.parse(data);
@@ -97,8 +93,9 @@
             sendFile(demoFile);
           } else {
             $("#demo_name").css('color', '#FFAA00');
-            var msg = '<div class="alert alert-' + obj.cat + '"><a class="close" data-dismiss="alert">×</a>' + obj.msg + '</div>';
-            $(msg).fadeIn().appendTo("#globalmsgs");
+            var msg = '<div id="alert" class="ui ' + obj.cat + ' message hidden "><i id="alert-close" class="close icon"></i><div class="header">' + obj.title + '</div><p>' + obj.msg + '</p></div>';
+            $(msg).appendTo("#globalmsgs").transition("scale");
+            $('#alert-close').click(function () { $(this).parent().transition("scale"); $this });
             console.log(data);
           }
         });
@@ -116,7 +113,7 @@
     evt.stopPropagation();
     evt.preventDefault();
     evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
-    $("#drop_zone_demo").addClass("drag_hover");
+    $("#drop_zone_demo").addClass("inverted");
     console.log("starting");
     console.log(evt);
   }
@@ -124,7 +121,7 @@
   function handleDragLeave(evt) {
     evt.stopPropagation();
     evt.preventDefault();
-    $("#drop_zone_demo").removeClass("drag_hover");
+    $("#drop_zone_demo").removeClass("inverted");
     evt.dataTransfer.dropEffect = 'none';
     console.log("leaving");
     console.log(evt);

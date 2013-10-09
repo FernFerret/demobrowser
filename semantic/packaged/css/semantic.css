@@ -518,6 +518,10 @@
   -ms-box-sizing: border-box;
   box-sizing: border-box;
 }
+body > .ui.grid {
+  margin-left: 0%;
+  margin-right: 0%;
+}
 .ui.grid:after,
 .ui.row:after {
   content: ".";
@@ -569,43 +573,36 @@
 /*******************************
            Variations
 *******************************/
-/*-------------------
-        Page
---------------------*/
+/*-----------------------
+  Page Grid (Responsive)
+-------------------------*/
 .ui.page.grid {
-  margin: 0%;
-  padding: 0% 2%;
-}
-/*-------------------
-      Responsive
---------------------*/
-.ui.responsive.grid {
-  margin-left: 0% !important;
-  margin-right: 0% !important;
   min-width: 320px;
+  margin-left: 0%;
+  margin-right: 0%;
 }
 @media only screen and (max-width: 998px) {
-  .ui.responsive.grid {
+  .ui.page.grid {
     padding: 0% 4%;
   }
 }
 @media only screen and (min-width: 998px) {
-  .ui.responsive.grid {
+  .ui.page.grid {
     padding: 0% 8%;
   }
 }
 @media only screen and (min-width: 1500px) {
-  .ui.responsive.grid {
+  .ui.page.grid {
     padding: 0% 13%;
   }
 }
 @media only screen and (min-width: 1750px) {
-  .ui.responsive.grid {
+  .ui.page.grid {
     padding: 0% 18%;
   }
 }
 @media only screen and (min-width: 2000px) {
-  .ui.responsive.grid {
+  .ui.page.grid {
     padding: 0% 23%;
   }
 }
@@ -851,7 +848,7 @@
   -moz-box-shadow: none;
   box-shadow: none;
 }
-.ui.celled.responsive.grid {
+.ui.celled.page.grid {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
@@ -1237,26 +1234,25 @@
 .ui.menu .item > .input input {
   width: 100%;
 }
-.ui.menu .input .icon {
-  padding-top: 0em;
+.ui.menu .ui.input > .icon {
+  padding-top: 0.1em;
   height: auto;
 }
 .ui.menu .item > .input input,
-.ui.menu .item > input {
+.ui.menu .item > input[type="text"] {
   position: relative;
-  top: -0.45em;
-  margin: 0em;
+  margin: -0.45em 0em;
   padding-top: 0.45em;
   padding-bottom: 0.45em;
 }
 .ui.vertical.menu .item > .input input,
-.ui.vertical.menu .item > input {
+.ui.vertical.menu .item > input[type="text"] {
   top: 0em;
   margin: 0em;
   padding-top: 0.63em;
   padding-bottom: 0.63em;
 }
-.ui.vertical.menu .item > .input .icon {
+.ui.vertical.menu .ui.input > .icon {
   top: 0px;
   padding-top: 0.63em;
 }
@@ -1518,10 +1514,11 @@
 .ui.tiered.menu > .menu .item.active:after {
   position: absolute;
   content: '';
+  margin-top: -1px;
   top: 100%;
   left: 0px;
   width: 100%;
-  height: 1px;
+  height: 2px;
   background-color: #FBFBFB;
 }
 .ui.tiered.menu .sub.menu {
@@ -1639,10 +1636,11 @@
 .ui.pagination.menu {
   margin: 0em;
   display: inline-block;
+  vertical-align: middle;
 }
 .ui.pagination.menu .item {
   min-width: 2.7em;
-  min-height: 2.66em;
+  min-height: 2.7em;
   text-align: center;
 }
 .ui.pagination.menu.floated {
@@ -1652,7 +1650,7 @@
 .ui.pagination.menu .active.item {
   border-top: none;
   padding-top: 0.83em;
-  background-color: transparent;
+  background-color: rgba(0, 0, 0, 0.05);
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
@@ -2462,7 +2460,6 @@
 }
 .ui.menu .item {
   font-size: 1rem;
-  height: 2.66em;
 }
 .ui.vertical.menu {
   width: 15rem;
@@ -4750,6 +4747,15 @@ i.massive.basic.icon {
 /*-------------------
        Colors
 --------------------*/
+/*--- White ---*/
+.ui.white.buttons .button,
+.ui.white.button {
+  background-color: #FFFFFF;
+}
+.ui.white.buttons .button:hover,
+.ui.white.button:hover {
+  background-color: #A4A4A4;
+}
 /*--- Black ---*/
 .ui.black.buttons .button,
 .ui.black.button {
@@ -5166,12 +5172,21 @@ i.massive.basic.icon {
   line-height: 1.2;
   color: rgba(0, 0, 0, 0.5);
 }
+.ui.header .icon {
+  display: table-cell;
+  vertical-align: middle;
+  padding-right: 0.5em;
+}
+.ui.header .icon:only-child {
+  display: inline-block;
+}
 .ui.header .content {
   display: inline-block;
   vertical-align: top;
 }
-.ui.header .icon {
-  margin-right: 0.5em;
+.ui.header .icon + .content {
+  padding-left: 0.5em;
+  display: table-cell;
 }
 /* Positioning */
 .ui.header:first-child {
@@ -5225,6 +5240,38 @@ h5.ui.header {
 }
 .ui.tiny.header {
   font-size: 1em;
+}
+/*******************************
+            Types
+*******************************/
+/*-------------------
+        Icon
+--------------------*/
+.ui.icon.header {
+  display: inline-block;
+  text-align: center;
+}
+.ui.icon.header .icon {
+  float: none;
+  display: block;
+  font-size: 3em;
+  margin: 0em auto 0.2em;
+  padding: 0em;
+}
+.ui.icon.header .content {
+  display: block;
+}
+.ui.icon.header .circular.icon,
+.ui.icon.header .square.icon {
+  font-size: 2em;
+}
+.ui.block.icon.header .icon {
+  margin-bottom: 0em;
+}
+.ui.icon.header.aligned {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }
 /*******************************
             States
@@ -5386,31 +5433,6 @@ h5.ui.header {
   -webkit-border-radius: 0em 0em 0.3125em 0.3125em;
   -moz-border-radius: 0em 0em 0.3125em 0.3125em;
   border-radius: 0em 0em 0.3125em 0.3125em;
-}
-/*-------------------
-        Icon
---------------------*/
-.ui.icon.header {
-  display: inline-block;
-  text-align: center;
-}
-.ui.icon.header .icon {
-  float: none;
-  display: block;
-  font-size: 3em;
-  margin: 0em auto 0.2em;
-}
-.ui.icon.header .circular.icon,
-.ui.icon.header .square.icon {
-  font-size: 2em;
-}
-.ui.block.icon.header .icon {
-  margin-bottom: 0em;
-}
-.ui.icon.header.aligned {
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
 }
 
 /*
@@ -6563,9 +6585,6 @@ i.icon.close:before {
 i.icon.delete:before {
   content: "\f00d";
 }
-i.icon.dropdown:before {
-  content: "\f0d7";
-}
 i.icon.like:before {
   content: "\f004";
 }
@@ -6578,10 +6597,6 @@ i.icon.signup:before {
 /*--------------
    Spacing Fix
 ---------------*/
-/* dropdown arrows are to the right */
-i.dropdown.icon {
-  margin: 0em 0em 0em 0.5em;
-}
 /* stars are usually consecutive */
 i.icon.star {
   width: auto;
@@ -6846,17 +6861,14 @@ i.icon {
 }
 i.large.icon {
   font-size: 2em;
-  margin-right: 0.5em;
   vertical-align: middle;
 }
 i.huge.icon {
   font-size: 4em;
-  margin-right: 0.75em;
   vertical-align: middle;
 }
 i.massive.icon {
   font-size: 8em;
-  margin-right: 1em;
   vertical-align: middle;
 }
 
@@ -9381,7 +9393,7 @@ a.ui.teal.label:hover:before {
   vertical-align: middle;
 }
 .ui.checkbox input {
-  visibility: hidden;
+  opacity: 0;
   outline: none;
 }
 /*--- Box ---*/
@@ -9882,6 +9894,12 @@ body.ui.dimmed.dimmable > :not(.dimmer){
   -ms-transition: border-radius 0.1s ease, width 0.2s ease;
   transition: border-radius 0.1s ease, width 0.2s ease;
 }
+/*******************************
+            Content
+*******************************/
+/*--------------
+     Menu
+---------------*/
 .ui.dropdown .menu {
   position: absolute;
   display: none;
@@ -9905,11 +9923,27 @@ body.ui.dimmed.dimmable > :not(.dimmer){
   transition: opacity 0.2s ease;
   z-index: 11;
 }
-/* Dropdown Icon */
+/*--------------
+      Icon
+---------------*/
 .ui.dropdown > .dropdown.icon {
   width: auto;
+  margin: 0em 0em 0em 0.5em;
 }
-/* Dropdown Text */
+.ui.dropdown > .dropdown.icon:before {
+  content: "\f0d7";
+}
+.ui.dropdown .menu .item .dropdown.icon {
+  width: auto;
+  float: right;
+  margin: 0em 0em 0em 0.5em;
+}
+.ui.dropdown .menu .item .dropdown.icon:before {
+  content: "\f0da";
+}
+/*--------------
+      Text
+---------------*/
 .ui.dropdown > .text {
   cursor: pointer;
   display: inline-block;
@@ -9923,12 +9957,9 @@ body.ui.dimmed.dimmable > :not(.dimmer){
 .ui.dropdown .menu {
   left: 0px;
 }
-.ui.menu .dropdown:last-child .menu,
-.ui > .ui.dropdown:last-child .menu {
-  left: auto;
-  right: 0px;
-}
-/* Sub Menu Position */
+/*--------------
+    Sub Menu
+---------------*/
 .ui.dropdown .menu .menu {
   top: 0% !important;
   left: 100% !important;
@@ -9961,6 +9992,15 @@ body.ui.dimmed.dimmable > :not(.dimmer){
 }
 .ui.dropdown .menu .item:first-child {
   border-top: none;
+}
+/*******************************
+            Coupling
+*******************************/
+/* Opposite on last menu on right */
+.ui.menu .right.menu .dropdown:last-child .menu,
+.ui.button > .ui.dropdown:last-child .menu {
+  left: auto;
+  right: 0px;
 }
 /*******************************
             States
@@ -10815,13 +10855,14 @@ a.ui.nag {
 *******************************/
 .ui.rating {
   display: inline-block;
-  vertical-align: middle;
+  font-size: 0em;
+  vertical-align: baseline;
   margin: 0em 0.5em 0em 0em;
 }
 .ui.rating:last-child {
   margin-right: 0em;
 }
-.ui.rating:after {
+.ui.rating:before {
   display: block;
   content: '';
   visibility: hidden;
@@ -10831,17 +10872,16 @@ a.ui.nag {
 /* Icon */
 .ui.rating .icon {
   cursor: default;
-  float: left;
   margin: 0em;
   width: 1em;
   height: auto;
   padding: 0em;
+  color: rgba(0, 0, 0, 0.15);
   font-weight: normal;
   font-style: normal;
 }
-.ui.rating .icon:after {
+.ui.rating .icon:before {
   content: "\2605";
-  color: rgba(0, 0, 0, 0.15);
   -webkit-transition: color 0.3s ease,
     opacity 0.3s ease
   ;
@@ -10865,17 +10905,15 @@ a.ui.nag {
         Star
 --------------------*/
 .ui.star.rating .icon {
-  width: 1em;
-  margin-right: 0.1em;
+  width: 1.2em;
 }
-.ui.star.rating .icon:last-child {
-  margin: 0em;
-}
-.ui.star.rating .icon:after {
+/* Star */
+.ui.star.rating .icon:before {
   content: '\f006';
   font-family: 'Icons';
 }
-.ui.star.rating .active.icon:after {
+/* Active Star */
+.ui.star.rating .active.icon:before {
   content: '\f005';
   font-family: 'Icons';
 }
@@ -10883,24 +10921,24 @@ a.ui.nag {
         Heart
 --------------------*/
 .ui.heart.rating .icon {
-  width: 1em;
-  margin-right: 0.1em;
+  width: 1.2em;
 }
-.ui.heart.rating .icon:last-child {
-  margin: 0em;
-}
-.ui.heart.rating .icon:after {
+.ui.heart.rating .icon:before {
   content: '\f08a';
   font-family: 'Icons';
 }
-.ui.heart.rating .active.icon:after {
+/* Active */
+.ui.heart.rating .active.icon:before {
   content: '\f004';
   font-family: 'Icons';
-  color: #EF404A;
 }
-.ui.heart.rating .hover.icon:after,
-.ui.heart.rating .active.hover.icon:after {
-  color: #FF2733;
+.ui.heart.rating .active.icon {
+  color: !important;
+}
+/* Hovered */
+.ui.heart.rating .hover.icon,
+.ui.heart.rating .active.hover.icon {
+  color: !important;
 }
 /*******************************
              States
@@ -10913,36 +10951,38 @@ a.ui.nag {
   cursor: pointer;
 }
 /* active icons */
-.ui.rating .active.icon:after {
-  color: #FFCB08;
+.ui.rating .active.icon {
+  color: #FFCB08 !important;
 }
 /*-------------------
         Hover
 --------------------*/
 /* rating */
-.ui.rating.hover .active.icon:after {
+.ui.rating.hover .active.icon {
   opacity: 0.5;
 }
 /* icon */
-.ui.rating .icon.hover:after,
-.ui.rating .icon.hover.active:after {
+.ui.rating .icon.hover,
+.ui.rating .icon.hover.active {
   opacity: 1;
-  color: #FFB70A;
+  color: #FFB70A !important;
 }
 /*******************************
           Variations
 *******************************/
-.ui.mini.rating {
+.ui.small.rating .icon {
+  font-size: 0.75rem;
+}
+.ui.rating .icon {
   font-size: 1rem;
 }
-.ui.small.rating {
-  font-size: 1.25rem;
-}
-.ui.rating {
+.ui.large.rating .icon {
   font-size: 1.5rem;
+  vertical-align: middle;
 }
-.ui.large.rating {
+.ui.huge.rating .icon {
   font-size: 2rem;
+  vertical-align: middle;
 }
 
 /*
@@ -11756,13 +11796,6 @@ body {
   display: block;
   visibility: visible;
 }
-/* Direction */
-.ui.out.transition {
-  -webkit-animation-direction: reverse;
-  -moz-animation-direction: reverse;
-  -o-animation-direction: reverse;
-  animation-direction: reverse;
-}
 /* Disabled */
 .ui.disabled.transition {
   -webkit-animation-play-state: paused;
@@ -11833,6 +11866,12 @@ body {
   -o-animation-name: horizontalFlip;
   animation-name: horizontalFlip;
 }
+.ui.horizontal.flip.transition.out {
+  -webkit-animation-name: horizontalFlipOut;
+  -moz-animation-name: horizontalFlipOut;
+  -o-animation-name: horizontalFlipOut;
+  animation-name: horizontalFlipOut;
+}
 .ui.vertical.flip.transition.in,
 .ui.vertical.flip.transition.out {
   -webkit-animation-name: verticalFlip;
@@ -11840,15 +11879,26 @@ body {
   -o-animation-name: verticalFlip;
   animation-name: verticalFlip;
 }
+.ui.vertical.flip.transition.out {
+  -webkit-animation-name: verticalFlipOut;
+  -moz-animation-name: verticalFlipOut;
+  -o-animation-name: verticalFlipOut;
+  animation-name: verticalFlipOut;
+}
 /*--------------
       Fades
 ---------------*/
-.ui.fade.transition.in,
-.ui.fade.transition.out {
+.ui.fade.transition.in {
   -webkit-animation-name: fade;
   -moz-animation-name: fade;
   -o-animation-name: fade;
   animation-name: fade;
+}
+.ui.fade.transition.out {
+  -webkit-animation-name: fadeOut;
+  -moz-animation-name: fadeOut;
+  -o-animation-name: fadeOut;
+  animation-name: fadeOut;
 }
 .ui.fade.up.transition.in {
   -webkit-animation-name: fadeUp;
@@ -11857,10 +11907,10 @@ body {
   animation-name: fadeUp;
 }
 .ui.fade.up.transition.out {
-  -webkit-animation-name: fade;
-  -moz-animation-name: fade;
-  -o-animation-name: fade;
-  animation-name: fade;
+  -webkit-animation-name: fadeUpOut;
+  -moz-animation-name: fadeUpOut;
+  -o-animation-name: fadeUpOut;
+  animation-name: fadeUpOut;
 }
 .ui.fade.down.transition.in {
   -webkit-animation-name: fadeDown;
@@ -11869,26 +11919,30 @@ body {
   animation-name: fadeDown;
 }
 .ui.fade.down.transition.out {
-  -webkit-animation-name: fade;
-  -moz-animation-name: fade;
-  -o-animation-name: fade;
-  animation-name: fade;
+  -webkit-animation-name: fadeDownOut;
+  -moz-animation-name: fadeDownOut;
+  -o-animation-name: fadeDownOut;
+  animation-name: fadeDownOut;
 }
 /*--------------
       Scale
 ---------------*/
-.ui.scale.transition.in,
-.ui.scale.transition.out {
+.ui.scale.transition.in {
   -webkit-animation-name: scale;
   -moz-animation-name: scale;
   -o-animation-name: scale;
   animation-name: scale;
 }
+.ui.scale.transition.out {
+  -webkit-animation-name: scaleOut;
+  -moz-animation-name: scaleOut;
+  -o-animation-name: scaleOut;
+  animation-name: scaleOut;
+}
 /*--------------
       Slide
 ---------------*/
-.ui.slide.down.transition.in,
-.ui.slide.down.transition.out {
+.ui.slide.down.transition.in {
   -webkit-animation-name: slide;
   -moz-animation-name: slide;
   -o-animation-name: slide;
@@ -11897,12 +11951,29 @@ body {
   -ms-transform-origin: 50% 0%;
   -webkit-transform-origin: 50% 0%;
 }
-.ui.slide.up.transition.in,
-.ui.slide.up.transition.out {
+.ui.slide.down.transition.out {
+  -webkit-animation-name: slideOut;
+  -moz-animation-name: slideOut;
+  -o-animation-name: slideOut;
+  animation-name: slideOut;
+  transform-origin: 50% 0%;
+  -ms-transform-origin: 50% 0%;
+  -webkit-transform-origin: 50% 0%;
+}
+.ui.slide.up.transition.in {
   -webkit-animation-name: slide;
   -moz-animation-name: slide;
   -o-animation-name: slide;
   animation-name: slide;
+  transform-origin: 50% 100%;
+  -ms-transform-origin: 50% 100%;
+  -webkit-transform-origin: 50% 100%;
+}
+.ui.slide.up.transition.out {
+  -webkit-animation-name: slideOut;
+  -moz-animation-name: slideOut;
+  -o-animation-name: slideOut;
+  animation-name: slideOut;
   transform-origin: 50% 100%;
   -ms-transform-origin: 50% 100%;
   -webkit-transform-origin: 50% 100%;
@@ -11935,6 +12006,36 @@ body {
   100% {
     opacity: 1;
     transform: scaleY(1);
+  }
+}
+@-moz-keyframes slideOut {
+  0% {
+    opacity: 1;
+    -moz-transform: scaleY(1);
+  }
+  100% {
+    opacity: 0;
+    -moz-transform: scaleY(0);
+  }
+}
+@-webkit-keyframes slideOut {
+  0% {
+    opacity: 1;
+    -webkit-transform: scaleY(1);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: scaleY(0);
+  }
+}
+@keyframes slideOut {
+  0% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleY(0);
   }
 }
 /*******************************
@@ -12401,6 +12502,46 @@ body {
     opacity: 1;
   }
 }
+@-webkit-keyframes verticalFlipOut {
+  0% {
+    -webkit-transform: rotateX(0deg);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: rotateX(-90deg);
+    opacity: 0;
+  }
+}
+@-moz-keyframes verticalFlipOut {
+  0% {
+    -moz-transform: rotateX(0deg);
+    opacity: 1;
+  }
+  100% {
+    -moz-transform: rotateX(-90deg);
+    opacity: 0;
+  }
+}
+@-o-keyframes verticalFlipOut {
+  0% {
+    -o-transform: rotateX(0deg);
+    opacity: 1;
+  }
+  100% {
+    -o-transform: rotateX(-90deg);
+    opacity: 0;
+  }
+}
+@keyframes verticalFlipOut {
+  0% {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: rotateX(-90deg);
+    opacity: 0;
+  }
+}
 /*--------------
      Fades
 ---------------*/
@@ -12435,6 +12576,38 @@ body {
   }
   100% {
     opacity: 1;
+  }
+}
+@-webkit-keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@-moz-keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@-o-keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
 /* Fade Up */
@@ -12478,6 +12651,46 @@ body {
     transform: translateY(0);
   }
 }
+@-webkit-keyframes fadeUpOut {
+  0% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+  }
+}
+@-moz-keyframes fadeUpOut {
+  0% {
+    opacity: 1;
+    -moz-transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    -moz-transform: translateY(20px);
+  }
+}
+@-o-keyframes fadeUpOut {
+  0% {
+    opacity: 1;
+    -o-transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    -o-transform: translateY(20px);
+  }
+}
+@keyframes fadeUpOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
 /* Fade Down */
 @-webkit-keyframes fadeDown {
   0% {
@@ -12517,6 +12730,46 @@ body {
   100% {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+@-webkit-keyframes fadeDownOut {
+  0% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(-20px);
+  }
+}
+@-moz-keyframes fadeDownOut {
+  0% {
+    opacity: 1;
+    -moz-transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    -moz-transform: translateY(-20px);
+  }
+}
+@-o-keyframes fadeDownOut {
+  0% {
+    opacity: 1;
+    -o-transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    -o-transform: translateY(-20px);
+  }
+}
+@keyframes fadeDownOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
   }
 }
 /*--------------
@@ -12561,6 +12814,46 @@ body {
   100% {
     opacity: 1;
     transform: scale(1);
+  }
+}
+@-webkit-keyframes scaleOut {
+  0% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: scale(0.7);
+  }
+}
+@-moz-keyframes scaleOut {
+  0% {
+    opacity: 1;
+    -moz-transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    -moz-transform: scale(0.7);
+  }
+}
+@-o-keyframes scaleOut {
+  0% {
+    opacity: 1;
+    -o-transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    -o-transform: scale(0.7);
+  }
+}
+@keyframes scaleOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.7);
   }
 }
 
@@ -13575,12 +13868,25 @@ ol.ui.list li,
   padding: 0.3em 0em;
   line-height: 1.2;
 }
+.ui.list .item:after {
+  content: '';
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
 /* Icon */
 .ui.list .item > .icon {
-  margin: 0em 0.5em 0em 0em;
+  display: table-cell;
+  margin: 0em;
+  padding: 0em 0.5em 0em 0em;
+  vertical-align: middle;
+}
+.ui.list .item > .icon:only-child {
+  display: inline-block;
 }
 .ui.horizontal.list .item > .icon {
-  margin: 0em 0.25em 0em 0em;
+  padding: 0em 0.25em 0em 0em;
 }
 /* Image */
 .ui.list .item > img {
@@ -13597,6 +13903,11 @@ ol.ui.list li,
   display: inline-block;
   vertical-align: middle;
   line-height: 1.2;
+}
+.ui.list .item > .icon + .content {
+  display: table-cell;
+  vertical-align: top;
+  padding-left: 0.5em;
 }
 /* Link */
 .ui.list a {
@@ -13619,9 +13930,11 @@ ol.ui.list li,
 }
 /* Floated Content */
 .ui.list .item > .left.floated {
+  margin-right: 1em;
   float: left;
 }
 .ui.list .item > .right.floated {
+  margin-left: 1em;
   float: right;
 }
 /*******************************

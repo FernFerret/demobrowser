@@ -44,7 +44,7 @@ class Demo(db.Model):
                                           Demo.id.desc()).filter(or_(Demo.date < self.date,
                                                                  and_(Demo.date <= self.date,
                                                                       Demo.id < self.id)))
-    	return sweet_query.first()
+        return sweet_query.first()
 
 
     def next_by_date(self):
@@ -52,7 +52,7 @@ class Demo(db.Model):
                                           Demo.id.asc()).filter(or_(Demo.date > self.date,
                                                                     and_(Demo.date >= self.date,
                                                                          Demo.id > self.id)))
-    	return sweet_query.first()
+        return sweet_query.first()
 
     @staticmethod
     def demo_exists(demo_name):
@@ -99,6 +99,15 @@ class Demo(db.Model):
         db.session.delete(demo)
         db.session.commit()
         return True
+
+    def get_map_name(self):
+        pieces = self.name.upper().split("_")
+        if len(pieces) > 1:
+            prefix = pieces.pop(0)
+        else:
+            prefix = ""
+        map_name = " ".join([str(piece).capitalize() for piece in pieces])
+        return map_name, prefix
 
     def __repr__(self):
         return "<(Demo:%s - Title: %s, Date: %s, Map: %s)>" % (self.id, self.title, self.date, self.name)

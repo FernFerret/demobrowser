@@ -1,5 +1,5 @@
 from demobrowser import app, oid, db
-from demobrowser.helpers import get_steam_userinfo, get_my_ip, do_upload_log
+from demobrowser.helpers import get_steam_userinfo, get_my_ip, do_upload_log, get_map_name
 from demobrowser.models import User, Demo
 from flask import render_template, session, redirect, url_for, request, g, flash, get_flashed_messages
 from werkzeug import secure_filename
@@ -15,6 +15,8 @@ _steam_id_re = re.compile('steamcommunity.com/openid/id/(.*?)$')
 if app.config.get('TEST', False):
     session['user_admin'] = True
     session['user_id'] = 'TEST_ID'
+
+
 ## Route Helpers ##
 def admin_required(function):
     @wraps(function)
@@ -24,6 +26,7 @@ def admin_required(function):
             return redirect(url_for('index'))
         return function(*args, **kwargs)
     return decorated
+
 
 def login_required(function):
     @wraps(function)
@@ -35,10 +38,14 @@ def login_required(function):
         return function(*args, **kwargs)
     return decorated
 
+
 ## Routes ##
 @app.route('/')
 def index():
+    print get_map_name("cp_dustbowl")
+    print get_map_name("pl_goldrush")
     return render_template('demos.html', demos=Demo.get_page(1, app.config['DEMO_PER_PAGE']))
+
 
 @app.route('/page/<page>/')
 def demopage(page=1):
@@ -50,12 +57,14 @@ def demopage(page=1):
         return redirect(url_for('index'))
     return render_template('demos.html', demos=Demo.get_page(page, app.config['DEMO_PER_PAGE']))
 
+
 @app.route('/login/')
 @oid.loginhandler
 def login():
     if g.user is not None:
         return redirect(oid.get_next_url())
     return oid.try_login('http://steamcommunity.com/openid')
+
 
 @oid.after_login
 def check_login(resp):
@@ -74,11 +83,13 @@ def check_login(resp):
     flash('You are logged in as %s' % g.user.nickname, category='success')
     return redirect(oid.get_next_url())
 
+
 @app.before_request
 def before_request():
     g.user = None
     if 'user_id' in session:
         g.user = User.query.get(session['user_id'])
+
 
 @app.route('/logout')
 def logout():
@@ -88,10 +99,12 @@ def logout():
     flash('You\'ve been logged out.', category='info')
     return redirect(url_for('index'))
 
+
 @app.route('/users/')
 @admin_required
 def users():
     return render_template('users.html', users=User.get_all())
+
 
 @app.route('/users/delete/', methods=['POST'])
 @admin_required
@@ -104,6 +117,7 @@ def delete_user():
     if User.delete(int(request.form['delete'])):
         return "Success."
     return "Fail.", 403
+
 
 @app.route('/users/add/', methods=['GET', 'POST'])
 @admin_required
@@ -127,6 +141,7 @@ def add_user():
             return redirect(url_for('add_user'))
     return render_template('add_user.html', errors=errors, values=values)
 
+
 @app.route('/users/makeadmin/', methods=['POST'])
 @admin_required
 def make_admin():
@@ -141,6 +156,7 @@ def make_admin():
         user.make_admin(admin)
         return "Success"
     return "Fail.", 403
+
 
 @app.route('/settings/', methods=['GET', 'POST'])
 @admin_required
@@ -161,7 +177,8 @@ def settings():
         try:
             values['DEMO_PER_PAGE'] = int(request.form.get('perpage', 12))
         except ValueError:
-            flash("Warning: Defaulting Demos Per Page to 12 because you didn't put a number in that textbox, idiot.", category='warn')
+            flash("Warning: Defaulting demos per page to 12 because you didn't put a number in that textbox, idiot.",
+                  category='warn')
         #if request.form.get('cleardb', None) is not None and values['DEBUG'] is True:
         #    db.drop_all()
         #    db.create_all()
@@ -172,25 +189,29 @@ def settings():
         flash('Success! Your settings were updated.', category='success')
     return render_template('settings.html')
 
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() == "dem"
+
 
 def allowed_log_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() == "log"
 
+
 @app.route('/upload/log/<demo>', methods=['POST'])
 @admin_required
 def upload_log(demo=None):
     if demo is None:
-        return json.dumps({'success':False, 'msg':"Demo ID required. How did you get here again?", 'cat':"error"})
+        return json.dumps({'success': False, 'msg': "Demo ID required. How did you get here again?", 'cat': "error"})
     demo_obj = Demo.get_from_id(demo)
     if demo_obj is None:
-        return json.dumps({'success':False, 'msg':"Demo %s was not found! How did you get here again?" % demo, 'cat':"error"})
+        return json.dumps({'success': False, 'msg': "Demo %s was not found! How did you get here again?" % demo, 'cat': "error"})
     log_file = request.files['log_file']
-    success, msg, cat = _do_upload_log_file(log_file, demo_obj)
-    return json.dumps({"success":success, "msg":msg, "cat":cat})
+    success, title, msg, cat = _do_upload_log_file(log_file, demo_obj)
+    return json.dumps({"success": success, "msg": msg, "cat": cat})
+
 
 @app.route('/upload/', methods=['GET', 'POST'])
 @admin_required
@@ -199,12 +220,13 @@ def upload_demo():
         the_file = request.files['demo_file']
         # Returns a demo on success, none if fail.
         demo, msg, cat = _do_upload_demo_file(the_file)
-        if demo:
+        if demo is not None:
             msg = "<strong>Success!</strong> Demo '%s' was uploaded! Would you like to <a href='%s'>view it</a>?" % \
                   (secure_filename(the_file.filename), url_for('view_demo', demo=demo.id))
-            return json.dumps({'success':True, 'msg':msg, 'cat':cat})
-        return json.dumps({'success':False, 'msg':msg, 'cat':cat})
+            return json.dumps({'success': True, 'msg': msg, 'cat': cat})
+        return json.dumps({'success': False, 'msg': msg, 'cat': cat})
     return render_template('upload_demo.html')
+
 
 @app.route('/demo/check/', methods=['POST'])
 @admin_required
@@ -212,12 +234,13 @@ def check_filename():
     filename = request.form.get('filename', None)
     if filename is not None:
         print "Checking %s" % filename
-        file_exists, total_path, category = _is_file_on_disk(filename)
+        file_exists, title, msg, category = _is_file_on_disk(filename)
         if file_exists:
-            return json.dumps({'success':False,'msg':total_path,'cat':category})
+            return json.dumps({'success': False, 'msg': msg, 'cat': category, 'title': title})
         print "File did NOT exist on disk! %s" % filename
-        return json.dumps({'success':True})
-    return json.dumps({'success':False, 'msg':"No filename provided.", 'cat':'error'})
+        return json.dumps({'success': True})
+    return json.dumps({'success': False, 'msg': 'No filename provided.', 'cat': 'error', 'title': 'Error'})
+
 
 def _is_file_on_disk(filename):
     total_path = os.path.join(app.config['DEMO_STORAGE_DIR'], filename)
@@ -225,29 +248,33 @@ def _is_file_on_disk(filename):
     file_exists = False
     category = "success"
     msg = total_path
+    title = "Error"
     if demo:
         file_exists = True
-        msg = "<strong>Whoops!</strong> <a href='%s'>That Demo already exists</a>!" % \
+        title = "Whoops!"
+        msg = "<a href='%s'>That Demo already exists</a>!" % \
               (url_for('view_demo', demo=demo.id))
         category = 'warning'
     elif os.path.exists(total_path):
         file_exists = True
-        msg = "<strong>Whoops!</strong> That Demo <strong>file</strong> already exists, but hasn't been added to the repository. " \
+        title = "That Demo already exists!"
+        msg = "That Demo <strong>file</strong> already exists, but hasn't been added to the repository. " \
               "Perhaps you'd like to <a href='%s'>import it</a>?" % (url_for("import_demo"))
         category = 'warning'
-    return file_exists, msg, category
+    return file_exists, title, msg, category
+
 
 def _do_upload_demo_file(the_file):
-    '''
+    """
     Returns: Demo Object/False, Message, Message Type (to be passed to flash)
-    '''
+    """
     if not the_file:
         return False, "You must select a demo to upload!", "error"
     if not allowed_file(the_file.filename):
         return False, "DOH! Only .dem files are allowed!", "error"
     demo = None
     filename = secure_filename(the_file.filename)
-    file_exists, total_path, category = _is_file_on_disk(filename)
+    file_exists, title, total_path, category = _is_file_on_disk(filename)
     if file_exists:
         # NOTE: total_path here will be the message!
         return False, total_path, category
@@ -260,7 +287,8 @@ def _do_upload_demo_file(the_file):
         demo = Demo.get_from_filename(filename)
     else:
         category = 'error'
-    return demo, msg, category
+    return demo, title, msg, category
+
 
 def _do_upload_log_file(the_file, demo):
     if not allowed_log_file(the_file.filename):
@@ -283,10 +311,10 @@ def _do_upload_log_file(the_file, demo):
     db.session.commit()
     return True, "<strong>SUCCESS!</strong> Logs added! <a href='http://logs.tf/%s'>Click here to see it</a>!" % log_id, "success"
 
+
 @app.route('/import/', methods=['GET', 'POST'])
 @admin_required
 def import_demo():
-    values = {}
     if request.method == 'POST':
         for demo_name in request.form:
             success, msg = Demo.create_from_name(demo_name)
@@ -303,6 +331,7 @@ def import_demo():
             demos.append(os.path.basename(demo))
     return render_template('import_demo.html', demos=demos)
 
+
 @app.route('/view/<demo>', methods=['GET'])
 def view_demo(demo=None):
     # This renders the permalink
@@ -315,6 +344,7 @@ def view_demo(demo=None):
     # TODO: Do SQL magic to get this down to 1 query, too late tonight...
     return render_template('view_demo.html', demo=demo, next=demo.next_by_date(), prev=demo.previous_by_date())
 
+
 @app.route('/demos/delete/', methods=['POST'])
 @admin_required
 def delete_demo():
@@ -322,6 +352,7 @@ def delete_demo():
         demoid = request.form.get("demoid", None)
         Demo.delete(int(demoid))
     return "Yay."
+
 
 @app.route('/demos/field/<demo>', methods=['POST'])
 @admin_required

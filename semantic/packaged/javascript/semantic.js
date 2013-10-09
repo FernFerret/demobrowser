@@ -87,8 +87,10 @@ $.fn.accordion = function(parameters) {
           resetStyle: function() {
             module.verbose('Resetting styles on element', this);
             $(this)
+              .attr('style', '')
               .removeAttr('style')
               .children()
+                .attr('style', '')
                 .removeAttr('style')
             ;
           }
@@ -138,8 +140,10 @@ $.fn.accordion = function(parameters) {
                 .slideUp(settings.duration , settings.easing, function() {
                   $previousContent
                     .removeClass(className.active)
+                    .attr('style', '')
                     .removeAttr('style')
                     .children()
+                      .attr('style', '')
                       .removeAttr('style')
                   ;
                 })
@@ -151,11 +155,13 @@ $.fn.accordion = function(parameters) {
             $activeContent
               .stop()
               .children()
+                .attr('style', '')
                 .removeAttr('style')
                 .end()
               .slideDown(settings.duration, settings.easing, function() {
                 $activeContent
                   .addClass(className.active)
+                  .attr('style', '')
                   .removeAttr('style')
                 ;
                 $.proxy(settings.onOpen, $activeContent)();
@@ -185,6 +191,7 @@ $.fn.accordion = function(parameters) {
               .end()
             .slideUp(settings.duration, settings.easing, function(){
               $activeContent
+                .attr('style', '')
                 .removeAttr('style')
               ;
               $.proxy(settings.onClose, $activeContent)();
@@ -3855,7 +3862,7 @@ $.fn.checkbox.settings = {
   },
 
   selector : {
-    input  : 'input',
+    input  : 'input[type=checkbox], input[type=radio]',
     label  : 'label'
   },
 
@@ -4500,7 +4507,7 @@ $.fn.dropdown = function(parameters) {
               .on(settings.on + eventNamespace, module.toggle)
             ;
           }
-          if(settings.action == 'form') {
+          if(settings.action == 'updateForm') {
             module.set.selected();
           }
           $item
@@ -5177,6 +5184,8 @@ $.fn.modal = function(parameters) {
         $context     = $(settings.context),
         $otherModals = $allModules.not($module),
         $close       = $module.find(selector.close),
+
+        $focusedElement,
         $dimmer,
 
         element      = this,
@@ -5194,8 +5203,6 @@ $.fn.modal = function(parameters) {
             .dimmer('get dimmer')
           ;
 
-          console.log($dimmer);
-
           module.verbose('Attaching close events', $close);
           $close
             .on('click' + eventNamespace, module.event.close)
@@ -5205,7 +5212,6 @@ $.fn.modal = function(parameters) {
               module.event.debounce(module.refresh, 50);
             })
           ;
-
           module.instantiate();
         },
 
@@ -5229,6 +5235,26 @@ $.fn.modal = function(parameters) {
           module.cacheSizes();
           module.set.type();
           module.set.position();
+        },
+
+        attachEvents: function(selector, event) {
+          var
+            $toggle = $(selector)
+          ;
+          event = $.isFunction(module[event])
+            ? module[event]
+            : module.show
+          ;
+          if($toggle.size() > 0) {
+            module.debug('Attaching modal events to element', selector, event);
+            $toggle
+              .off(eventNamespace)
+              .on('click' + eventNamespace, event)
+            ;
+          }
+          else {
+            module.error(error.notFound);
+          }
         },
 
         event: {
@@ -5276,13 +5302,18 @@ $.fn.modal = function(parameters) {
             $module
               .transition(settings.transition + ' in', settings.duration, function() {
                 module.set.active();
+                module.save.focus();
                 module.set.type();
               })
             ;
           }
           else {
             $module
-              .fadeIn(settings.duration, settings.easing, module.set.active)
+              .fadeIn(settings.duration, settings.easing, function() {
+                module.set.active();
+                module.save.focus();
+                module.set.type();
+              })
             ;
           }
           module.debug('Triggering dimmer');
@@ -5308,12 +5339,16 @@ $.fn.modal = function(parameters) {
             $module
               .transition(settings.transition + ' out', settings.duration, function() {
                 module.remove.active();
+                module.restore.focus();
               })
             ;
           }
           else {
             $module
-              .fadeOut(settings.duration, settings.easing, module.remove.active)
+              .fadeOut(settings.duration, settings.easing, function() {
+                module.remove.active();
+                module.restore.focus();
+              })
             ;
           }
           $.proxy(settings.onHide, element)();
@@ -5332,6 +5367,18 @@ $.fn.modal = function(parameters) {
             $document
               .on('keyup' + eventNamespace, module.event.keyboard)
             ;
+          }
+        },
+
+        save: {
+          focus: function() {
+            $focusedElement = $(document.activeElement).blur();
+          }
+        },
+
+        restore: {
+          focus: function() {
+          $focusedElement.focus();
           }
         },
 
@@ -5392,7 +5439,6 @@ $.fn.modal = function(parameters) {
             ;
           },
           scrolling: function() {
-            console.log($dimmer, 'set scrolling');
             $dimmer.addClass(className.scrolling);
             $module.addClass(className.scrolling);
           },
@@ -5411,7 +5457,7 @@ $.fn.modal = function(parameters) {
             if(module.can.fit()) {
               $module
                 .css({
-                  top: '50%',
+                  top: '',
                   marginTop: -(module.cache.height / 2)
                 })
               ;
@@ -6439,7 +6485,9 @@ $.fn.popup = function(parameters) {
           // refresh state of module
           module.refresh();
           if( !$module.hasClass(className.visible) ) {
-            module.hideAll();
+            if(settings.on == 'click') {
+              module.hideAll();
+            }
             module.show();
           }
           else {
@@ -6954,14 +7002,15 @@ $.fn.rating = function(parameters) {
       module = {
 
         initialize: function() {
-          module.verbose('Initializing rating module');
+          module.verbose('Initializing rating module', settings);
+
           if(settings.interactive) {
-            $icon
-              .bind('mouseenter' + eventNamespace, module.event.mouseenter)
-              .bind('mouseleave' + eventNamespace, module.event.mouseleave)
-              .bind('click' + eventNamespace, module.event.click)
-            ;
+            module.enable();
           }
+          else {
+            module.disable();
+          }
+
           if(settings.initialRating) {
             module.debug('Setting initial rating');
             module.setRating(settings.initialRating);
@@ -6970,9 +7019,6 @@ $.fn.rating = function(parameters) {
             module.debug('Rating found in metadata');
             module.setRating( $module.data(metadata.rating) );
           }
-          $module
-            .addClass(className.active)
-          ;
           module.instantiate();
         },
 
@@ -6990,29 +7036,6 @@ $.fn.rating = function(parameters) {
           $icon
             .off(eventNamespace)
           ;
-        },
-
-        setRating: function(rating) {
-          var
-            $activeIcon = $icon.eq(rating - 1)
-          ;
-          module.verbose('Setting current rating to', rating);
-          $module
-            .removeClass(className.hover)
-          ;
-          $icon
-            .removeClass(className.hover)
-          ;
-          $activeIcon
-            .nextAll()
-              .removeClass(className.active)
-          ;
-          $activeIcon
-            .addClass(className.active)
-              .prevAll()
-              .addClass(className.active)
-          ;
-          $.proxy(settings.onRate, element)();
         },
 
         event: {
@@ -7043,11 +7066,79 @@ $.fn.rating = function(parameters) {
           },
           click: function() {
             var
-              $activeIcon = $(this)
+              $activeIcon   = $(this),
+              currentRating = module.getRating(),
+              rating        = $icon.index($activeIcon) + 1
             ;
-            module.setRating( $icon.index($activeIcon) + 1);
+            if(settings.clearable && currentRating == rating) {
+              module.clearRating();
+            }
+            else {
+              module.setRating( rating );
+            }
           }
         },
+
+        clearRating: function() {
+          module.debug('Clearing current rating');
+          module.setRating(0);
+        },
+
+        getRating: function() {
+          var
+            currentRating = $icon.filter('.' + className.active).size()
+          ;
+          module.verbose('Current rating retrieved', currentRating);
+          return currentRating;
+        },
+
+        enable: function() {
+          module.debug('Setting rating to interactive mode');
+          $icon
+            .on('mouseenter' + eventNamespace, module.event.mouseenter)
+            .on('mouseleave' + eventNamespace, module.event.mouseleave)
+            .on('click' + eventNamespace, module.event.click)
+          ;
+          $module
+            .addClass(className.active)
+          ;
+        },
+
+        disable: function() {
+          module.debug('Setting rating to read-only mode');
+          $icon
+            .off(eventNamespace)
+          ;
+          $module
+            .removeClass(className.active)
+          ;
+        },
+
+        setRating: function(rating) {
+          var
+            ratingIndex = (rating - 1 >= 0)
+              ? (rating - 1)
+              : 0,
+            $activeIcon = $icon.eq(ratingIndex)
+          ;
+          $module
+            .removeClass(className.hover)
+          ;
+          $icon
+            .removeClass(className.hover)
+            .removeClass(className.active)
+          ;
+          if(rating > 0) {
+            module.verbose('Setting current rating to', rating);
+            $activeIcon
+              .addClass(className.active)
+                .prevAll()
+                .addClass(className.active)
+            ;
+          }
+          $.proxy(settings.onRate, element)(rating);
+        },
+
         setting: function(name, value) {
           if(value !== undefined) {
             if( $.isPlainObject(name) ) {
@@ -7135,9 +7226,6 @@ $.fn.rating = function(parameters) {
             title += ' ' + totalTime + 'ms';
             if(moduleSelector) {
               title += ' \'' + moduleSelector + '\'';
-            }
-            if($allModules.size() > 1) {
-              title += ' ' + '(' + $allModules.size() + ')';
             }
             if( (console.group !== undefined || console.table !== undefined) && performance.length > 0) {
               console.groupCollapsed(title);
@@ -7241,7 +7329,9 @@ $.fn.rating.settings = {
 
   initialRating : 0,
   interactive   : true,
-  onRate        : function(){},
+  clearable     : false,
+
+  onRate        : function(rating){},
 
   error       : {
     method : 'The method you called is not defined'
@@ -8896,29 +8986,26 @@ $.fn.sidebar = function(parameters) {
           $style  = $('style[title=' + namespace + ']');
         },
 
-        attach: {
-
-          events: function(selector, event) {
-            var
-              $toggle = $(selector)
+        attachEvents: function(selector, event) {
+          var
+            $toggle = $(selector)
+          ;
+          event = $.isFunction(module[event])
+            ? module[event]
+            : module.toggle
+          ;
+          if($toggle.size() > 0) {
+            module.debug('Attaching sidebar events to element', selector, event);
+            $toggle
+              .off(eventNamespace)
+              .on('click' + eventNamespace, event)
             ;
-            event = $.isFunction(module[event])
-              ? module[event]
-              : module.toggle
-            ;
-            if($toggle.size() > 0) {
-              module.debug('Attaching sidebar events to element', selector, event);
-              $toggle
-                .off(eventNamespace)
-                .on('click' + eventNamespace, event)
-              ;
-            }
-            else {
-              module.error(error.notFound);
-            }
           }
-
+          else {
+            module.error(error.notFound);
+          }
         },
+
 
         show: function() {
           module.debug('Showing sidebar');
@@ -9364,6 +9451,15 @@ $.fn.sidebar.settings = {
 
       initialize: function() {
         module.debug('Initializing Tabs', $module);
+
+        // set up automatic routing
+        if(settings.auto) {
+          module.verbose('Setting up automatic tab retrieval from server');
+          settings.apiSettings = {
+            url: settings.path + '/{$tab}'
+          };
+        }
+
         // attach history events
         if(settings.history) {
           if( $.address === undefined ) {
@@ -9375,11 +9471,6 @@ $.fn.sidebar.settings = {
             return false;
           }
           else {
-            if(settings.auto) {
-              settings.apiSettings = {
-                url: settings.path + '/{$tab}'
-              };
-            }
             module.verbose('Address library found adding state change event');
             $.address
               .state(settings.path)
@@ -9388,8 +9479,10 @@ $.fn.sidebar.settings = {
             ;
           }
         }
+
         // attach events if navigation wasn't set to window
         if( !$.isWindow( element ) ) {
+          module.debug('Attaching tab activation events to element', $module);
           $module
             .on('click' + eventNamespace, module.event.click)
           ;
@@ -9412,7 +9505,7 @@ $.fn.sidebar.settings = {
       },
 
       event: {
-        click: function() {
+        click: function(event) {
           module.debug('Navigation clicked');
           var
             tabPath = $(this).data(metadata.tab)
@@ -9424,6 +9517,7 @@ $.fn.sidebar.settings = {
             else {
               module.changeTab(tabPath);
             }
+            event.preventDefault();
           }
           else {
             module.debug('No tab specified');
@@ -9482,9 +9576,9 @@ $.fn.sidebar.settings = {
           // only get default path if not remote content
           pathArray = (remoteContent && !shouldIgnoreLoad)
             ? module.utilities.pathToArray(tabPath)
-            : module.get.defaultPathArray(tabPath),
-          tabPath   = module.utilities.arrayToPath(pathArray)
+            : module.get.defaultPathArray(tabPath)
         ;
+        tabPath = module.utilities.arrayToPath(pathArray);
         module.deactivate.all();
         $.each(pathArray, function(index, tab) {
           var
@@ -9551,8 +9645,6 @@ $.fn.sidebar.settings = {
         fetch: function(tabPath, fullTabPath) {
           var
             $tab             = module.get.tabElement(tabPath),
-            fullTabPath      = fullTabPath || tabPath,
-            cachedContent    = module.cache.read(fullTabPath),
             apiSettings      = {
               dataType     : 'html',
               stateContext : $tab,
@@ -9572,8 +9664,14 @@ $.fn.sidebar.settings = {
               urlData: { tab: fullTabPath }
             },
             request         = $tab.data(metadata.promise) || false,
-            existingRequest = ( request && request.state() === 'pending' )
+            existingRequest = ( request && request.state() === 'pending' ),
+            requestSettings,
+            cachedContent
           ;
+
+          fullTabPath   = fullTabPath || tabPath;
+          cachedContent = module.cache.read(fullTabPath);
+
           if(settings.cache && cachedContent) {
             module.debug('Showing existing content', fullTabPath);
             module.content.update(tabPath, cachedContent);
@@ -9587,8 +9685,10 @@ $.fn.sidebar.settings = {
             ;
           }
           else if($.api !== undefined) {
-            module.debug('Retrieving remote content', fullTabPath);
-            $.api( $.extend(true, { headers: { 'X-Remote': true } }, settings.apiSettings, apiSettings) );
+            console.log(settings.apiSettings);
+            requestSettings = $.extend(true, { headers: { 'X-Remote': true } }, settings.apiSettings, apiSettings);
+            module.debug('Retrieving remote content', fullTabPath, requestSettings);
+            $.api( requestSettings );
           }
           else {
             module.error(error.api);
@@ -9678,7 +9778,7 @@ $.fn.sidebar.settings = {
             module.error(error.recursion);
           }
           else {
-            module.debug('No default tabs found for', tabPath);
+            module.debug('No default tabs found for', tabPath, $tabs);
           }
           recursionDepth = 0;
           return tabPath;
@@ -9940,7 +10040,6 @@ $.fn.sidebar.settings = {
 
     // uses pjax style endpoints fetching content from same url with remote-content headers
     auto            : false,
-
     history         : false,
     path            : false,
 
@@ -9949,7 +10048,7 @@ $.fn.sidebar.settings = {
     // max depth a tab can be nested
     maxDepth        : 25,
     // dont load content on first load
-    ignoreFirstLoad : true,
+    ignoreFirstLoad : false,
     // load tab content new every tab click
     alwaysRefresh   : false,
     // cache the content requests to pull locally
@@ -9959,12 +10058,12 @@ $.fn.sidebar.settings = {
 
     error: {
       api        : 'You attempted to load content without API module',
-      noContent  : 'The tab you specified is missing a content url.',
       method     : 'The method you called is not defined',
-      state      : 'The state library has not been initialized',
       missingTab : 'Tab cannot be found',
+      noContent  : 'The tab you specified is missing a content url.',
       path       : 'History enabled, but no path was specified',
-      recursion  : 'Max recursive depth reached'
+      recursion  : 'Max recursive depth reached',
+      state      : 'The state library has not been initialized'
     },
 
     metadata : {
@@ -9979,7 +10078,7 @@ $.fn.sidebar.settings = {
     },
 
     selector    : {
-      tabs : '.tab'
+      tabs : '.ui.tab'
     }
 
   };

@@ -25,6 +25,16 @@ def get_steam_userinfo(steam_id, api_key=None):
     rv = json.load(urllib2.urlopen(url))
     return rv['response']['players']['player'][0] or {}
 
+def get_map_name(file_name):
+    pieces = file_name.split("_")
+    if len(pieces) > 1:
+        prefix = pieces.pop(0)
+    else:
+        prefix = ""
+    map_name = " ".join([str(piece).capitalize() for piece in pieces])
+    return map_name, prefix
+
+
 def convert_id_to_community(steam_id):
     match = re.match("^.*([01]):(\d+)$", steam_id)
     if not match:
