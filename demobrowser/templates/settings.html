@@ -47,29 +47,34 @@
         </div>
         <div class="inline field">
           <div class="ui checkbox">
-            <input type="checkbox" id="debug" name="debug" {% if config.get('DEMO_PUBLIC', False) %}checked{% endif %}>
+            <input type="checkbox" id="debug" name="debug" {% if config.get('DEBUG', False) %}checked{% endif %}>
             <label for="debug"></label>
           </div>
           <label><i class="help icon link" data-position="left center" data-content="Turn Debug mode on/off. If debug mode is on, you'll see full stack traces for pages. Disable this for production systems."></i>Debug</label>
         </div>
         <div class="inline field">
           <div class="ui checkbox">
-            <input type="checkbox" id="cleardb" name="cleardb" {% if config.get('DEMO_PUBLIC', False) %}checked{% endif %}>
+            <input type="checkbox" id="test" name="test" {% if config.get('TEST', False) %}checked{% endif %}>
+            <label for="test"></label>
+          </div>
+          <label><i class="help icon link" data-position="left center" data-content="Turn Test mode on/off. This allows offline logins. Disable this for production systems."></i>Test Mode</label>
+        </div>
+        <div class="inline field">
+          <div class="ui checkbox">
+            <input type="checkbox" id="cleardb" name="cleardb">
             <label for="cleardb"></label>
           </div>
           <label><i class="help icon link" data-position="left center" data-content="CLEARS the database. I'll probably delete this later. ONLY for testing."></i>RESET the database</label>
         </div>
-        <div class="ui error message">
-          <div class="header">We noticed some issues</div>
-        </div>
         <!-- <div class="ui blue submit button">Login</div>
         <button type="submit" class="btn btn-success">Save Settings</button>
         <a href="{{ url_for('index') }}" class="btn">Cancel</a> -->
-        <div class="ui buttons center floated">
+        <center>
+        <div class="ui buttons">
           <a href="{{ url_for('index') }}" class="ui button">Cancel</a>
-          <div class="or"></div>
-          <div onclick="document.myform.submit()" class="ui positive button">Save</div>
+          <div onclick="$('#myform').submit()" class="ui positive button">Save</div>
         </div>
+          </center>
       </div>
     </form>
   </div>

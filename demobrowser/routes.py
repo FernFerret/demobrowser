@@ -182,6 +182,7 @@ def settings():
         values['TITLE'] = str(request.form['title'])
         values['DEMO_STORAGE_DIR'] = str(request.form.get('storage', None))
         values['DEBUG'] = request.form.get('debug', None) is not None
+        values['TEST'] = request.form.get('test', None) is not None
         values['DEMO_DOWNLOAD_DIR'] = str(request.form.get('download', None))
         values['DEMO_PUBLIC'] = request.form.get('public', None) is not None
         try:

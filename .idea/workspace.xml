@@ -2,20 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="83b2fa9f-d29f-4e09-b478-3527369b91e5" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/demobrowser/static/font.old/FontAwesome.otf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/demobrowser/static/font.old/fontawesome-webfont.eot" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/demobrowser/static/font.old/fontawesome-webfont.svg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/demobrowser/static/font.old/fontawesome-webfont.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/demobrowser/static/font.old/fontawesome-webfont.woff" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/demobrowser/templates/demos.html" afterPath="$PROJECT_DIR$/demobrowser/templates/demos.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/demobrowser/templates/layout-master.html" afterPath="$PROJECT_DIR$/demobrowser/templates/layout-master.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/demobrowser/models.py" afterPath="$PROJECT_DIR$/demobrowser/models.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/demobrowser/routes.py" afterPath="$PROJECT_DIR$/demobrowser/routes.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/demobrowser/settings.cfg.example" afterPath="$PROJECT_DIR$/demobrowser/settings.cfg.example" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/demobrowser/templates/settings.html" afterPath="$PROJECT_DIR$/demobrowser/templates/settings.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/demobrowser/templates/users.html" afterPath="$PROJECT_DIR$/demobrowser/templates/users.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="demobrowser.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -38,25 +26,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="layout-master.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/demobrowser/templates/layout-master.html">
+      <file leaf-file-name="settings.html" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/demobrowser/templates/settings.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="68" column="10" selection-start="3961" selection-end="3961" vertical-scroll-proportion="-16.5" vertical-offset="624" max-vertical-offset="1440">
+            <state line="63" column="12" selection-start="3583" selection-end="3583" vertical-scroll-proportion="0.3971061" vertical-offset="698" max-vertical-offset="1320">
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="demos.html" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/demobrowser/templates/demos.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="79" column="29" selection-start="3077" selection-end="3077" vertical-scroll-proportion="1.4522059" vertical-offset="0" max-vertical-offset="1305">
-              <folding>
-                <element signature="n#style#0;n#img#0;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#1;n#div#1;n#div#0;n#div#1;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#1;n#a#0;n#div#0;n#div#1;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#2;n#!!top" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -64,7 +38,7 @@
       <file leaf-file-name="routes.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/demobrowser/routes.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="163" column="51" selection-start="5267" selection-end="5267" vertical-scroll-proportion="0.0" vertical-offset="2194" max-vertical-offset="5835">
+            <state line="201" column="0" selection-start="6975" selection-end="6975" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5850">
               <folding>
                 <element signature="e#0#36#0" expanded="true" />
               </folding>
@@ -72,72 +46,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="models.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/demobrowser/models.py">
+      <file leaf-file-name="settings.cfg" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/demobrowser/settings.cfg">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="146" column="21" selection-start="5353" selection-end="5353" vertical-scroll-proportion="0.0" vertical-offset="526" max-vertical-offset="1185">
-              <folding>
-                <element signature="e#0#26#0" expanded="true" />
-                <element signature="e#165#4314#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="upload_demo.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/demobrowser/templates/upload_demo.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="38" selection-start="1708" selection-end="1708" vertical-scroll-proportion="-11.020409" vertical-offset="0" max-vertical-offset="2145">
-              <folding>
-                <element signature="n#style#0;n#div#1;n#form#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#div#1;n#form#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#2;n#form#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#h2#0;n#div#2;n#form#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="users.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/demobrowser/templates/users.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="16" selection-start="50" selection-end="50" vertical-scroll-proportion="-0.30612245" vertical-offset="0" max-vertical-offset="1470">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="view_demo.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/demobrowser/templates/view_demo.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="1365">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="view_demo_raw.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/demobrowser/templates/view_demo_raw.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="990">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="settings.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/demobrowser/templates/settings.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="16" selection-start="432" selection-end="432" vertical-scroll-proportion="-6.875" vertical-offset="0" max-vertical-offset="1245">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="layout-two-col.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/demobrowser/templates/layout-two-col.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="285">
+            <state line="9" column="12" selection-start="372" selection-end="372" vertical-scroll-proportion="0.0" vertical-offset="15" max-vertical-offset="255">
               <folding />
             </state>
           </provider>
@@ -170,13 +82,13 @@
         <option value="$PROJECT_DIR$/demobrowser/templates/upload_demo.html" />
         <option value="$PROJECT_DIR$/demobrowser/static/js/popup.js" />
         <option value="$PROJECT_DIR$/demobrowser/settings.cfg.example" />
-        <option value="$PROJECT_DIR$/demobrowser/settings.cfg" />
         <option value="$PROJECT_DIR$/demobrowser/models.py" />
-        <option value="$PROJECT_DIR$/demobrowser/routes.py" />
         <option value="$PROJECT_DIR$/demobrowser/templates/users.html" />
-        <option value="$PROJECT_DIR$/demobrowser/templates/settings.html" />
         <option value="$PROJECT_DIR$/demobrowser/templates/layout-master.html" />
         <option value="$PROJECT_DIR$/demobrowser/templates/demos.html" />
+        <option value="$PROJECT_DIR$/demobrowser/settings.cfg" />
+        <option value="$PROJECT_DIR$/demobrowser/routes.py" />
+        <option value="$PROJECT_DIR$/demobrowser/templates/settings.html" />
       </list>
     </option>
   </component>
@@ -488,11 +400,11 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32964602" sideWeight="0.49969825" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24984913" sideWeight="0.6626106" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.42839658" sideWeight="0.75995576" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.29620564" sideWeight="0.75995576" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24004425" sideWeight="0.500612" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24004425" sideWeight="0.499388" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24004425" sideWeight="0.500612" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24004425" sideWeight="0.499388" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -501,25 +413,6 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
-    <layout-to-restore>
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32964602" sideWeight="0.49969825" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24004425" sideWeight="0.500612" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24984913" sideWeight="0.6626106" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.42839658" sideWeight="0.75995576" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24004425" sideWeight="0.499388" order="2" side_tool="false" content_ui="tabs" />
-    </layout-to-restore>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
@@ -548,13 +441,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/demobrowser/settings.cfg">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="11" selection-start="406" selection-end="406" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/pyvenv/demobrowser/lib/python2.7/site-packages/werkzeug/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.15933232" vertical-offset="105" max-vertical-offset="2355">
@@ -577,15 +463,6 @@
           <folding>
             <element signature="e#0#26#0" expanded="true" />
             <element signature="e#165#4314#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/demobrowser/routes.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="163" column="51" selection-start="5267" selection-end="5267" vertical-scroll-proportion="0.0" vertical-offset="2194" max-vertical-offset="5835">
-          <folding>
-            <element signature="e#0#36#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -637,13 +514,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/demobrowser/templates/settings.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="16" selection-start="432" selection-end="432" vertical-scroll-proportion="-6.875" vertical-offset="0" max-vertical-offset="1245">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/demobrowser/templates/layout-master.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="68" column="10" selection-start="3961" selection-end="3961" vertical-scroll-proportion="-16.5" vertical-offset="624" max-vertical-offset="1440">
@@ -653,13 +523,36 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/demobrowser/templates/demos.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="79" column="29" selection-start="3077" selection-end="3077" vertical-scroll-proportion="1.4522059" vertical-offset="0" max-vertical-offset="1305">
+        <state line="20" column="10" selection-start="653" selection-end="653" vertical-scroll-proportion="7.875" vertical-offset="489" max-vertical-offset="1305">
           <folding>
             <element signature="n#style#0;n#img#0;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#1;n#div#1;n#div#0;n#div#1;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#1;n#a#0;n#div#0;n#div#1;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#2;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demobrowser/settings.cfg">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="12" selection-start="372" selection-end="372" vertical-scroll-proportion="0.0" vertical-offset="15" max-vertical-offset="255">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demobrowser/routes.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="201" column="0" selection-start="6975" selection-end="6975" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5850">
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demobrowser/templates/settings.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="63" column="12" selection-start="3583" selection-end="3583" vertical-scroll-proportion="0.3971061" vertical-offset="698" max-vertical-offset="1320">
+          <folding />
         </state>
       </provider>
     </entry>
