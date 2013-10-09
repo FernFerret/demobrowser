@@ -43,29 +43,23 @@
       {% endif %}
     </div>
     <div class="segment">
-      <div class="main container">
-        <div id="globalmsgs">
-          {% with messages = get_flashed_messages(with_categories=True) %}
-            {% if messages %}
-              {% for cat, message in messages %}
-                <div class="ui message hidden left aligned db_message {{ cat }}">
-
-                  <!--<div class="header">-->
-                    <!--Title-->
-                  <!--</div>-->
-                  {{ message|safe }}
-                  <i class="close icon"></i>
-                </div>
-              {% endfor %}
-            {% endif %}
-          {% endwith %}
-        </div>
-        {% block container %}{% endblock %}
-        <div class="ui divider"></div>
-        <footer>
-          <center><p>Version {{ config.get('VERSION', '0.1') }}<br />Powered by <a href="http://flask.pocoo.org/">Flask</a>, <a href="http://www.semantic-ui.com/">Semantic UI</a> &amp; <a href="http://steampowered.com">Steam</a></p></center>
-        </footer>
+      <div id="globalmsgs">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+          {% if messages %}
+            {% for cat, message in messages %}
+              <div class="ui message hidden left aligned db_message {{ cat }}">
+                {{ message|safe }}
+                <i class="close icon"></i>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
       </div>
+      {% block container %}{% endblock %}
+      <div class="ui divider"></div>
+      <footer>
+        <center><p>Version {{ config.get('VERSION', '0.1') }}<br />Powered by <a href="http://flask.pocoo.org/">Flask</a>, <a href="http://www.semantic-ui.com/">Semantic UI</a> &amp; <a href="http://steampowered.com">Steam</a></p></center>
+      </footer>
     </div>
     <!-- <script src="{{ url_for('static', filename='js/jquery-1.9.0.min.js') }}"></script> -->
     <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script> -->
@@ -80,7 +74,7 @@
     });
     $(".icon.close").on({
       click: function() {
-        $( this ).parent().transition("fade").fadeUp();
+        $( this ).parent().transition("fade");
       }
     });
     </script>

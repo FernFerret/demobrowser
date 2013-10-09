@@ -75,22 +75,43 @@ p:last-child {
 }
 
 /** Responsive options **/
-
 @media only screen and (max-width : 1725px) {
-  .container {
-    width: auto;
-    margin: 0% 60px 0px;
+  .container.narrow {
+    width: 800px;
+    margin: auto;
+  }
+  .container.wide {
+    width: 1324px;
+    margin: auto;
+  }
+}
+
+@media only screen and (max-width : 1500px) {
+  .container.wide {
+    width: 993px;
+    margin: auto;
   }
 }
 
 @media only screen and (max-width : 1050px) {
-  .fixed .container {
-    width: auto;
-    margin: 0px auto;
+  .container.narrow {
+    width: 662px;
+    margin: auto;
+  }
+  .container.wide {
+    width: 662px;
+    margin: auto;
   }
 
-  .container {
-    width: auto;
-    margin: 0% 30px 0px;
+}
+
+@media only screen and (max-width : 670px) {
+  .container.narrow {
+    width: 600px;
+    margin: auto;
+  }
+  .container.wide {
+    width: 331px;
+    margin: auto;
   }
 }

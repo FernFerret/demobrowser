@@ -1,12 +1,13 @@
-{% extends "layout-fixed.html" %}
+{% extends "layout-narrow.html" %}
 {% block left %}
 {% endblock left %}
 {% block main %}
-{% if session.user_admin %}
-{% endif %}
-<div>
-  <h2>Users</h2>
-  <p>Any user on this page will have access to view the demos (unless you have demos set to public in the settings). Any user with the admin field, will be able to upload demos or add other users.</p>
+<h2>Users</h2>
+<div class="ui message info">
+  <ul class="ui list">
+    <li>Any user on this page will have access to view the demos (unless you have demos set to public in the settings).</li>
+    <li>Any user with the admin field, will be able to upload demos or add other users.</li>
+  </ul>
 </div>
 <table class="table table-striped">
   <thead>
