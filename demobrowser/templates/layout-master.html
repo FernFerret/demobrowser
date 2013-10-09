@@ -3,16 +3,13 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    {% if title %}
-      <title>{{ title }}</title>
-    {% else %}
-      <title>{{ config.get('TITLE', 'Server Manager') }}</title>
-    {% endif %}
+    <title>{{ title }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{ url_for('static', filename='css/demobrowser.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='semantic/css/semantic.css') }}" rel="stylesheet">
-    <!-- <link href="{{ url_for('static', filename='css/font-awesome.css') }}" rel="stylesheet"> -->
-    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Open+Sans:300italic,400,300,700" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+    <!-- <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Open+Sans:300italic,400,300,700" rel="stylesheet" type="text/css"> -->
+    <link href="{{ url_for('static', filename='font/open_sans.css') }}" rel="stylesheet" type="text/css">
   </head>
   <body class="segment">
     <div class="ui inverted tiered menu">
@@ -20,13 +17,11 @@
         {% if session.user_id %}
           <a class="item" href="{{ url_for('logout') }}"><i class="off icon"></i><!-- <img src="{{ session.avatar }}" /> -->Logout</a>
         {% else %}
-          <a class="item" href="{{ url_for('login') }}"> <img src="{{ url_for('static', filename='img/sits_small.png') }}" alt="Login through Steam" /></a>
+          <a class="item" href="{{ url_for('login') }}"><!-- <img src="{{ url_for('static', filename='img/sits_small.png') }}" alt="Login through Steam" /> -->Login with Steam</a>
+          {% if config.get('TEST', False) %}
+            <a class="item" href="{{ url_for('test_login') }}">Sign in as Admin</a>
+          {% endif %}
         {% endif %}
-        <a class="ui image label">
-          <img src="/images/demo/photo2.jpg">
-          dog@doggington.com
-          <i class="delete icon"></i>
-        </a>
       </div>
       {% if session.user_admin %}
         <a class="item{% if request.endpoint in ['demopage', 'view_demo', 'index', 'import_demo', 'upload_demo'] %} active{% endif %}" href="{{ url_for('index') }}"><i class="block layout icon"></i>Demos</a>
@@ -53,16 +48,13 @@
           {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
               {% for cat, message in messages %}
-                <div class="ui message">
-                  <i class="close icon"></i>
-                  <div class="header">
-                    Title
-                  </div>
-                  <p>{{ message|safe }}</p>
-                </div>
-                <div class="alert alert-{{ cat }}">
-                  <a class="close" data-dismiss="alert">×</a>
+                <div class="ui message hidden left aligned db_message {{ cat }}">
+
+                  <!--<div class="header">-->
+                    <!--Title-->
+                  <!--</div>-->
                   {{ message|safe }}
+                  <i class="close icon"></i>
                 </div>
               {% endfor %}
             {% endif %}
@@ -76,10 +68,22 @@
       </div>
     </div>
     <!-- <script src="{{ url_for('static', filename='js/jquery-1.9.0.min.js') }}"></script> -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script> -->
     <!-- <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script> -->
+    <script src="{{ url_for('static', filename='js/jquery-2.0.3.min.js') }}"></script>
     <script src="{{ url_for('static', filename='semantic/javascript/semantic.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/popup.js') }}"></script>
+    <script>
+    $( document ).ready(function() {
+      $(".db_message").transition("fade up");
+      $(".db_message")
+    });
+    $(".icon.close").on({
+      click: function() {
+        $( this ).parent().transition("fade").fadeUp();
+      }
+    });
+    </script>
     {% block javascript %}{% endblock %}
   </body>
 </html>

@@ -1,4 +1,4 @@
-{% extends "layout-two-col.html" %}
+{% extends "layout-fixed.html" %}
 {% block main %}
 <div class="ui grid">
   <div class="four wide column"></div>
@@ -8,7 +8,7 @@
       <div class="header">Warning!</div>
       <p>Changing these settings can break things!</p>
     </div>
-    <form class="form-horizontal" action="{{ url_for('settings') }}" method="POST">
+    <form id="myform" action="{{ url_for('settings') }}" method="POST">
       <div class="ui form segment">
         <div class="field">
           <label><i class="help icon link" data-position="left center" data-content="The title of this site"></i>Title</label>

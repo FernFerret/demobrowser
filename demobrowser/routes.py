@@ -1,7 +1,7 @@
 from demobrowser import app, oid, db
-from demobrowser.helpers import get_steam_userinfo, get_my_ip, do_upload_log, get_map_name
+from demobrowser.helpers import get_steam_userinfo, do_upload_log, get_map_name
 from demobrowser.models import User, Demo
-from flask import render_template, session, redirect, url_for, request, g, flash, get_flashed_messages
+from flask import render_template, session, redirect, url_for, request, g, flash
 from werkzeug import secure_filename
 from functools import wraps
 from pyfile import write_pyfile
@@ -10,12 +10,7 @@ from glob import glob
 import os
 import json
 
-_steam_id_re = re.compile('steamcommunity.com/openid/id/(.*?)$')
-
-if app.config.get('TEST', False):
-    session['user_admin'] = True
-    session['user_id'] = 'TEST_ID'
-
+STEAM_ID_REGEX = re.compile('steamcommunity.com/openid/id/(.*?)$')
 
 ## Route Helpers ##
 def admin_required(function):
@@ -68,7 +63,7 @@ def login():
 
 @oid.after_login
 def check_login(resp):
-    match = _steam_id_re.search(resp.identity_url)
+    match = STEAM_ID_REGEX.search(resp.identity_url)
     g.user = User.get(match.group(1))
     if not g.user:
         flash("Error, Could not log in. You don't have an account.", category='error')
@@ -83,6 +78,21 @@ def check_login(resp):
     flash('You are logged in as %s' % g.user.nickname, category='success')
     return redirect(oid.get_next_url())
 
+@app.route('/login/test')
+def test_login():
+    if not app.config.get("TEST", False):
+        return redirect(url_for("index"))
+    g.user = User.get_test_user()
+    if not g.user:
+        flash("Error, Could not log in. You don't have an account.", category='error')
+        return redirect(url_for('index'))
+    g.user.nickname = "TEST USER"
+    session['user_id'] = g.user.id
+    session['user_admin'] = g.user.admin
+    session['user_nick'] = g.user.nickname
+    session['avatar'] = ""
+    flash('You are logged in as %s' % g.user.nickname, category='success')
+    return redirect(url_for("index"))
 
 @app.before_request
 def before_request():

@@ -120,6 +120,9 @@ class User(db.Model):
     nickname = db.String(80)
     admin = db.Column(db.Boolean)
 
+    def __repr__(self):
+        return "<User name='%s' nick='%s' admin='%s' steam='%s'>" % (self.name, self.nickname, self.admin, self.steam_id)
+
     def make_admin(self, admin):
         self.admin = admin
         db.session.commit()
@@ -147,6 +150,10 @@ class User(db.Model):
     @staticmethod
     def get_all():
         return User.query.all()
+
+    @staticmethod
+    def get_test_user():
+        return User.query.first()
 
     @staticmethod
     def create(name, steamid, admin):
