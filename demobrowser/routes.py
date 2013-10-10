@@ -2,7 +2,7 @@ from demobrowser import app, oid, db
 from demobrowser.helpers import get_steam_userinfo, do_upload_log, get_map_name
 from demobrowser.models import User, Demo
 from flask import render_template, session, redirect, url_for, request, g, flash
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 from functools import wraps
 from pyfile import write_pyfile
 import re
