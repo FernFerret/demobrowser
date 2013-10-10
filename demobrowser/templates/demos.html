@@ -2,21 +2,17 @@
 {% block main %}
 {% macro render_pagination(pagination) %}
   {% if not pagination.items %}
-    <div class="ui grid">
-      <div class="twelve wide column">
-        <div class="ui center aligned huge icon message">
-          <i class="inbox icon"></i>
-          <div class="content">
-            <div class="header">
-              No Demos.
-            </div>
-            {% if g.user.id %}
-              Perhaps you would like to <a href="{{ url_for('import_demo') }}">import one</a>?
-            {% else %}
-              Check back later!
-            {% endif %}
-          </div>
+    <div class="ui center aligned huge icon message">
+      <i class="inbox icon"></i>
+      <div class="content">
+        <div class="header">
+          No Demos.
         </div>
+        {% if g.user.id %}
+          Perhaps you would like to <a href="{{ url_for('import_demo') }}">import one</a>?
+        {% else %}
+          Check back later!
+        {% endif %}
       </div>
     </div>
   {% else %}
