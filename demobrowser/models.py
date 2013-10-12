@@ -62,9 +62,10 @@ class Demo(db.Model):
         match = re.match('auto-(?P<date>[0-9]{8})-.*-(?P<map>.*)\.dem', demo_name)
         result = False
         if match:
-            str_date = match.groupdict()['date']
-            match.groupdict()['date'] = datetime(int(str_date[0:4]), int(str_date[4:6]), int(str_date[6:8]))
-            result = match.groupdict()
+            match_dict = match.groupdict()
+            str_date = match_dict['date']
+            match_dict['date'] = datetime(int(str_date[0:4]), int(str_date[4:6]), int(str_date[6:8]))
+            result = match_dict
         return result
 
 

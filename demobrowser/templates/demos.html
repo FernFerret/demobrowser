@@ -19,6 +19,7 @@
   {% else %}
     <div class="ui items">
       {% for demo in pagination.items %}
+        {#  Don't forget about demo.sub #}
         <div id="demo{{ demo.id }}" class="item">
           <div class="image">
             {% if demo.logfile %}
@@ -29,17 +30,25 @@
             <img style="width: 300px; height:188px" src="{{ url_for('static', filename='img/maps/%s.png' % demo.name) }}" />
           </div>
           <div class="content">
-              <div class="name"><a href="{{ url_for('view_demo', demo=demo.id) }}">{% if demo.title %}{{ demo.title }}{% else %}{{ demo.name }}{% endif %}</a></div>
-            <p class="description">{{ demo.get_map_name()[0].upper() }}</p>
+            <div class="name">
+              <a href="{{ url_for('view_demo', demo=demo.id) }}">
+                {% if demo.title %}
+                  {{ demo.title }}
+                {% else %}
+                  {{ demo.name }}
+                {% endif %}
+              </a>
+            </div>
+            <p class="description">
+              <a class="ui image label">
+                <img style="padding-left: .5em; margin-right: .3em;" src="{{ url_for('static', filename='img/tf2_icons/control_point.png') }}" />
+                {{ demo.get_map_name()[0].upper() }}
+              </a>
+            </p>
             <div class="extra" style="text-align: right;">
               {{ demo.good_date() }} <i class="icon calendar"></i>
             </div>
           </div>
-          <a href="{{ url_for('view_demo', demo=demo.id) }}">
-            {% if demo.sub %}
-            <div class="pull-left visible-desktop"><small><i class="icon-group"></i> {{ demo.sub }}</small></div>
-            {% endif %}
-            <div style="margin-right:-10px;" class="pull-right hidden-phone"></div></a>
         </div>
       {% endfor %}
     </div>
