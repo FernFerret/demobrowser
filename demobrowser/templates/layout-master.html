@@ -58,7 +58,7 @@
       {% block container %}{% endblock %}
       <div class="ui divider"></div>
       <footer>
-        <center><p>Version {{ config.get('VERSION', '0.1') }}<br />Powered by <a href="http://flask.pocoo.org/">Flask</a>, <a href="http://www.semantic-ui.com/">Semantic UI</a> &amp; <a href="http://steampowered.com">Steam</a></p></center>
+        <div class=""><p>Version {{ config.get('VERSION', '0.1') }}<br />Powered by <a href="http://flask.pocoo.org/">Flask</a>, <a href="http://www.semantic-ui.com/">Semantic UI</a> &amp; <a href="http://steampowered.com">Steam</a></p></div>
       </footer>
     </div>
     <!-- <script src="{{ url_for('static', filename='js/jquery-1.9.0.min.js') }}"></script> -->
@@ -70,7 +70,6 @@
     <script>
     $( document ).ready(function() {
       $(".db_message").transition("fade up");
-      $(".db_message")
     });
     $(".icon.close").on({
       click: function() {
