@@ -1,5 +1,5 @@
 # Source Demo Browser
-![Demo Browser in action](http://i1.minus.com/ibeohcrACJwZ21.png)
+![Demo Browser in action](http://i4.minus.com/i8FbLCCHzoxJZ.png)
 
 ## Installing
 If I were you, I'd use [virtualenv](https://pypi.python.org/pypi/virtualenv).
