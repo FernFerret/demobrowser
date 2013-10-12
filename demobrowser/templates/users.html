@@ -3,13 +3,19 @@
 {% endblock left %}
 {% block main %}
 <h2 class="ui header">Users</h2>
-<div class="ui message info">
-  <ul class="ui list">
-    <li>Any user on this page will have access to view the demos (unless you have demos set to public in the settings).</li>
-    <li>Any user with the admin field, will be able to upload demos or add other users.</li>
-  </ul>
+<div class="ui icon message info">
+  <i class="users icon"></i>
+    <div class="content">
+      <div class="header">
+        About Users
+      </div>
+      <p>
+        Any user on this page will have access to view the demos (unless you have demos set to public in the settings).
+        Any user with the admin field, will be able to upload demos or add other users.
+      </p>
+    </div>
 </div>
-<table class="table table-striped">
+<table class="ui table segment">
   <thead>
     <tr>
       <th>Name</th>
@@ -20,28 +26,28 @@
   </thead>
   <tbody>
     {% for user in users %}
-    <tr>
-      <td>{{ user.name }}</td>
-      <td><a href="http://www.steamcommunity.com/profiles/{{ user.steam_id  }}">{{ user.steam_id  }}</a></td>
-      <td style="text-align:center">
-        {% if user.id == session.user_id %}
-        <div class="ui button {% if user.admin %}success{% else %}danger{% endif %} disabled" >
-          <i class="icon-{% if user.admin %}ok{% else %}remove icon-white{% endif %}"></i>
-        </div>
-        {% else %}
-        <a id="promote-{{ user.id }}" class="btn btn-mini btn-{% if user.admin %}success{% else %}danger{% endif %} promote" href="{{ url_for('users') }}">
-          <i class="icon-{% if user.admin %}ok{% else %}remove icon-white{% endif %}"></i>
-        </a>
-        {% endif %}
-      </td>
-      <td style="text-align:center">
-        {% if user.id == session.user_id %}
-        <div class="ui button warning disabled" href="#"><i class="icon-remove icon-white"></i></div>
-        {% else %}
-        <a id='delete-{{ user.id }}' class="btn btn-mini btn-warning delete" href="#"><i class="icon-remove icon-white"></i></a>
-        {% endif %}
-      </td>
-    </tr>
+      <tr>
+        <td>{{ user.name }}</td>
+        <td><a href="http://www.steamcommunity.com/profiles/{{ user.steam_id  }}">{{ user.steam_id  }}</a></td>
+        <td style="text-align:center">
+          {% if user.id == session.user_id %}
+            <div class="ui mini button {% if user.admin %}success{% else %}danger{% endif %} disabled" >
+              <i class="icon-{% if user.admin %}ok{% else %}remove icon-white{% endif %}"></i>
+            </div>
+          {% else %}
+            <a id="promote-{{ user.id }}" class="ui mini button {% if user.admin %}positive{% else %}negative{% endif %} promote" href="{{ url_for('users') }}">
+              <i class="icon-{% if user.admin %}ok{% else %}remove icon-white{% endif %}"></i>
+            </a>
+          {% endif %}
+        </td>
+        <td style="text-align:center">
+          {% if user.id == session.user_id %}
+            <div class="ui mini button disabled"><i class="icon-remove"></i></div>
+          {% else %}
+            <a id='delete-{{ user.id }}' class="ui mini button teal delete" href="#"><i class="icon-remove icon-white"></i></a>
+          {% endif %}
+        </td>
+      </tr>
     {% endfor %}
   </tbody>
 </table>
@@ -52,16 +58,16 @@
     $('a.promote').click(function(e) {
       e.preventDefault();
       var me = $(this);
-      var isadmin = $(this).hasClass('btn-success');
+      var isadmin = $(this).hasClass('positive');
       $.ajax({
         type: 'post',
         url: '{{ url_for('make_admin', _external=True) }}',
         data: 'userid=' + $(this).attr('id').replace('promote-', '') + '&admin=' + !isadmin,
         success: function() {
           if (isadmin) {
-            me.removeClass('btn-success').addClass('btn-danger').html('<i class="icon-remove icon-white"></i>');
+            me.removeClass('positive').addClass('negative').html('<i class="icon-remove icon-white"></i>');
           } else {
-            me.removeClass('btn-danger').addClass('btn-success').html('<i class="icon-ok"></i>');
+            me.removeClass('negative').addClass('positive').html('<i class="icon-ok"></i>');
           }
         },
         fail: function() {
@@ -72,9 +78,9 @@
     $('a.delete').click(function(e) {
       e.preventDefault();
       if ($(this).hasClass('delete')) {
-        var me = $(this)
-        $(this).removeClass('delete btn-warning').addClass('btn-danger confirm-delete').text('Sure?')
-        window.setTimeout(function() { me.removeClass('confirm-delete btn-danger').addClass('btn-warning delete').html('<i class="icon-remove icon-white"></i>'); }, 5000);
+        var me = $(this);
+        $(this).removeClass('delete teal').addClass('negative confirm-delete').text('Sure?');
+        window.setTimeout(function() { me.removeClass('confirm-delete negative').addClass('teal delete').html('<i class="icon-remove icon-white"></i>'); }, 5000);
       } else {
         var parent = $(this).parent().parent();
         $.ajax({

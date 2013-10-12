@@ -2,25 +2,43 @@
 {% block main %}
 <h2 class="ui header">Import a Demo</h2>
 <form action="{{ url_for('import_demo') }}" method="POST">
-  <div class="ui blue form segment">
-    <div class="ui info message">
-      <div class="header">
-        Was this what you wanted?
-      </div>
-      <p>The following files were found in <b>{{ config.get('DEMO_STORAGE_DIR', '') }}</b>. <br /><br /> Select the checkboxes of the file(s) you'd like to import, then click the green button at the bottom.</p>
-    </div>
-    {% for demo in demos %}
-      <div class="inline field">
-        <div class="ui checkbox">
-          <input type="checkbox" id="demo{{ loop.index }}" name="{{ demo }}" value="{{ demo }}">
-          <label for="demo{{ loop.index }}"></label>
+  {%  if demos %}
+    <div class="ui blue form segment">
+      <div class="ui message">
+        <div class="header">
+          Was this what you wanted?
         </div>
-        <label>{{ demo }}</label>
+        <p>The following files were found in <b>{{ config.get('DEMO_STORAGE_DIR', '') }}</b>.
+          <br /><br /> Select the checkboxes of the file(s) you'd like to import, then
+          click the green button at the bottom.
+        </p>
       </div>
-    {% endfor %}
-  </div>
-  <div class="ui center aligned">
-    <button type="submit" class="ui blue submit button">Import Demo(s)</button>
-  </div>
+      {% for demo in demos %}
+        <div class="inline field">
+          <div class="ui checkbox">
+            <input type="checkbox" id="demo{{ loop.index }}" name="{{ demo }}" value="{{ demo }}">
+            <label for="demo{{ loop.index }}"></label>
+          </div>
+          <label>{{ demo }}</label>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="ui icon message">
+      <i class="folder open outline icon"></i>
+      <div class="content">
+        <div class="header">
+          No Demos to Import
+        </div>
+        <p>There were no unimported <b>.dem</b> files found in <b>{{ config.get('DEMO_STORAGE_DIR', '') }}</b>.</p>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if demos %}
+    <div class="ui">
+      <button type="submit" class="ui blue submit button">Import Demo(s)</button>
+    </div>
+  {% endif %}
 </form>
 {% endblock %}

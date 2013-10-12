@@ -1,10 +1,16 @@
 {% extends "layout-narrow.html" %}
 {% block main %}
-<h3 class="ui header">Upload a Demo</h3>
+<h2 class="ui header">Upload a Demo</h2>
 <form action="{{ url_for('upload_demo') }}" method="POST" enctype="multipart/form-data">
-  <div class="ui info message">
-    <div class="header">About Demo Uploads</div>
-    <p>The filename of the demo is used to determine the <strong>map</strong> and <strong>date</strong>. The accepted syntax is the same as your Team Fortress 2 server creates the demos. If you keep getting an error, see the <a href="{{ url_for('static', filename='img/anatomy_demo_file.png')}}">anatomy of a demo filename</a> for more info!</p>
+  <div class="ui icon blue message">
+    <i class="info icon"></i>
+    <div class="content">
+      <div class="header">About Demo Uploads</div>
+      <p>The filename of the demo is used to determine the <strong>map</strong> and <strong>date</strong>.
+        The accepted syntax is the same as your Team Fortress 2 server creates the demos.
+        If you keep getting an error, see the <a id="anatomy" href="{{ url_for('static', filename='img/anatomy_demo_file.png') }}">
+          anatomy of a demo filename</a> for more info!</p>
+    </div>
   </div>
   <div style="display: none;" id="demo_progress_ctr" class="ui blue active progress">
     <div id="demo_progress" class="bar" style="width:40%"></div>
@@ -13,6 +19,9 @@
     <h2>Drop <span style="color:#FF8540;">demo</span> file here!</h2>
   </div>
 </form>
+<div id="anatomy_modal" class="ui modal">
+  <img src="{{ url_for('static', filename='img/anatomy_demo_file.png') }}" >
+</div>
 {% endblock %}
 {% block javascript %}
 <script>
@@ -71,7 +80,7 @@
 
     // files is a FileList of File objects. List some properties.
     var output = [];
-    var fn = escape(demoFile.name);
+    var fn = encodeURI(demoFile.name);
     var name_match = fn.match(/^auto-([0-9]{8})-.*-(.*)\.dem$/);
     if (name_match == null) {
       output.push('<h3 style="color:#BE2F33;"><i class="icon-file-alt icon"></i> ', escape(demoFile.name), '</h3>',
@@ -132,6 +141,11 @@
   dropZoneDemo.addEventListener('dragover', handleDragOver, false);
   dropZoneDemo.addEventListener('dragleave', handleDragLeave, false);
   dropZoneDemo.addEventListener('drop', handleFileSelectDemo, false);
-
+  $( document ).ready(function() {
+    $('#anatomy').on("click", function(event){
+      event.preventDefault();
+      $("#anatomy_modal").modal('show');
+    });
+  });
 </script>
 {% endblock %}

@@ -1,10 +1,15 @@
 {% extends "layout-narrow.html" %}
 {% block main %}
 <div class="fixed container">
-  <h3 class="ui header">Modify System Settings</h3>
-  <div class="ui warning message">
-    <div class="header">Warning!</div>
-    <p>Changing these settings can break things!</p>
+  <h2 class="ui header">Modify System Settings</h2>
+  <div class="ui icon warning message">
+    <i class="warning icon"></i>
+      <div class="content">
+        <div class="header">
+          Warning!
+        </div>
+        <p>Changing these settings can break things!</p>
+      </div>
   </div>
   <form id="myform" action="{{ url_for('settings') }}" method="POST">
     <div class="ui form segment">
@@ -42,7 +47,6 @@
           <input type="checkbox" id="public" name="public" {% if config.get('DEMO_PUBLIC', False) %}checked{% endif %}>
           <label for="public">Public Demos</label>
         </div>
-
       </div>
       <div class="field">
         <i class="help icon link" data-position="left center" data-content="Turn Debug mode on/off. If debug mode is on, you'll see full stack traces for pages. Disable this for production systems."></i>
@@ -65,12 +69,12 @@
           <label for="cleardb">RESET the database</label>
         </div>
       </div>
-      <center>
-      <div class="ui buttons">
-        <a href="{{ url_for('index') }}" class="ui button">Cancel</a>
-        <div onclick="$('#myform').submit()" class="ui positive button">Save</div>
+      <div class="ui statistic" >
+        <div class="ui buttons">
+          <a href="{{ url_for('index') }}" class="ui button">Cancel</a>
+          <div onclick="$('#myform').submit()" class="ui positive button">Save</div>
+        </div>
       </div>
-        </center>
     </div>
   </form>
 </div>
