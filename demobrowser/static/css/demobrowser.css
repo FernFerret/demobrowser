@@ -2,10 +2,6 @@
         Highlighted Colors
 *******************************/
 
-::-webkit-selection {
-  background-color: #FFFFCC;
-  color: #555555;
-}
 ::-moz-selection {
   background-color: #FFFFCC;
   color: #555555;
@@ -58,20 +54,20 @@ body {
 
 body {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
   color: #555555;
   min-width: 320px;
 }
 
 p {
-  margin: 1em 0em;
+  margin: 1em 0;
 }
 p:first-child {
-  margin-top: 0em;
+  margin-top: 0;
 }
 p:last-child {
-  margin-bottom: 0em;
+  margin-bottom: 0;
 }
 
 /** Responsive options **/
@@ -84,10 +80,18 @@ p:last-child {
     width: 1324px;
     margin: auto;
   }
+  .container.main {
+    width: 1324px;
+    margin: auto;
+  }
 }
 
 @media only screen and (max-width : 1500px) {
   .container.wide {
+    width: 993px;
+    margin: auto;
+  }
+  .container.main {
     width: 993px;
     margin: auto;
   }
@@ -102,7 +106,10 @@ p:last-child {
     width: 662px;
     margin: auto;
   }
-
+  .container.main {
+    width: 662px;
+    margin: auto;
+  }
 }
 
 @media only screen and (max-width : 670px) {
@@ -111,6 +118,10 @@ p:last-child {
     margin: auto;
   }
   .container.wide {
+    width: 331px;
+    margin: auto;
+  }
+  .container.main {
     width: 331px;
     margin: auto;
   }

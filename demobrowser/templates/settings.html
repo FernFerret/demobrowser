@@ -4,34 +4,34 @@
   <h2 class="ui header">Modify System Settings</h2>
   <div class="ui icon warning message">
     <i class="warning icon"></i>
-      <div class="content">
-        <div class="header">
-          Warning!
-        </div>
-        <p>Changing these settings can break things!</p>
+    <div class="content">
+      <div class="header">
+        Warning!
       </div>
+      <p>Changing these settings can break things!</p>
+    </div>
   </div>
   <form id="myform" action="{{ url_for('settings') }}" method="POST">
-    <div class="ui form segment">
+    <div class="ui form segment attached">
       <div class="field">
         <label><i class="help icon link" data-position="left center" data-content="The title of this site"></i>Title</label>
         <div class="ui left labeled icon input">
           <input type="text" id="title" name="title" placeholder="Sexy Server Manager" value="{{ config.get('TITLE', '') }}">
-          <i class="user icon"></i>
+          <i class="browser icon"></i>
         </div>
       </div>
       <div class="field">
         <label><i class="help icon link" data-position="left center" data-content="Absolute url from the root of the site where the demos are stored"></i>Download Directory</label>
         <div class="ui left labeled icon input">
           <input type="text" id="download" name="download" placeholder="/demo_storage" value="{{ config.get('DEMO_DOWNLOAD_DIR', '') }}">
-          <i class="folder icon"></i>
+          <i class="download disk icon"></i>
         </div>
       </div>
       <div class="field">
         <label><i class="help icon link" data-position="left center" data-content="Directory where uploads are stored"></i>Storage Directory</label>
         <div class="ui left labeled icon input">
           <input type="text" id="storage" name="storage" placeholder="/var/www/html/tf2files/demo_storage" value="{{ config.get('DEMO_STORAGE_DIR', '') }}">
-          <i class="folder icon"></i>
+          <i class="folder open icon"></i>
         </div>
       </div>
       <div class="field">
@@ -42,38 +42,34 @@
         </div>
       </div>
       <div class="field">
-        <i class="help icon link" data-content="If enabled, anyone can see your demos without logging in. If not, you'll have to add each Steam ID yourself."></i>
         <div class="ui left labeled icon checkbox">
           <input type="checkbox" id="public" name="public" {% if config.get('DEMO_PUBLIC', False) %}checked{% endif %}>
-          <label for="public">Public Demos</label>
+          <label for="public"><i class="help icon link" data-content="If enabled, anyone can see your demos<br />without logging in. If not, you'll have to add<br />each Steam ID yourself."></i>Public Demos</label>
         </div>
       </div>
       <div class="field">
-        <i class="help icon link" data-position="left center" data-content="Turn Debug mode on/off. If debug mode is on, you'll see full stack traces for pages. Disable this for production systems."></i>
         <div class="ui checkbox">
           <input type="checkbox" id="debug" name="debug" {% if config.get('DEBUG', False) %}checked{% endif %}>
-          <label for="debug">Debug</label>
+          <label for="debug"><i class="help icon link" data-content="Turn Debug mode on/off. If debug mode is<br />on, you'll see full stack traces for pages.<br />Disable this for production systems."></i>Debug</label>
         </div>
       </div>
-      <div class="field">
-        <i class="help icon link" data-position="left center" data-content="Turn Test mode on/off. This allows offline logins. Disable this for production systems."></i>
+      <div class="inline field">
         <div class="ui checkbox">
           <input type="checkbox" id="test" name="test" {% if config.get('TEST', False) %}checked{% endif %}>
-          <label for="test">Test Mode</label>
+          <label for="test"><i class="help icon link" data-content="Turn Test mode on/off. This allows offline<br />logins. Disable this for production systems."></i>Test Mode</label>
         </div>
       </div>
-      <div class="field">
-        <i class="help icon link" data-position="left center" data-content="CLEARS the database. I'll probably delete this later. ONLY for testing."></i>
+      <div class="inline field">
         <div class="ui checkbox">
           <input type="checkbox" id="cleardb" name="cleardb">
-          <label for="cleardb">RESET the database</label>
+          <label for="cleardb"><i class="help icon link" data-content="<b>REMOVES all records from the database.</b><br />I'll probably delete this later. <b>ONLY for<br />testing.</b>"></i>RESET the database</label>
         </div>
       </div>
-      <div class="ui statistic">
-        <div class="ui buttons">
-          <a href="{{ url_for('index') }}" class="ui button">Cancel</a>
-          <div onclick="$('#myform').submit()" class="ui positive button">Save</div>
-        </div>
+    </div>
+    <div class="ui message secondary bottom attached statistic">
+      <div class="ui buttons">
+        <a href="{{ url_for('index') }}" class="ui black button">Cancel</a>
+        <div onclick="$('#myform').submit()" class="ui positive button">Save</div>
       </div>
     </div>
   </form>
