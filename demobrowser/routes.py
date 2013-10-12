@@ -339,7 +339,7 @@ def import_demo():
     demos = []
     for demo in demos_raw:
         if not Demo.demo_exists(os.path.basename(demo)):
-            demos.append(os.path.basename(demo))
+            demos.append((os.path.basename(demo), Demo.check_demo_filename(os.path.basename(demo))))
     return render_template('import_demo.html', demos=demos)
 
 

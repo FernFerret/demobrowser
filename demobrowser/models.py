@@ -1,5 +1,4 @@
 from demobrowser import db
-from pprint import pprint
 from datetime import datetime
 import re
 from sqlalchemy import or_, and_
@@ -59,12 +58,21 @@ class Demo(db.Model):
         return (Demo.query.filter_by(path=demo_name).first() is not None)
 
     @staticmethod
-    def create_from_name(demo_name):
+    def check_demo_filename(demo_name):
         match = re.match('auto-(?P<date>[0-9]{8})-.*-(?P<map>.*)\.dem', demo_name)
+        result = False
         if match:
-            strdate = match.groupdict()['date']
-            thedate = datetime(int(strdate[0:4]), int(strdate[4:6]), int(strdate[6:8]))
-            return Demo.create(match.groupdict()['map'], demo_name, "27.45 MB", thedate)
+            str_date = match.groupdict()['date']
+            match.groupdict()['date'] = datetime(int(str_date[0:4]), int(str_date[4:6]), int(str_date[6:8]))
+            result = match.groupdict()
+        return result
+
+
+    @staticmethod
+    def create_from_name(demo_name):
+        demo = Demo.check_demo_filename(demo_name)
+        if demo:
+            return Demo.create(demo['map'], demo_name, "27.45 MB", demo['date'])
         return (False, "Whoops, something went wrong... :( %s" % demo_name)
 
     @staticmethod
@@ -111,6 +119,7 @@ class Demo(db.Model):
 
     def __repr__(self):
         return "<(Demo:%s - Title: %s, Date: %s, Map: %s)>" % (self.id, self.title, self.date, self.name)
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)

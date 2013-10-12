@@ -16,13 +16,21 @@
           </p>
         </div>
       </div>
-      {% for demo in demos %}
-        <div class="inline field">
-          <div class="ui checkbox">
-            <input type="checkbox" id="demo{{ loop.index }}" name="{{ demo }}" value="{{ demo }}">
-            <label for="demo{{ loop.index }}">{{ demo }}</label>
+      {% for (demo, check) in demos %}
+        {% if check %}
+          <div class="inline field">
+            <div class="ui checkbox">
+              <input type="checkbox" id="demo{{ loop.index }}" name="{{ demo }}" value="{{ demo }}">
+              <label for="demo{{ loop.index }}">{{ demo }}</label>
+            </div>
           </div>
-        </div>
+        {% else %}
+          <div class="inline field">
+            <div class="ui icon disabled checkbox">
+              <label>{{ demo }} - <b>Invalid filename</b></label>
+            </div>
+          </div>
+        {% endif %}
       {% endfor %}
     </div>
   {% else %}
