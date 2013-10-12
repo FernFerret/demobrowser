@@ -36,37 +36,35 @@
           <i class="grid layout icon"></i>
         </div>
       </div>
-      <div class="inline field">
-        <div class="ui checkbox">
+      <div class="field">
+        <i class="help icon link" data-content="If enabled, anyone can see your demos without logging in. If not, you'll have to add each Steam ID yourself."></i>
+        <div class="ui left labeled icon checkbox">
           <input type="checkbox" id="public" name="public" {% if config.get('DEMO_PUBLIC', False) %}checked{% endif %}>
-          <label for="public"></label>
+          <label for="public">Public Demos</label>
         </div>
-        <label><i class="help icon link" data-content="If enabled, anyone can see your demos without logging in. If not, you'll have to add each Steam ID yourself."></i>Public Demos</label>
+
       </div>
-      <div class="inline field">
+      <div class="field">
+        <i class="help icon link" data-position="left center" data-content="Turn Debug mode on/off. If debug mode is on, you'll see full stack traces for pages. Disable this for production systems."></i>
         <div class="ui checkbox">
           <input type="checkbox" id="debug" name="debug" {% if config.get('DEBUG', False) %}checked{% endif %}>
-          <label for="debug"></label>
+          <label for="debug">Debug</label>
         </div>
-        <label><i class="help icon link" data-position="left center" data-content="Turn Debug mode on/off. If debug mode is on, you'll see full stack traces for pages. Disable this for production systems."></i>Debug</label>
       </div>
-      <div class="inline field">
+      <div class="field">
+        <i class="help icon link" data-position="left center" data-content="Turn Test mode on/off. This allows offline logins. Disable this for production systems."></i>
         <div class="ui checkbox">
           <input type="checkbox" id="test" name="test" {% if config.get('TEST', False) %}checked{% endif %}>
-          <label for="test"></label>
+          <label for="test">Test Mode</label>
         </div>
-        <label><i class="help icon link" data-position="left center" data-content="Turn Test mode on/off. This allows offline logins. Disable this for production systems."></i>Test Mode</label>
       </div>
-      <div class="inline field">
+      <div class="field">
+        <i class="help icon link" data-position="left center" data-content="CLEARS the database. I'll probably delete this later. ONLY for testing."></i>
         <div class="ui checkbox">
           <input type="checkbox" id="cleardb" name="cleardb">
-          <label for="cleardb"></label>
+          <label for="cleardb">RESET the database</label>
         </div>
-        <label><i class="help icon link" data-position="left center" data-content="CLEARS the database. I'll probably delete this later. ONLY for testing."></i>RESET the database</label>
       </div>
-      <!-- <div class="ui blue submit button">Login</div>
-      <button type="submit" class="btn btn-success">Save Settings</button>
-      <a href="{{ url_for('index') }}" class="btn">Cancel</a> -->
       <center>
       <div class="ui buttons">
         <a href="{{ url_for('index') }}" class="ui button">Cancel</a>
