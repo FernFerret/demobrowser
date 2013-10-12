@@ -3,23 +3,25 @@
 <h2 class="ui header">Import a Demo</h2>
 <form action="{{ url_for('import_demo') }}" method="POST">
   {%  if demos %}
-    <div class="ui blue form segment">
-      <div class="ui message">
-        <div class="header">
-          Was this what you wanted?
+    <div class="ui blue top attached form segment">
+      <div class="ui message icon">
+        <i class="text file outline icon"></i>
+        <div class="content">
+          <p>
+            The following files were found in <b>{{ config.get('DEMO_STORAGE_DIR', '') }}</b>.
+          </p>
+          <p>
+            Select the checkboxes of the file(s) you'd like to import, then
+            click the green button at the bottom.
+          </p>
         </div>
-        <p>The following files were found in <b>{{ config.get('DEMO_STORAGE_DIR', '') }}</b>.
-          <br /><br /> Select the checkboxes of the file(s) you'd like to import, then
-          click the green button at the bottom.
-        </p>
       </div>
       {% for demo in demos %}
         <div class="inline field">
           <div class="ui checkbox">
             <input type="checkbox" id="demo{{ loop.index }}" name="{{ demo }}" value="{{ demo }}">
-            <label for="demo{{ loop.index }}"></label>
+            <label for="demo{{ loop.index }}">{{ demo }}</label>
           </div>
-          <label>{{ demo }}</label>
         </div>
       {% endfor %}
     </div>
@@ -30,14 +32,13 @@
         <div class="header">
           No Demos to Import
         </div>
-        <p>There were no unimported <b>.dem</b> files found in <b>{{ config.get('DEMO_STORAGE_DIR', '') }}</b>.</p>
+        <p>There were no unimported <b>.dem</b> files found in:<br /><b>{{ config.get('DEMO_STORAGE_DIR', '') }}</b></p>
       </div>
     </div>
   {% endif %}
-
   {% if demos %}
-    <div class="ui">
-      <button type="submit" class="ui blue submit button">Import Demo(s)</button>
+    <div class="ui bottom attached message statistic">
+      <button type="submit" class="ui green labeled icon button"><i class="copy icon"></i> Import Demo(s)</button>
     </div>
   {% endif %}
 </form>

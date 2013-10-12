@@ -34,7 +34,7 @@
         {% endif %}
         {% if request.endpoint in ['demopage', 'view_demo', 'index', 'import_demo', 'upload_demo'] %}
           <div class="ui sub menu">
-            <a href="{{ url_for('import_demo') }}" class="item{% if request.endpoint in ['import_demo'] %} active{% endif %}"><i class="add icon"></i>Import</a>
+            <a href="{{ url_for('import_demo') }}" class="item{% if request.endpoint in ['import_demo'] %} active{% endif %}"><i class="copy icon"></i>Import</a>
             <a href="{{ url_for('upload_demo') }}" class="item{% if request.endpoint in ['upload_demo'] %} active{% endif %}"><i class="cloud upload icon"></i>Upload</a>
           </div>
         {% endif %}

@@ -4,7 +4,7 @@
 <form action="{{ url_for('add_user') }}" method="POST">
   <div class="ui top attached form fluid segment">
     <div class="field">
-      <label></i>Name</label>
+      <label>Name</label>
       <div class="ui left labeled icon input">
         <input type="text" id="name" name="name" placeholder="FernFerret" value="{{ values.get('name', '') }}">
         <i class="user icon"></i>
@@ -14,20 +14,24 @@
       <label><i class="help icon link" data-position="left center" data-content="Put Help Here."></i>Steam Profile ID</label>
       <div class="ui left labeled icon input">
         <input type="text" id="steamid" name="steamid" placeholder="01234567890123456" value="{{ values.get('steamid', '') }}" />
-        <i class="user icon"></i>
+        <i class="id basic icon"></i>
       </div>
     </div>
-     <div class="ui message">This should be a number, found after the person's profile:
-          <br /><a href="http://steamcommunity.com/profiles/01234567890123456">http://steamcommunity.com/profiles/<b>01234567890123456</b></a><br />
-          If you can't find it, use this: <a href="http://steamidconverter.com/">http://steamidconverter.com</a>. I'll have it accepting all these values sometime...</div>
-    <div class="field">
+     <div class="ui message">
+       <p>
+         This should be a number, found after the person's profile: <a href="http://steamcommunity.com/profiles/01234567890123456">http://steamcommunity.com/profiles/<b>01234567890123456</b></a>.
+          If you can't find it, use this: <a href="http://steamidconverter.com/">http://steamidconverter.com</a>. I'll have it accepting all these values sometime...
+       </p>
+     </div>
+    <div class="inline field">
       <div class="ui checkbox">
         <input {% if values.get('admin', None) %}checked {% endif %}type="checkbox" id="admin" name="admin">
         <label for="admin">Admin</label>
       </div>
     </div>
+    <br />
   </div>
-  <div class="ui bottom attached message">
+  <div class="ui bottom attached message statistic">
     <button type="submit" class="ui green labeled icon button"><i class="user icon"></i> Add User</button>
   </div>
 </form>

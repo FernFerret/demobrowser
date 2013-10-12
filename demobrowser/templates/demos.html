@@ -9,7 +9,8 @@
           No Demos.
         </div>
         {% if g.user.id %}
-          Perhaps you would like to <a href="{{ url_for('import_demo') }}">import one</a>?
+          Perhaps you would like to <a href="{{ url_for('import_demo') }}">import</a> or
+          <a href="{{ url_for('upload_demo') }}">upload</a> one?
         {% else %}
           Check back later!
         {% endif %}
