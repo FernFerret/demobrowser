@@ -1,107 +1,89 @@
 <!DOCTYPE html>
+{% set title = config.get('TITLE', 'Demo Browser') %}
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    {% if title %}
     <title>{{ title }}</title>
-    {% else %}
-    <title>{{ config.get('TITLE', 'Server Manager') }}</title>
-    {% endif %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Le styles -->
-    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/font-awesome.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/demobrowser.css') }}" rel="stylesheet">
-    <style type="text/css">
-
-      </style>
-      <link href="{{ url_for('static', filename='css/bootstrap-responsive.css') }}" rel="stylesheet">
-
-    <!--
-		Put this back in when we enable mobile mode.
-    @media (max-width: 979px) {
-      body {
-        padding-top: 0;
-        padding-bottom: 0;
-      }
-    } -->
-    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-    <!-- Le fav and touch icons -->
+    <link href="{{ url_for('static', filename='semantic/css/semantic.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+    <!-- <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Open+Sans:300italic,400,300,700" rel="stylesheet" type="text/css"> -->
+    <link href="{{ url_for('static', filename='font/open_sans.css') }}" rel="stylesheet" type="text/css">
   </head>
-
   <body>
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          {% set title = config.get('TITLE', 'Server Manager') %}
-          <a class="brand" href="{{ url_for('index') }}">{{ title }}</a>
-          <div class="nav-collapse">
-            <ul class="nav">
-              {% if session.user_admin %}
-              <li class="dropdown{% if request.endpoint in ['demopage', 'view_demo', 'index', 'import_demo', 'upload_demo'] %} active{% endif %}">
-                <a class="dropdown-toggle" href="{{ url_for('index') }}">Demos</a>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
-                  <li><a tabindex="-1" href="{{ url_for('upload_demo') }}"><i class="icon-upload"></i> Upload Demo</a></li>
-                  <li><a tabindex="-1" href="{{ url_for('import_demo') }}"><i class="icon-signin"></i> Import Demo</a></li>
-                </ul>
-              </li>
-              <li class="dropdown{% if request.endpoint in ['users', 'add_user'] %} active{% endif %}">
-                <a href="{{ url_for('users') }}">Users</a>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="drop2">
-                  <li><a tabindex="-1" href="{{ url_for('add_user') }}"><i class="icon-plus"></i> Add User</a></li>
-                </ul>
-              </li>
-              <li {% if 'settings' in request.path %}class="active"{% endif %}><a href="{{ url_for('settings') }}">Settings</a></li>
-              {% else %}
-              <li class="active"><a href="{{ url_for('index') }}">Demos</a></li>
-              {% endif %}
-            </ul>
-            <ul class="nav pull-right">
-              {% if session.user_id %}
-              <li style="padding: 6px 15px 4px;"><a style="padding: 0px" href="{{ url_for('logout') }}"><span style="padding:0px 6px;">Logout</span><img style="width: 28px;" class="img-rounded" src="{{ session.avatar }}" /></a></li>
-              {% else %}
-              <li class="pull-right"><a style="padding: 8px 15px 9px;" href="{{ url_for('login') }}"><img src="{{ url_for('static', filename='img/sits_small.png') }}" alt="Login through Steam" /></a></li>
-              {% endif %}
-            </ul>
-          </div><!--/.nav-collapse -->
-        </div>
+    <div class="ui inverted tiered menu">
+      <div class="right menu">
+        {% if session.user_id %}
+          <a class="item" href="{{ url_for('logout') }}"><i class="off icon"></i><!-- <img src="{{ session.avatar }}" /> -->Logout</a>
+        {% else %}
+          <a class="item" href="{{ url_for('login') }}"><!-- <img src="{{ url_for('static', filename='img/sits_small.png') }}" alt="Login through Steam" /> -->Login with Steam</a>
+          {% if config.get('TEST', False) %}
+            <a class="item" href="{{ url_for('test_login') }}">Sign in as Admin</a>
+          {% endif %}
+        {% endif %}
       </div>
+      {% if session.user_admin %}
+        <a class="item{% if request.endpoint in ['demopage', 'view_demo', 'index', 'import_demo', 'upload_demo'] %} active{% endif %}" href="{{ url_for('index') }}"><i class="block layout icon"></i>Demos</a>
+        <a class="item{% if request.endpoint in ['users', 'add_user'] %} active{% endif %}" href="{{ url_for('users') }}"><i class="users icon"></i>Users</a>
+        <a class="item{% if request.endpoint in ['settings'] %} active{% endif %}" href="{{ url_for('settings') }}"><i class="settings icon"></i>Settings</a>
+        {% if request.endpoint in ['users', 'add_user'] %}
+          <div class="ui sub menu">
+            <a href="{{ url_for('add_user') }}" class="item{% if request.endpoint in ['add_user'] %} active{% endif %}"><i class="add icon"></i>Add</a>
+          </div>
+        {% endif %}
+        {% if request.endpoint in ['demopage', 'view_demo', 'index', 'import_demo', 'upload_demo'] %}
+          <div class="ui sub menu">
+            <a href="{{ url_for('import_demo') }}" class="item{% if request.endpoint in ['import_demo'] %} active{% endif %}"><i class="copy icon"></i>Import</a>
+            <a href="{{ url_for('upload_demo') }}" class="item{% if request.endpoint in ['upload_demo'] %} active{% endif %}"><i class="cloud upload icon"></i>Upload</a>
+          </div>
+        {% endif %}
+      {% else %}
+        <a class="item active" href="{{ url_for('index') }}"><i class="block layout icon"></i>Demos</a>
+      {% endif %}
     </div>
-    <div class="container">
+    <div class="ui container main">
       <div id="globalmsgs">
         {% with messages = get_flashed_messages(with_categories=True) %}
           {% if messages %}
             {% for cat, message in messages %}
-          <div class="alert alert-{{ cat }}">
-            <a class="close" data-dismiss="alert">×</a>
-              {{ message|safe }}
-          </div>
+              <div class="ui message hidden left aligned db_message {{ cat }}">
+                {{ message|safe }}
+                <i class="close icon"></i>
+              </div>
             {% endfor %}
+            <div></div>
           {% endif %}
         {% endwith %}
       </div>
-      {% block container %}{% endblock %}
-      <hr>
-      <footer>
-        <center><p>Version {{ config.get('VERSION', '0.1') }}<br />Powered by <a href="http://flask.pocoo.org/">Flask</a>, <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap</a> &amp; <a href="http://steampowered.com">Steam</a></p></center>
-      </footer>
-    </div> <!-- /container -->
 
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="{{ url_for('static', filename='js/jquery-1.9.0.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+      {% block container %}{% endblock %}
+      <div class="ui basic segment statistic">
+        <div class="ui divider"></div>
+        <p>Version {{ config.get('VERSION', '0.1') }}</p>
+        <p>
+          Powered by <a href="http://flask.pocoo.org/">Flask</a>,
+          <a href="http://www.semantic-ui.com/">Semantic UI</a> &amp;
+          <a href="http://steampowered.com">Steam</a>
+        </p>
+      </div>
+    </div>
+    <!-- <script src="{{ url_for('static', filename='js/jquery-1.9.0.min.js') }}"></script> -->
+    <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script> -->
+    <!-- <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script> -->
+    <script src="{{ url_for('static', filename='js/jquery-2.0.3.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='semantic/javascript/semantic.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/popup.js') }}"></script>
+    <script>
+    $( document ).ready(function() {
+      $(".db_message").transition("fade up");
+    });
+    $(".icon.close").on({
+      click: function() {
+        $( this ).parent().transition("fade");
+      }
+    });
+    </script>
     {% block javascript %}{% endblock %}
   </body>
 </html>

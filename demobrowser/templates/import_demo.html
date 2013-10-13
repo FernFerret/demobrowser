@@ -1,19 +1,53 @@
-{% extends "demos.html" %}
+{% extends "layout-narrow.html" %}
 {% block main %}
-<form class="form-horizontal" action="{{ url_for('import_demo') }}" method="POST">
-  <fieldset>
-    <legend><h3>Import a Demo</h3></legend>
-    <div class="control-group  {% if 'name' in errors %}error{% endif %}">
-      <label class="control-label" for="Íname">Demo File</label>
-      <div class="controls">
-			  {% for demo in demos %}
-				  <input type="checkbox" name="{{ demo }}" value="{{ demo }}" /> {{ demo }}<br />
-			  {% endfor %}
+<h2 class="ui header">Import a Demo</h2>
+<form action="{{ url_for('import_demo') }}" method="POST">
+  {%  if demos %}
+    <div class="ui blue top attached form segment">
+      <div class="ui message icon">
+        <i class="text file outline icon"></i>
+        <div class="content">
+          <p>
+            The following files were found in <b>{{ config.get('DEMO_STORAGE_DIR', '') }}</b>.
+          </p>
+          <p>
+            Select the checkboxes of the file(s) you'd like to import, then
+            click the green button at the bottom.
+          </p>
+        </div>
+      </div>
+      {% for (demo, check) in demos %}
+        {% if check %}
+          <div class="inline field">
+            <div class="ui checkbox">
+              <input type="checkbox" id="demo{{ loop.index }}" name="{{ demo }}" value="{{ demo }}">
+              <label for="demo{{ loop.index }}">{{ demo }}</label>
+            </div>
+          </div>
+        {% else %}
+          <div class="inline field">
+            <div class="ui icon disabled checkbox">
+              <label>{{ demo }} - <b>Invalid filename</b></label>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="ui icon message">
+      <i class="folder open outline icon"></i>
+      <div class="content">
+        <div class="header">
+          No Demos to Import
+        </div>
+        <p>There were no unimported <b>.dem</b> files found in:<br /><b>{{ config.get('DEMO_STORAGE_DIR', '') }}</b></p>
       </div>
     </div>
-    <div class="form-actions">
-      <button type="submit" class="btn btn-success">Import Demo(s)</button>
+  {% endif %}
+  {% if demos %}
+    <div class="ui bottom attached message statistic">
+      <button type="submit" class="ui green labeled icon button"><i class="copy icon"></i> Import Demo(s)</button>
     </div>
-  </fieldset>
+  {% endif %}
 </form>
 {% endblock %}

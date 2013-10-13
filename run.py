@@ -6,7 +6,9 @@ db.create_all()
 app.debug = app.config.get('DEBUG', False)
 
 # This is required.
-app.secret_key = app.config.get('SECRET_KEY', 'I\'m a secret!11!!1')
+app.secret_key = app.config.get('SECRET_KEY', None)
 
-# TODO: Unhardcode this.
-app.run(host=app.config.get('ADDRESS', '0.0.0.0'))
+if app.secret_key is None:
+    print "ERROR: SECRET_KEY not found in settings.cfg. Please see README.md for help!"
+else:
+    app.run(host=app.config.get('ADDRESS', '0.0.0.0'))

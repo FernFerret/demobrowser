@@ -1,36 +1,21 @@
-{% extends "layout-fixed.html" %}
+{% extends "layout-narrow.html" %}
 {% block left %}
-<div class="well">
-  <ul class="nav nav-list">
-    <li class="nav-header">
-        Users
-    </li>
-    <li {% if request.path == url_for('users') %}class="active"{% endif %}>
-      <a href="{{ url_for('users') }}">
-        <i class="icon-list {% if request.path == url_for('users') %}icon-white{% endif %}"></i>
-        User List
-      </a>
-    </li>
-    <li {% if request.path == url_for('add_user') %}class="active"{% endif %}>
-      <a href="{{ url_for('add_user') }}">
-        <i class="icon-plus-sign {% if request.path == url_for('add_user') %}icon-white{% endif %}"></i>
-        Add User
-      </a>
-    </li>
-  </ul>
-</div>
 {% endblock left %}
 {% block main %}
-{% if session.user_admin %}
-<div class="hidden-desktop text-center">
-  <a class="btn btn-success" href="{{ url_for('add_user') }}"><i class="icon-plus"></i> Upload Demo</a>
+<h2 class="ui header">Users</h2>
+<div class="ui icon message info">
+  <i class="users icon"></i>
+    <div class="content">
+      <div class="header">
+        About Users
+      </div>
+      <p>
+        Any user on this page will have access to view the demos (unless you have demos set to public in the settings).
+        Any user with the admin field, will be able to upload demos or add other users.
+      </p>
+    </div>
 </div>
-{% endif %}
-<div>
-  <h2>Users</h2>
-  <p>Any user on this page will have access to view the demos (unless you have demos set to public in the settings). Any user with the admin field, will be able to upload demos or add other users.</p>
-</div>
-<table class="table table-striped">
+<table class="ui table segment">
   <thead>
     <tr>
       <th>Name</th>
@@ -41,28 +26,28 @@
   </thead>
   <tbody>
     {% for user in users %}
-    <tr>
-      <td>{{ user.name }}</td>
-      <td><a href="http://www.steamcommunity.com/profiles/{{ user.steam_id  }}">{{ user.steam_id  }}</a></td>
-      <td style="text-align:center">
-        {% if user.id == session.user_id %}
-        <div class="btn btn-mini btn-{% if user.admin %}success{% else %}danger{% endif %} disabled" >
-          <i class="icon-{% if user.admin %}ok{% else %}remove icon-white{% endif %}"></i>
-        </div>
-        {% else %}
-        <a id="promote-{{ user.id }}" class="btn btn-mini btn-{% if user.admin %}success{% else %}danger{% endif %} promote" href="{{ url_for('users') }}">
-          <i class="icon-{% if user.admin %}ok{% else %}remove icon-white{% endif %}"></i>
-        </a>
-        {% endif %}
-      </td>
-      <td style="text-align:center">
-        {% if user.id == session.user_id %}
-        <div class="btn btn-mini btn-warning disabled" href="#"><i class="icon-remove icon-white"></i></div>
-        {% else %}
-        <a id='delete-{{ user.id }}' class="btn btn-mini btn-warning delete" href="#"><i class="icon-remove icon-white"></i></a>
-        {% endif %}
-      </td>
-    </tr>
+      <tr>
+        <td>{{ user.name }}</td>
+        <td><a href="http://www.steamcommunity.com/profiles/{{ user.steam_id  }}">{{ user.steam_id  }}</a></td>
+        <td style="text-align:center">
+          {% if user.id == session.user_id %}
+            <div class="ui mini button {% if user.admin %}success{% else %}danger{% endif %} disabled" >
+              <i class="icon-{% if user.admin %}ok{% else %}remove icon-white{% endif %}"></i>
+            </div>
+          {% else %}
+            <a id="promote-{{ user.id }}" class="ui mini button {% if user.admin %}positive{% else %}negative{% endif %} promote" href="{{ url_for('users') }}">
+              <i class="icon-{% if user.admin %}ok{% else %}remove icon-white{% endif %}"></i>
+            </a>
+          {% endif %}
+        </td>
+        <td style="text-align:center">
+          {% if user.id == session.user_id %}
+            <div class="ui mini button disabled"><i class="icon-remove"></i></div>
+          {% else %}
+            <a id='delete-{{ user.id }}' class="ui mini button teal delete" href="#"><i class="icon-remove icon-white"></i></a>
+          {% endif %}
+        </td>
+      </tr>
     {% endfor %}
   </tbody>
 </table>
@@ -73,16 +58,16 @@
     $('a.promote').click(function(e) {
       e.preventDefault();
       var me = $(this);
-      var isadmin = $(this).hasClass('btn-success');
+      var isadmin = $(this).hasClass('positive');
       $.ajax({
         type: 'post',
         url: '{{ url_for('make_admin', _external=True) }}',
         data: 'userid=' + $(this).attr('id').replace('promote-', '') + '&admin=' + !isadmin,
         success: function() {
           if (isadmin) {
-            me.removeClass('btn-success').addClass('btn-danger').html('<i class="icon-remove icon-white"></i>');
+            me.removeClass('positive').addClass('negative').html('<i class="icon-remove icon-white"></i>');
           } else {
-            me.removeClass('btn-danger').addClass('btn-success').html('<i class="icon-ok"></i>');
+            me.removeClass('negative').addClass('positive').html('<i class="icon-ok"></i>');
           }
         },
         fail: function() {
@@ -93,9 +78,9 @@
     $('a.delete').click(function(e) {
       e.preventDefault();
       if ($(this).hasClass('delete')) {
-        var me = $(this)
-        $(this).removeClass('delete btn-warning').addClass('btn-danger confirm-delete').text('Sure?')
-        window.setTimeout(function() { me.removeClass('confirm-delete btn-danger').addClass('btn-warning delete').html('<i class="icon-remove icon-white"></i>'); }, 5000);
+        var me = $(this);
+        $(this).removeClass('delete teal').addClass('negative confirm-delete').text('Sure?');
+        window.setTimeout(function() { me.removeClass('confirm-delete negative').addClass('teal delete').html('<i class="icon-remove icon-white"></i>'); }, 5000);
       } else {
         var parent = $(this).parent().parent();
         $.ajax({

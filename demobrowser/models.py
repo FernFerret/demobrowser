@@ -1,5 +1,4 @@
 from demobrowser import db
-from pprint import pprint
 from datetime import datetime
 import re
 from sqlalchemy import or_, and_
@@ -44,7 +43,7 @@ class Demo(db.Model):
                                           Demo.id.desc()).filter(or_(Demo.date < self.date,
                                                                  and_(Demo.date <= self.date,
                                                                       Demo.id < self.id)))
-    	return sweet_query.first()
+        return sweet_query.first()
 
 
     def next_by_date(self):
@@ -52,19 +51,29 @@ class Demo(db.Model):
                                           Demo.id.asc()).filter(or_(Demo.date > self.date,
                                                                     and_(Demo.date >= self.date,
                                                                          Demo.id > self.id)))
-    	return sweet_query.first()
+        return sweet_query.first()
 
     @staticmethod
     def demo_exists(demo_name):
         return (Demo.query.filter_by(path=demo_name).first() is not None)
 
     @staticmethod
-    def create_from_name(demo_name):
+    def check_demo_filename(demo_name):
         match = re.match('auto-(?P<date>[0-9]{8})-.*-(?P<map>.*)\.dem', demo_name)
+        result = False
         if match:
-            strdate = match.groupdict()['date']
-            thedate = datetime(int(strdate[0:4]), int(strdate[4:6]), int(strdate[6:8]))
-            return Demo.create(match.groupdict()['map'], demo_name, "27.45 MB", thedate)
+            match_dict = match.groupdict()
+            str_date = match_dict['date']
+            match_dict['date'] = datetime(int(str_date[0:4]), int(str_date[4:6]), int(str_date[6:8]))
+            result = match_dict
+        return result
+
+
+    @staticmethod
+    def create_from_name(demo_name):
+        demo = Demo.check_demo_filename(demo_name)
+        if demo:
+            return Demo.create(demo['map'], demo_name, "27.45 MB", demo['date'])
         return (False, "Whoops, something went wrong... :( %s" % demo_name)
 
     @staticmethod
@@ -100,8 +109,18 @@ class Demo(db.Model):
         db.session.commit()
         return True
 
+    def get_map_name(self):
+        pieces = self.name.upper().split("_")
+        if len(pieces) > 1:
+            prefix = pieces.pop(0)
+        else:
+            prefix = ""
+        map_name = " ".join([str(piece).capitalize() for piece in pieces])
+        return map_name, prefix
+
     def __repr__(self):
         return "<(Demo:%s - Title: %s, Date: %s, Map: %s)>" % (self.id, self.title, self.date, self.name)
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -110,6 +129,9 @@ class User(db.Model):
     name = db.Column(db.String(40))
     nickname = db.String(80)
     admin = db.Column(db.Boolean)
+
+    def __repr__(self):
+        return "<User name='%s' nick='%s' admin='%s' steam='%s'>" % (self.name, self.nickname, self.admin, self.steam_id)
 
     def make_admin(self, admin):
         self.admin = admin
@@ -138,6 +160,10 @@ class User(db.Model):
     @staticmethod
     def get_all():
         return User.query.all()
+
+    @staticmethod
+    def get_test_user():
+        return User.query.first()
 
     @staticmethod
     def create(name, steamid, admin):

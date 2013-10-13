@@ -1,75 +1,86 @@
-{% extends "layout-fixed.html" %}
+{% extends "layout-wide.html" %}
 {% block main %}
-{% if session.user_admin %}
-<div class="hidden-desktop text-center">
-  <a class="btn btn-success" href="{{ url_for('upload_demo') }}"><i class="icon-upload"></i> Upload Demo</a>
-  <a class="btn btn-info" href="{{ url_for('import_demo') }}"><i class="icon-signin"></i> Import Demo</a>
-</div>
-{% endif %}
 {% macro render_pagination(pagination) %}
-    {% if not pagination.items %}
-      <div class="hero-unit">
-        {% if g.user.id %}
-          <h3 style="text-align:center;">No Demos. <small>Perhaps you like to <a href="{{ url_for('import_demo') }}">import one</a>?</small></h3>
-          {% else %}
-            <h3 style="text-align:center;">No Demos. <small>Check back later!</small></h3>
-          {% endif %}
-      </div>
-    {% else %}
-      <div class="row-fluid marketing">
-      {% for demo in pagination.items %}
-      <div id="demo{{ demo.id }}" class="span3" style="text-align:center">
-
-  			<h4>
-  			{% if demo.title %}
-  				{{ demo.title }}
-  			{% else %}
-  				{{ demo.name }}
-  			{% endif %}
-  			{% if demo.logfile %}
-  			<small><a target="_blank" href="http://www.logs.tf/{{ demo.logfile }}"><i class="icon-bar-chart"></i></a></small>
-  			{% endif %}
-  			</h4>
-        <a href="{{ url_for('view_demo', demo=demo.id) }}">
-          <img class="img-polaroid" src="{{ url_for('static', filename='img/maps/%s.png' % demo.name) }}" />
-          {% if demo.sub %}
-          <div class="pull-left visible-desktop"><small><i class="icon-group"></i> {{ demo.sub }}</small></div>
-          {% endif %}
-          <div style="margin-right:-10px;" class="pull-right hidden-phone"><small>{{ demo.good_date() }} <i class="icon-calendar"></i></small></div></a>
-      </div>
-      {% if loop.index % 4 == 0 and not loop.last %}
+  {% if not pagination.items %}
+    <div class="ui center aligned huge icon message">
+      <i class="inbox icon"></i>
+      <div class="content">
+        <div class="header">
+          No Demos.
         </div>
-        <div class="row-fluid marketing">
-       {% endif %}
+        {% if g.user.id %}
+          Perhaps you would like to <a href="{{ url_for('import_demo') }}">import</a> or
+          <a href="{{ url_for('upload_demo') }}">upload</a> one?
+        {% else %}
+          Check back later!
+        {% endif %}
+      </div>
+    </div>
+  {% else %}
+    <div class="ui items">
+      {% for demo in pagination.items %}
+        {#  Don't forget about demo.sub #}
+        <div id="demo{{ demo.id }}" class="item" style="min-height: 0;">
+          <div class="ui image">
+            {% if demo.logfile %}
+              <a class="ui blue right corner label" target="_blank" href="http://www.logs.tf/{{ demo.logfile }}">
+                <i class="bar chart icon"></i>
+              </a>
+            {% endif %}
+            <a href="{{ url_for('view_demo', demo=demo.id) }}">
+              <img class="rounded ui image" style="width: 300px; height:188px" src="{{ url_for('static', filename='img/maps/%s.png' % demo.name) }}" /></a>
+          </div>
+          <div class="content">
+            <div class="name" style="text-align: center;">
+              <a href="{{ url_for('view_demo', demo=demo.id) }}">
+                {% if demo.title %}
+                  {{ demo.title }}
+                {% else %}
+                  {{ demo.name }}
+                {% endif %}
+              </a>
+            </div>
+            <div class="extra" style="text-align: right;">
+              {{ demo.good_date() }} <i class="icon calendar"></i>
+            </div>
+            {% if demo.sub %}
+              <div class="extra" style="text-align: left;">
+                <i class="icon users"></i>{{ demo.sub }}
+              </div>
+            {% endif %}
+          </div>
+        </div>
       {% endfor %}
     </div>
-    <div class="pagination pagination-centered">
-      <ul>
-        {% if pagination.has_prev %}
-          <li><a href="{{ url_for('demopage', page=pagination.prev_num) }}"><i class="icon-angle-left"></i></a></li>
-        {% else %}
-          <li class="disabled"><a href="#"><i class="icon-angle-left"></i></a></li>
-        {% endif %}
-        {%- for page in pagination.iter_pages() %}
-          {% if page %}
-            {% if page != pagination.page %}
-              <li><a href="{{ url_for('demopage', page=page) }}">{{ page }}</a></li>
-            {% else %}
-              <li class="active"><a  href="#">{{ page }}</a></li>
-            {% endif %}
+  <div class="ui basic segment" style="text-align:center;">
+    <div class="ui borderless pagination menu">
+      {% if pagination.has_prev %}
+        <a href="{{ url_for('demopage', page=pagination.prev_num) }}" class="item"><i class="icon left arrow"></i></a>
+      {% else %}
+        <a class="disabled item"><i class="icon left arrow"></i></a>
+      {% endif %}
+
+      {%- for page in pagination.iter_pages() %}
+        {% if page %}
+          {% if page != pagination.page %}
+            <a class="item" href="{{ url_for('demopage', page=page) }}">{{ page }}</a>
+          {% else %}
+            <a class="active blue item" href="#">{{ page }}</a>
           {% endif %}
-        {%- endfor %}
-        {% if pagination.has_next %}
-          <li><a href="{{ url_for('demopage', page=pagination.next_num) }}"><i class="icon-angle-right"></i></a></li>
-        {% else %}
-          <li class="disabled"><a href="#"><i class="icon-angle-right"></i></a></li>
         {% endif %}
-      </ul>
+      {%- endfor %}
+
+      {% if pagination.has_next %}
+        <a href="{{ url_for('demopage', page=pagination.next_num) }}" class="item"><i class="icon right arrow"></i></a>
+      {% else %}
+        <a class="disabled item"><i class="icon right arrow"></i></a>
+      {% endif %}
     </div>
-  {% endif %}
+  </div>
+{% endif %}
 {% endmacro %}
 {{ render_pagination(demos) }}
 {% endblock main %}
 {% block javascript %}
-	<script src="{{ url_for('static', filename='js/editdemo.js') }}"></script>
+	<!--<script src="{{ url_for('static', filename='js/editdemo.js') }}"></script>-->
 {% endblock %}
