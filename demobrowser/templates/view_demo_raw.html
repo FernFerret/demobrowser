@@ -1,60 +1,55 @@
-<div class="row-fluid">
-	<div style="text-align:center;">
-	  <h2 style="line-height: 30px;">
-      {% if session.user_admin %}
-        <a href="#" id="title">
-      {% endif %}
-			{% if demo.title %}
-			  {{ demo.title }}
-			{% else %}
-				{{ demo.name }}
-			{% endif %}
-			{% if session.user_admin %}
-        </a>
-      {% endif %}
-      {% if demo.sub or session.user_admin %}
-        <small><br /><i class="icon-group"></i> {% if session.user_admin %}<a href="#" id="sub">{% endif %}{{ demo.sub }}{% if session.user_admin %}</a>{% endif %}</small>
-      {% endif %}
-		</h2>
-	</div>
+<div class="ui large attached message">
+  <div class="header">
+    {% if session.user_admin %}
+      <a href="#" id="title">
+    {% endif %}
+    {% if demo.title %}
+      {{ demo.title }}
+    {% else %}
+      {{ demo.name }}
+    {% endif %}
+    {% if session.user_admin %}
+      </a>
+    {% endif %}
+  </div>
+  {% if demo.sub or session.user_admin %}
+    <p><i class="icon users"></i> {% if session.user_admin %}<a href="#" id="sub">{% endif %}{{ demo.sub }}{% if session.user_admin %}</a>{% endif %}</p>
+  {% endif %}
 </div>
-<div class="row-fluid">
-  <div class="span6" style="border-right: 1px solid rgb(223, 223, 223);">
-    <div class="pull-right text-center" style="margin-right:20px">
-      <img class="img-polaroid" src="{{ url_for('static', filename='img/maps/%s.png' % demo.name) }}" />
-      <h4>Map: <a title="Learn about {{ demo.name }} on the Team Fortress 2 wiki!" target="_blank" href="http://wiki.teamfortress.com/w/index.php?title={{ demo.name }}&amp;redirect=yes">{{ demo.name }}</a><br /><small>on {{ demo.good_date() }}</small></h4>
+<div style="padding-right: 0;" class="ui blue attached segment">
+  <div class="ui two column divided grid">
+    <div class="column">
+      <h3 class="ui header"><i class="book icon"></i>Description</h3>
+      {% if session.user_admin %}
+        <a href="#" id="summary">{{ demo.summary|safe }}</a>
+      {% else %}
+        {{ demo.summary|safe }}
+      {% endif %}
+      {% if demo.logfile or session.user_admin %}
+        <h3 class="ui header"><i class="bar chart icon"></i>Summary</h3>
+        {% if session.user_admin %}
+          <p>Log ID: <a href="#" id="logfile">{{ demo.logfile }}</a> (Click this link to edit it)</p>
+        {% endif %}
+        <p>
+          <a target="_blank" href="http://www.logs.tf/{{ demo.logfile }}">logs.tf/{{ demo.logfile }}</a>
+        </p>
+      {% endif %}
+      <h3 class="ui header"><i class="icon url"></i>Permalink</h3>
+      <p><a title="{{ demo.title }}" href="{{ url_for('view_demo', demo=demo.id) }}">{{ url_for('view_demo', demo=demo.id, _external=True) }}</a></p>
+    </div>
+    <div class="column">
+      <div class="ui basic center aligned segment">
+        <img style="display:inline-block;" class="rounded ui image" src="{{ url_for('static', filename='img/maps/%s.png' % demo.name) }}" />
+        <h4 class="ui header">Map: <a title="Learn about {{ demo.name }} on the Team Fortress 2 wiki!" target="_blank" href="http://wiki.teamfortress.com/w/index.php?title={{ demo.name }}&amp;redirect=yes">{{ demo.name }}</a><br /><small>on {{ demo.good_date() }}</small></h4>
+      </div>
     </div>
   </div>
-  <div class="span6">
-		{% if demo.summary or session.user_admin %}
-			<h4><i class="icon-book"></i> Description</h4>
-	    <p>
-	       {% if session.user_admin %}
-	       <a href="#" id="summary">{{ demo.summary|safe }}</a>
-	       {% else %}
-	       {{ demo.summary|safe }}
-	       {% endif %}
-	    </p>
-		{% endif %}
-		{% if demo.logfile or session.user_admin %}
-			<h4><i class="icon-bar-chart"></i> Summmary</h4>
-			{% if session.user_admin %}
-			<p>Log ID: <a href="#" id="logfile">{{ demo.logfile }}</a> (Click this link to edit it)</p>
-			{% endif %}
-			<p><a target="_blank" href="http://www.logs.tf/{{ demo.logfile }}">logs.tf/{{ demo.logfile }}</a></p>
-		{% endif %}
-    <h4><i class="icon-link"></i> Permalink</h4>
-    <a title="{{ demo.title }}" href="{{ url_for('view_demo', demo=demo.id) }}">{{ url_for('view_demo', demo=demo.id, _external=True) }}</a>
-  </div>
 </div>
-<br />
-<div class="row-fluid">
-	<div style="text-align:center;" class="span12">
-		<a class="btn btn-success btn-large ttip" href="{{ config.get('DEMO_DOWNLOAD_DIR', '')  }}/{{ demo.path }}"><i class="icon-download"></i> Download this demo!</a>
-		{% if session.user_admin %}
-      <a href="#" data-toggle="tooltip" title="Set this demo file as 'bad'." class="btn btn-large btn-warning ttip" ><i class='icon-ban-circle'></i> Nuke Demo</a>
-      {% set delete_script = 'deleteDemoRedirect(%s, "#myModal", "%s", "%s");' % (demo.id, url_for('delete_demo'), url_for('index')) %}
-      <a id="deletedemo" href="#" class="btn btn-danger btn-large" data-placement="top" data-toggle="popover" data-html="true" data-content="<p>Are you sure you really want to remove <strong>{{demo.title}}</strong>?</p><p>This <strong>won't</strong> delete the demo file!</p><div style='text-align:center'><button onclick='$(&quot;#deletedemo&quot;).popover(&quot;hide&quot;);' class='btn btn-info'>No!</button> <button onclick='{{ delete_script }}' class='btn btn-danger'>Yes, remove it!</button></div>" data-original-title="<strong class='text-error'>Really Delete?</strong>"><i class="icon-remove"></i> Remove Demo</a>
-		{% endif %}
-	</div>
+<div class="ui bottom attached message statistic">
+  <a class="ui button labeled icon positive" href="{{ config.get('DEMO_DOWNLOAD_DIR', '')  }}/{{ demo.path }}"><i class="icon download"></i>Download this demo!</a>
+  {% if session.user_admin %}
+    <a href="#" data-toggle="tooltip" title="Set this demo file as 'bad'." class="ui button labeled icon orange" ><i class='icon ban circle'></i>Nuke Demo</a>
+    {% set delete_script = 'deleteDemoRedirect(%s, "#myModal", "%s", "%s");' % (demo.id, url_for('delete_demo'), url_for('index')) %}
+    <a id="deletedemo" href="#" class="ui button labeled icon negative"><i class="icon remove"></i>Remove Demo</a>
+  {% endif %}
 </div>
