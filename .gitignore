@@ -1,3 +1,10 @@
 *.pyc
 settings.cfg
 .DS_store
+sample
+deps/semantic/less
+deps/semantic/examples
+deps/semantic/minified
+deps/semantic/uncompressed
+deps/semantic/semantic.zip
+.idea

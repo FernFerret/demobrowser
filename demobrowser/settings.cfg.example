@@ -13,6 +13,7 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/test.db'
 # App Config
 TITLE = 'Server Manager'
 DEBUG = False
+TEST = False
 DEMO_DOWNLOAD_DIR = '/demo_storage'
 DEMO_STORAGE_DIR = '/var/www/html/tf2files/demo_storage'
 DEMO_PUBLIC = False

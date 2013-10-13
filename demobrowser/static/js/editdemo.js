@@ -59,13 +59,13 @@ function handleDragOver(evt) {
   evt.stopPropagation();
   evt.preventDefault();
   evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
-  $("#upload_overlay").show();
+  $('.page.dimmer').dimmer('show');
 }
 
 function handleFileSelect(evt) {
   evt.stopPropagation();
   evt.preventDefault();
-  $("#upload_overlay").hide();
+  $('.page.dimmer').dimmer('hide');
   $("#globalmsgs").children().each(function() {$(this).slideUp();});
 
   logFile = evt.dataTransfer.files[0]; // FileList object.
@@ -93,7 +93,7 @@ function handleDragLeave(evt) {
   // Check the mouseEvent coordinates are outside of the rectangle
   if(evt.x > rect.left + rect.width || evt.x < rect.left
   || evt.y > rect.top + rect.height || evt.y < rect.top) {
-    $("#upload_overlay").hide();
+    $('.page.dimmer').dimmer('hide');
     evt.dataTransfer.dropEffect = 'none';
   }
 }

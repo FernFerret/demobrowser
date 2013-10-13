@@ -1,84 +1,82 @@
-{% extends "layout-fixed.html" %}
+{% extends "layout-narrow.html" %}
 {% block main %}
-  <div class="row-fluid">
+  <div style="display:none;" class="ui basic segment">
     <div id="log_progress_ctr" style="display:none;" class="span10 offset1" style="height:20px;">
       <div style="" id="log_progress_style" class="progress progress-striped active">
           <div id="log_progress" class="bar" style="width: 40%;"></div>
       </div>
     </div>
   </div>
-  <div id="drop_zone" class="row">
+  <div id="drop_zone">
     <div style="display:none;" id="upload_overlay">
       <div class="drop_fade_txt"><h1><i class="icon-cloud-upload"></i> Drop <span style="color:#FF9640">log</span> here to upload it!</h1></div>
       <div class="drop_fade"></div>
     </div>
-    <div class="span10 offset1">
-      <ul class="pager" style="margin-top:0px">
+    {% include "view_demo_raw.html" %}
+    <div class="ui basic segment statistic">
+      <div class="ui borderless pagination menu">
         {% if next %}
-          <li class="previous">
-            <a title="View Demo: {{ next.title }}" href="{{ url_for('view_demo', demo=next.id) }}"><i class="icon-angle-left"></i> Newer</a>
-          </li>
+          <a class="item" title="View Demo: {{ next.title }}" href="{{ url_for('view_demo', demo=next.id) }}"><i class="icon-angle-left"></i> Newer</a>
         {% else %}
-          <li class="previous disabled">
-            <a href="#"><i class="icon-angle-left"></i> Newer</a>
-          </li>
+          <a class="disabled item"><i class="icon-angle-left"></i> Newer</a>
         {% endif %}
-        <li>
-          <a title="Back to Demo Grid" href="{{ url_for('demopage', page=demo.get_page_of(config.get('DEMO_PER_PAGE', 12))) }}"><i class="icon-th"></i></a>
-        </li>
+        <a class="item" title="Back to Demo Grid" href="{{ url_for('demopage', page=demo.get_page_of(config.get('DEMO_PER_PAGE', 12))) }}"><i class="icon-th"></i></a>
         {% if prev %}
-          <li class="next">
-            <a title="View Demo: {{ prev.title }}" href="{{ url_for('view_demo', demo=prev.id) }}">Older <i class="icon-angle-right"></i></a>
-          </li>
+          <a class="item" title="View Demo: {{ prev.title }}" href="{{ url_for('view_demo', demo=prev.id) }}">Older <i class="icon-angle-right"></i></a>
         {% else %}
-          <li class="next disabled">
-            <a href="#" onclick="e.preventDefault();" class="">Older <i class="icon-angle-right"></i></a>
-          </li>
+          <a class="disabled item">Older <i class="icon-angle-right"></i></a>
         {% endif %}
-      </ul>
-      <div class="hero-unit" style="padding:30px 60px 60px 60px">
-        {% include "view_demo_raw.html" %}
+      </div>
+    </div>
+  </div>
+  <div class="ui page dimmer">
+    <div class="content">
+      <div class="center">
+        <h1><i class="icon-cloud-upload"></i> Drop <span style="color:#FF9640">log</span> here to upload it!</h1>
       </div>
     </div>
   </div>
 {% endblock main %}
 {% block javascript %}
   {% if session.user_admin %}
-    <script src="{{ url_for('static', filename='js/bootstrap-editable.js') }}"></script>
+    <link href="{{ url_for('static', filename='jquery-editable/css/jquery-editable.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='poshytip/js/jquery.poshytip.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='jquery-editable/js/jquery-editable-poshytip.min.js') }}"></script>
     <script type="text/javascript">
     var uri = '{{ url_for("upload_log", demo=demo.id) }}';
     $.fn.editable.defaults.placement = 'right';
-    $('#deletedemo').popover();
+    $.fn.editable.defaults.mode = 'inline';
+    //$('#deletedemo').popover();
     $('#title').editable({
                                type:  'text',
-                               pk:    {{ demo.id }},
+                               pk:    '{{ demo.id }}',
                                name:  'title',
                                url:   '{{ url_for("edit_demo_field", demo=demo.id) }}',
                                title: 'Enter the title of this match'
                             });
     $('#sub').editable({
                                type:  'text',
-                               pk:    {{ demo.id }},
+                               pk:    '{{ demo.id }}',
                                name:  'sub',
                                url:   '{{ url_for("edit_demo_field", demo=demo.id) }}',
                                title: 'Enter the type of this demo (Scrim, Match, etc.)'
                             });
     $('#logfile').editable({
                                type:  'text',
-                               pk:    {{ demo.id }},
+                               pk:    '{{ demo.id }}',
                                name:  'logfile',
                                url:   '{{ url_for("edit_demo_field", demo=demo.id) }}',
                                title: 'Enter the Log ID number for logs.tf'
                             });
     $('#summary').editable({
                                type:  'textarea',
-                               pk:    {{ demo.id }},
+                               pk:    '{{ demo.id }}',
                                name:  'summary',
                                url:   '{{ url_for("edit_demo_field", demo=demo.id) }}',
                                title: 'Enter a brief summary',
                                rows: 7
                             });
-    $('.ttip').tooltip();
+    //$('.ttip').tooltip();
     </script>
     <script src="{{ url_for('static', filename='js/editdemo.js') }}"></script>
   {% endif %}
