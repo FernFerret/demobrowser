@@ -20,17 +20,18 @@
     <div class="ui items">
       {% for demo in pagination.items %}
         {#  Don't forget about demo.sub #}
-        <div id="demo{{ demo.id }}" class="item">
+        <div id="demo{{ demo.id }}" class="item" style="min-height: 0;">
           <div class="ui image">
             {% if demo.logfile %}
               <a class="ui blue right corner label" target="_blank" href="http://www.logs.tf/{{ demo.logfile }}">
                 <i class="bar chart icon"></i>
               </a>
             {% endif %}
-            <img style="width: 300px; height:188px" src="{{ url_for('static', filename='img/maps/%s.png' % demo.name) }}" />
+            <a href="{{ url_for('view_demo', demo=demo.id) }}">
+              <img class="rounded ui image" style="width: 300px; height:188px" src="{{ url_for('static', filename='img/maps/%s.png' % demo.name) }}" /></a>
           </div>
           <div class="content">
-            <div class="name">
+            <div class="name" style="text-align: center;">
               <a href="{{ url_for('view_demo', demo=demo.id) }}">
                 {% if demo.title %}
                   {{ demo.title }}
@@ -39,15 +40,14 @@
                 {% endif %}
               </a>
             </div>
-            <p class="description">
-              <a class="ui image label">
-                <img style="padding-left: .5em; margin-right: .3em;" src="{{ url_for('static', filename='img/tf2_icons/control_point.png') }}" />
-                {{ demo.get_map_name()[0].upper() }}
-              </a>
-            </p>
             <div class="extra" style="text-align: right;">
               {{ demo.good_date() }} <i class="icon calendar"></i>
             </div>
+            {% if demo.sub %}
+              <div class="extra" style="text-align: left;">
+                <i class="icon users"></i>{{ demo.sub }}
+              </div>
+            {% endif %}
           </div>
         </div>
       {% endfor %}

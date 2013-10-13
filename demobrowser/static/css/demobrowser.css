@@ -71,6 +71,18 @@ p:last-child {
 }
 
 /** Responsive options **/
+.container.narrow {
+  width: 800px;
+  margin: auto;
+}
+.container.wide {
+  width: 1324px;
+  margin: auto;
+}
+.container.main {
+  width: 1324px;
+  margin: auto;
+}
 @media only screen and (max-width : 1725px) {
   .container.narrow {
     width: 800px;
